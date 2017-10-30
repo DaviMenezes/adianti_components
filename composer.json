@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4" : {
+      "Dvi\\" : "/",
+      "Dvi\\Control\\" : "control/",
+      "Dvi\\Widget\\" : "widget/",
+      "Dvi\\Widget\\Form\\" : "widget/form/",
+    }
+  }
+}
