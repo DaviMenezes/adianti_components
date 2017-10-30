@@ -113,9 +113,9 @@ class DviPanelGroup implements IDviWidget
         $dhbox_columns = array();
         $dgrid_collumns = array();
         foreach ($param as $column) {
-            if (is_a($column, 'Lib\Dvi\Widget\Base\DGridColumn')) {
+            if (is_a($column, 'Dvi\Widget\Base\DGridColumn')) {
                 $field = $column->getChilds(0);
-                if (is_a($field, 'Lib\Dvi\Widget\Container\DHBox') or is_a($field, 'Lib\Dvi\Widget\Container\DVBox')) {
+                if (is_a($field, 'Dvi\Widget\Container\DHBox') or is_a($field, 'Dvi\Widget\Container\DVBox')) {
                     /**@var DHBox $field*/
                     $fields[] = $field->getChilds();
                 }
@@ -124,10 +124,10 @@ class DviPanelGroup implements IDviWidget
             }
         }
 
-
+        $columns = array();
         //GET FIELD OF DGRIDCOLUMN AND ADD FIELD IN FORM
         foreach ($param as $column) {
-            if (is_a($column, 'Lib\Dvi\Widget\Base\DGridColumn')) {
+            if (is_a($column, 'Dvi\Widget\Base\DGridColumn')) {
                 /**@var DGridColumn $column */
                 if (is_a($column->getChilds(0), TLabel::class)) {
                     $qtd_labels ++;
