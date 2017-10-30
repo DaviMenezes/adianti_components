@@ -4,7 +4,7 @@
       "Dvi\\" : "/",
       "Dvi\\Control\\" : "control/",
       "Dvi\\Widget\\" : "widget/",
-      "Dvi\\Widget\\Form\\" : "widget/form/",
+      "Dvi\\Widget\\Form\\" : "widget/form/"
     }
   }
 }
