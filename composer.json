@@ -1,5 +1,5 @@
 {
-	"name": "adianti_components",
+	"name": "davimenezes/adianti_components",
 	"autoload": {
 		"psr-4" : {
 			"Dvi\\" : "/",
