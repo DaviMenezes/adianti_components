@@ -10,6 +10,7 @@
 	"autoload": {
 		"psr-4" : {
 			"Dvi\\" : "/"
-		}
+		},
+		"classmap": ["/"]
 	}
 }
