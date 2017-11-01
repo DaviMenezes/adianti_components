@@ -93,6 +93,7 @@ class DviControl extends TPage
     public function onClear()
     {
         $this->panel->getForm()->clear();
+        TApplication::loadPage(get_called_class());
     }
 
     public function onInitPage()
@@ -117,27 +118,23 @@ class DviControl extends TPage
             $this->objectClass::remove($id);
             TTransaction::close();
 
-            new TMessage('info', _t('Record deleted'));
-
             AdiantiCoreApplication::loadPage(get_called_class());
 
-            //            $this->onReload($param);
         } catch (Exception $e) {
             TTransaction::rollback();
             new TMessage('error', $e->getMessage());
         }
     }
 
-    public function show($check_again = false)
+    public function show()
     {
         $args = func_get_arg(0);
 
-        if ($check_again
-            and (!$this->grid_loaded
-                    and (!isset($_GET['method']) or ($_GET['method'] !== 'onReload'))
-            )
-        ) {
-            $this->onReload($args);
+        $recheck = $args['recheck'] ?? true;
+        if ($recheck) {
+            if (!$this->grid_loaded and (!isset($_GET['method']) or ($_GET['method'] !== 'onReload'))) {
+                $this->onReload($args);
+            }
         }
         parent::show();
     }

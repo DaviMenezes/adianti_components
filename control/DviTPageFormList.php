@@ -41,7 +41,7 @@ class DviTPageFormList extends DviControl
 
 
     protected $pageTitle;
-    protected $database;
+    protected $database = 'default';
     protected $objectClass;
     /**@var DviPanelGroup $panel*/
     protected $panel;

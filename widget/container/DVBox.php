@@ -21,6 +21,8 @@ class DVBox extends TVBox
     public function __construct()
     {
         parent::__construct();
+
+        $this->style = 'width:100%';
     }
     
     public static function pack()

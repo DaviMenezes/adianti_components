@@ -360,39 +360,30 @@ class DviPanelGroup implements IDviWidget
     }
 
     /********* ACTIONS ********************/
-    public function addActionSave(string $saveMethod = 'onSave', array $parameters = null, $tip = null)
+    public function addActionSave(string $label = 'Save', string $saveMethod = 'onSave', array $parameters = null, $tip = null)
     {
-        $this->addQuickAction('btnSave', [$this->className, $saveMethod], 'fa:floppy-o fa-2x', $parameters, $tip);
+        $this->addCustomAction([$this->className, $saveMethod], 'fa:floppy-o fa-2x', _t($label), $parameters, $tip, 'btnSave');
 
         return $this;
     }
 
-    public function addActionEdit(array $callback = null, array $parameters = null, $tip = null)
+    public function addActionClear(string $label = 'Clear', string $clearMethod = 'onClear', array $parameters = null, $tip = null)
     {
-        $action[] = $callback[0] ?? $this->className;
-        $action[] = $callback[1] ?? 'onEdit';
-
-        $this->addQuickAction('btnEdit', $action, 'fa:pencil fa-2x', $parameters, $tip);
+        $this->addCustomAction([$this->className, $clearMethod], 'fa:refresh fa-2x', _t($label), $parameters, $tip, 'btnClear');
 
         return $this;
     }
 
-    public function addActionClear(string $clearMethod = 'onClear', array $parameters = null, $tip = null)
+    public function addActionSearch(string $label = 'Search', $searchMethod = 'onSearch', array $parameters = null, $tip = null)
     {
-        $this->addQuickAction('btnClear', [$this->className, $clearMethod], 'fa:refresh fa-2x', $parameters, $tip);
+        $this->addCustomAction([$this->className, $searchMethod], 'fa:search fa-2x', _t($label), $parameters, $tip, 'btnSearch');
 
         return $this;
     }
 
-    public function addActionSearch($searchMethod = 'onSearch', array $parameters = null, $tip = null)
+    public function addCustomAction(array $callback, string $image, $label = null, array $parameters = null, $tip = null, string $id = null)
     {
-        $this->addQuickAction('btnSearch', [$this->className, $searchMethod], 'fa:search fa-2x', $parameters, $tip);
-
-        return $this;
-    }
-
-    public function addQuickAction(string $id, array $callback, string $image, array $parameters = null, $tip = null, $label = null)
-    {
+        $id = $id ?? uniqid().mktime();
         $data = ['type' => 'button', 'id' => $id, 'callback' => $callback, 'image' => $image, 'parameters' => $parameters, 'tip' => $tip, 'label' => $label];
 
         $btn = $this->createButton($data);
