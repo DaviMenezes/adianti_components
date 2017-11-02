@@ -403,13 +403,15 @@ class DviPanelGroup implements IDviWidget
             if (isset($value['label']) and $value['label']) {
                 $element_label = new TElement('div');
                 $element_label->add($value['label']);
-                $element_label->style = 'float: right; margin: 4px 0 0 4px';
+                $element_label->class = 'dvi_btn_label';
                 $btn->setLabel($element_label);
             } else {
                 $btn->setLabel($value['label']);
             }
+
             $btn->setImage($value['image']);
             $btn->setTip($value['tip']);
+            $btn->class = 'dvi_panel_action';
             $btn->style = 'font-size: 14px;';
         } elseif ($value['type'] == 'link') {
             $action = new TAction($value['callback'], $value['parameters']);
