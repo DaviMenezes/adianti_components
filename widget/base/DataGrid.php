@@ -24,7 +24,8 @@ class DataGrid extends TDataGrid
     {
         parent::__construct();
 
-        $this->{style} ='width: 100%';
+        $this->style ='width: 100%';
+        $this->disableDefaultClick();
 
         if ($use_column_id) {
             $this->addCol('id', 'Id', 'left', '7%');
@@ -41,6 +42,13 @@ class DataGrid extends TDataGrid
     {
         parent::addColumn(new TDataGridColumn($name, $label, $align, $width));
     }
+
+    #region [ALIAS] *************************************************
+    public function col($name, $label, $align, $width)
+    {
+        $this->addCol($name, $label, $align, $width);
+    }
+    #endregion
 
     static public function newInstance($prefix)
     {

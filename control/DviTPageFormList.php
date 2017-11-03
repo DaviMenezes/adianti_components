@@ -20,6 +20,7 @@ use Adianti\Widget\Dialog\TQuestion;
 use Adianti\Widget\Form\TCheckButton;
 use Adianti\Widget\Form\TForm;
 use Adianti\Widget\Form\THidden;
+use Dvi\Widget\Base\DataGrid;
 use Dvi\Widget\Form\DviPanelGroup;
 use Dvi\Widget\Base\DGridColumn;
 use Exception;
@@ -45,7 +46,7 @@ class DviTPageFormList extends DviControl
     protected $objectClass;
     /**@var DviPanelGroup $panel*/
     protected $panel;
-    /**@var TDataGrid $datagrid*/
+    /**@var DataGrid $datagrid*/
     protected $datagrid;
     /**@var TPageNavigation $pageNavigation*/
     protected $pageNavigation;
@@ -116,6 +117,10 @@ class DviTPageFormList extends DviControl
 
             //get the filters genereted by the child classes
             $filters = TSession::getValue(get_called_class().'_filters');
+
+            if (!$filters and isset($param['filters']) and $param['filters']) {
+                $filters = $param['filters'];
+            }
 
             if ($filters) {
                 foreach ($filters as $filter) {

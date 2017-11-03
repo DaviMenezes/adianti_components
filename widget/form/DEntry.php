@@ -3,6 +3,7 @@ namespace Dvi\Widget\Form;
 
 use Adianti\Validator\TRequiredValidator;
 use Adianti\Widget\Form\TEntry;
+use Dvi\Widget\Form\Field\SearchableField;
 
 /**
  * Model DEntry
@@ -16,6 +17,8 @@ use Adianti\Widget\Form\TEntry;
  */
 class DEntry extends TEntry
 {
+    use SearchableField;
+
     public function __construct(string $name, string $placeholder = null, bool $required = false, bool $tip = true)
     {
         parent::__construct($name);

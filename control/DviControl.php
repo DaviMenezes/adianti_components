@@ -13,6 +13,7 @@ use Adianti\Widget\Datagrid\TPageNavigation;
 use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Dialog\TQuestion;
 use Adianti\Widget\Form\THidden;
+use Dvi\Widget\Base\DataGrid;
 use Exception;
 use Dvi\Widget\Form\DviPanelGroup;
 
@@ -32,7 +33,7 @@ class DviControl extends TPage
 
     /**@var DviPanelGroup $panel*/
     protected $panel;
-    /**@var TDataGrid $datagrid*/
+    /**@var DataGrid $datagrid*/
     protected $datagrid;
     /**@var TPageNavigation $pageNavigation*/
     protected $pageNavigation;
@@ -45,11 +46,18 @@ class DviControl extends TPage
     protected $action_delete;
     protected $grid_loaded=  false;
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $name = get_called_class();
+        $this->panel = new DviPanelGroup($name, $this->pageTitle);
+    }
+
     protected function createPanelForm($param)
     {
         $id = new THidden('id');
-        $name = get_called_class();
-        $this->panel = new DviPanelGroup($name, $this->pageTitle);
+
         $this->panel->addHiddenFields([$id]);
         $this->panel->addActionSave();
         $this->panel->addActionClear();
@@ -57,18 +65,16 @@ class DviControl extends TPage
 
     protected function createDataGrid($createModel = true, $showId = false)
     {
-        $this->datagrid = new TDataGrid();
-        $this->datagrid->style = '100%';
-        $this->datagrid->disableDefaultClick();
+        $this->datagrid = new DataGrid(self::class);
 
         $this->action_edit = new TDataGridAction([$this, 'onEdit']);
         $this->action_edit->setField('id');
         $this->action_edit->setLabel('Editar');
         $this->action_edit->setImage('fa:pencil-square-o blue fa-2x');
-        $this->action_delete = new TDataGridAction([$this, 'onDelete']);
-        $this->action_delete->setField('id');
-        $this->action_delete->setLabel('Apagar');
-        $this->action_delete->setImage('fa:trash-o red fa-2x');
+//        $this->action_delete = new TDataGridAction([$this, 'onDelete']);
+//        $this->action_delete->setField('id');
+//        $this->action_delete->setLabel('Apagar');
+//        $this->action_delete->setImage('fa:trash-o red fa-2x');
 
         if ($showId) {
             $this->column_id = new TDataGridColumn('id', 'Id', 'left', '5%');
@@ -76,7 +82,7 @@ class DviControl extends TPage
         }
 
         $this->datagrid->addAction($this->action_edit);
-        $this->datagrid->addAction($this->action_delete);
+//        $this->datagrid->addAction($this->action_delete);
 
         if ($createModel) {
             $this->createDatagridModel();
@@ -101,7 +107,7 @@ class DviControl extends TPage
         AdiantiCoreApplication::loadPage(get_called_class());
     }
 
-    public function onDelete($param)
+    public function gridOnDelete($param)
     {
         $action = new TAction([$this, 'delete']);
 
