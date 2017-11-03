@@ -2,28 +2,21 @@
 
 namespace Dvi\Control;
 
-use Adianti\Control\TAction;
-use Adianti\Widget\Container\TVBox;
-use Adianti\Widget\Datagrid\TDataGridColumn;
-use Adianti\Widget\Datagrid\TPageNavigation;
-use Dvi\Widget\Base\DataGrid;
+use Dvi\Widget\Container\DVBox;
 use Dvi\Widget\Form\DviPanelGroup;
 
 /**
- * Manipulação de grids bootstraps
+ * Control DviSearchFormList
  *
  * @version    Dvi 1.0
- * @package    grid bootstrap to Adianti Framework
- * @subpackage base
+ * @package    Control
+ * @subpackage component
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
-
-class DviTPageFormList extends DviControl
+class DviSearchFormList extends DviControl
 {
-    //essa classe deve focar na construção da tela
-
     protected $objectClass;
     /**@var DviPanelGroup $panel*/
     protected $panel;
@@ -43,7 +36,7 @@ class DviTPageFormList extends DviControl
     protected $panel_grid;
     private $use_grid_panel;
 
-    use DviTPageForm;
+    use DviTPageSearch;
     use DviTPageList;
 
     public function __construct($param)
@@ -54,8 +47,7 @@ class DviTPageFormList extends DviControl
         $this->createDataGrid();
         $this->createPageNavigation();
 
-        $vbox = new TVBox();
-        $vbox->style = 'width:100%;';
+        $vbox = new DVBox();
         $vbox->add($this->panel);
 
         $vbox->add($this->datagrid);
@@ -63,10 +55,5 @@ class DviTPageFormList extends DviControl
         $vbox->add($this->pageNavigation);
 
         parent::add($vbox);
-    }
-
-    public function useCheckButton()
-    {
-        $this->useCheckButton = true;
     }
 }

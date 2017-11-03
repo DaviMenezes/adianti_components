@@ -14,7 +14,12 @@ namespace Dvi\Widget\Form\Field;
 trait SearchableField
 {
     private $is_searchable = true; // estender uma classe com essa propriedade setada
-    public $search_operator = 'like';
+    private $search_operator = 'like';
+
+    public function setSearchOperator(string $search_operator)
+    {
+        $this->search_operator = $search_operator;
+    }
 
     public function getSearchableValue()
     {

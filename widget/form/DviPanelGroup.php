@@ -362,14 +362,16 @@ class DviPanelGroup implements IDviWidget
     /********* ACTIONS ********************/
     public function addActionSave(string $label = 'Save', string $saveMethod = 'onSave', array $parameters = null, $tip = null)
     {
-        $this->addCustomAction([$this->className, $saveMethod], 'fa:floppy-o fa-2x', _t($label), $parameters, $tip, 'btnSave');
+        $str_label = !empty($label) ? _t($label) : null;
+        $this->addCustomAction([$this->className, $saveMethod], 'fa:floppy-o fa-2x', $str_label, $parameters, $tip, 'btnSave');
 
         return $this;
     }
 
     public function addActionClear(string $label = 'Clear', string $clearMethod = 'onClear', array $parameters = null, $tip = null)
     {
-        $this->addCustomAction([$this->className, $clearMethod], 'fa:refresh fa-2x', _t($label), $parameters, $tip, 'btnClear');
+        $str_label = !empty($label) ? _t($label) : null;
+        $this->addCustomAction([$this->className, $clearMethod], 'fa:refresh fa-2x', $str_label, $parameters, $tip, 'btnClear');
 
         return $this;
     }

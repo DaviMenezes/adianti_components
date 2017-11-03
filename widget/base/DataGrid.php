@@ -18,7 +18,8 @@ use Dvi\Widget\Base\DataGridColumn;
  */
 class DataGrid extends TDataGrid
 {
-    public $grid_action_delete;
+    private $grid_action_delete;
+    private $grid_action_edit;
 
     public function __construct($class_name, $function_prefix = 'grid', $use_column_id = true, $params_delete = null)
     {
@@ -31,10 +32,17 @@ class DataGrid extends TDataGrid
             $this->addCol('id', 'Id', 'left', '7%');
         }
 
+        $this->grid_action_edit = new TDataGridAction([$class_name, 'onEdit']);
+        $this->grid_action_edit->setField('id');
+        $this->grid_action_edit->setLabel('Editar');
+        $this->grid_action_edit->setImage('fa:pencil-square-o blue fa-2x');
+
         $this->grid_action_delete = new TDataGridAction([$class_name, $function_prefix . 'OnDelete'], $params_delete);
         $this->grid_action_delete->setField('id');
         $this->grid_action_delete->setImage('fa:trash red fa-2x');
+
         $this->addAction($this->grid_action_delete);
+        $this->addAction($this->grid_action_edit);
 
     }
 

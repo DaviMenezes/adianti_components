@@ -5,6 +5,7 @@ namespace Dvi\Widget\Form;
 use Adianti\Validator\TRequiredValidator;
 use Adianti\Widget\Form\TCombo;
 use Dvi\Database\DTransaction;
+use Dvi\Widget\Form\Field\SearchableField;
 
 
 /**
@@ -19,10 +20,13 @@ use Dvi\Database\DTransaction;
  */
 class DCombo extends TCombo
 {
+    use SearchableField;
 
     public function __construct($name, string $placeholder = null, $required = false, array $obj_array_value = null, bool $tip = true, bool $enable_search = true)
     {
         parent::__construct($name);
+
+        $this->setSearchOperator('=');
 
         if ($placeholder) {
             $this->placeholder = $placeholder;
