@@ -3,7 +3,9 @@ namespace Dvi\Widget\Form;
 
 use Adianti\Validator\TRequiredValidator;
 use Adianti\Widget\Form\TEntry;
+use Dvi\Widget\Form\Field\FieldEntry;
 use Dvi\Widget\Form\Field\SearchableField;
+use Dvi\Widget\IDviWidget;
 
 /**
  * Model DEntry
@@ -15,24 +17,22 @@ use Dvi\Widget\Form\Field\SearchableField;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
  */
-class DEntry extends TEntry
+class DEntry extends FieldEntry
 {
     use SearchableField;
 
     public function __construct(string $name, string $placeholder = null, bool $required = false, bool $tip = true)
     {
-        parent::__construct($name);
+        parent::__construct($name, $placeholder, $required, $tip);
 
-        if ($placeholder) {
-            $this->placeholder = $placeholder;
-        }
-
-        if ($required) {
-            $this->addValidation(ucfirst($this->placeholder), new TRequiredValidator());
-        }
-
-        if ($tip) {
-            $this->setTip(ucfirst($this->placeholder));
-        }
+        $this->operator('like');
     }
+
+    public static function create(string $name, string $placeholder = null, bool $required = false, bool $tip = true)
+    {
+        $obj = new DEntry($name, $placeholder, $required, $tip);
+
+        return $obj;
+    }
+
 }

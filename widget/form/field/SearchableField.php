@@ -1,6 +1,9 @@
 <?php
 namespace Dvi\Widget\Form\Field;
 
+use Adianti\Widget\Form\TField;
+use Dvi\Widget\IDviWidget;
+
 /**
  * Model SearchableField
  *
@@ -13,16 +16,23 @@ namespace Dvi\Widget\Form\Field;
  */
 trait SearchableField
 {
-    private $is_searchable = true; // estender uma classe com essa propriedade setada
-    private $search_operator = 'like';
+    private $search_operator;
 
-    public function setSearchOperator(string $search_operator)
+    public function operator(string $operator)
     {
-        $this->search_operator = $search_operator;
+        $this->search_operator = $operator;
+        return $this;
+    }
+
+    public function getSearchOperator()
+    {
+        return $this->search_operator;
     }
 
     public function getSearchableValue()
     {
         return $this->search_operator == 'like' ? "%{$this->getValue()}%" : $this->getValue();
     }
+
+
 }

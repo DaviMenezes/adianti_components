@@ -44,7 +44,7 @@ class DviSearchFormList extends DviControl
         parent::__construct();
 
         $this->createPanelForm($param);
-        $this->createDataGrid();
+        $this->datagrid = $this->createDataGrid();
         $this->createPageNavigation();
 
         $vbox = new DVBox();

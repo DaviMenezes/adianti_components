@@ -45,7 +45,7 @@ trait DviTPageForm
 
             $data = $this->panel->getFormData();
 
-            $obj = new $this->objectClass();
+            $obj = $this->objectClass::get($data->id);
             $obj->fromArray((array)$data);
             $obj->store();
 

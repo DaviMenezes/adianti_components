@@ -26,7 +26,7 @@ class DCombo extends TCombo
     {
         parent::__construct($name);
 
-        $this->setSearchOperator('=');
+        $this->operator('=');
 
         if ($placeholder) {
             $this->placeholder = $placeholder;
@@ -36,11 +36,12 @@ class DCombo extends TCombo
             $this->addValidation(ucfirst($this->placeholder), new TRequiredValidator());
         }
 
-        if ($obj_array_value) {
-            $this->addItems($this->getObjItems($obj_array_value));
-        }
         if ($tip) {
             $this->setTip(ucfirst($this->placeholder));
+        }
+
+        if ($obj_array_value) {
+            $this->addItems($this->getObjItems($obj_array_value));
         }
 
         if ($enable_search) {
@@ -74,5 +75,11 @@ class DCombo extends TCombo
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
         }
+    }
+
+    public static function create($name, string $placeholder = null, $required = false, array $obj_array_value = null, bool $tip = true, bool $enable_search = true)
+    {
+        $obj = new DCombo($name, $placeholder, $required, $obj_array_value, $tip, $enable_search);
+        return $obj;
     }
 }

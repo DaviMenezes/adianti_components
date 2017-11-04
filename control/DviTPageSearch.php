@@ -4,6 +4,7 @@ namespace Dvi\Control;
 
 use Adianti\Database\TFilter;
 use Dvi\Widget\Form\DviPanelGroup;
+use Dvi\Widget\Form\Field\SearchableField;
 
 /**
  * control DviTPageSearch
@@ -38,10 +39,15 @@ trait DviTPageSearch
 
         $filters = array();
         foreach ($fields as $field) {
-            if (isset($field->search_operator)) {
+            $traits = class_uses($field);
+
+            if (in_array(SearchableField::class, $traits)) {
                 $name = $field->getName();
+                if (empty($data->$name)) continue;
+
                 $field->setValue($data->$name);
-                $filters[] = new TFilter($name, $field->search_operator, $field->getSearchableValue());
+                $searchOperator = $field->getSearchOperator();
+                $filters[] = new TFilter($name, $searchOperator, $field->getSearchableValue());
             }
         }
 

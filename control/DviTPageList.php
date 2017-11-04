@@ -103,7 +103,7 @@ trait DviTPageList
         }
     }
 
-    protected function createDataGrid($createModel = true, $showId = false)
+    protected function createDataGrid($createModel = true, $showId = false): DataGrid
     {
         $class = get_called_class();
         $this->datagrid = new DataGrid($class);
@@ -116,6 +116,8 @@ trait DviTPageList
         if ($createModel) {
             $this->createDatagridModel();
         }
+
+        return $this->datagrid;
     }
 
     protected function createDatagridModel()
@@ -147,7 +149,7 @@ trait DviTPageList
     {
         $action = new TAction([$this, 'delete']);
 
-        $param['pagination_param'] = $this->getUrlPaginationParameters();
+        $param['url_params'] = $this->getUrlPaginationParameters();
 
         $action->setParameters($param);
 
@@ -163,7 +165,11 @@ trait DviTPageList
 
             DTransaction::close();
 
-            AdiantiCoreApplication::loadPage(get_called_class(), 'onReload', $param['pagination_param']);
+            $back_method = $param['url_params']['back_method'];
+            $back_method = empty($back_method) ? null : $back_method;
+            unset($param['url_params']['back_method']);
+
+            AdiantiCoreApplication::loadPage(get_called_class(), $back_method, $param['url_params']);
         } catch (Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
@@ -172,16 +178,27 @@ trait DviTPageList
 
     private function getUrlPaginationParameters(): array
     {
-        $url_params = explode('&', $_SERVER['HTTP_REFERER']);
-        unset($url_params[0]);//remove url ini
-        unset($url_params[1]);//remove param method
+        $url_params = explode('?', $_SERVER['HTTP_REFERER']);
+        $url_params = explode('&', $url_params[1]);
+        unset($url_params[0]);//remove class param
 
-        $pagination_params = array();
+        $new_url_params = array();
+        $new_url_params['back_method'] = '';
+
+        //get param method
+        foreach ($url_params as $url_param) {
+            $param = explode('=', $url_param);
+            if ($param[0] == 'method') {
+                $new_url_params['back_method'] = $param[1];
+                break;
+            }
+        }
+        //get anothers params
         foreach ($url_params as $url_param) {
             $explode = explode('=', $url_param);
 
-            $pagination_params[$explode[0]] = $explode[1];
+            $new_url_params[$explode[0]] = $explode[1];
         }
-        return $pagination_params;
+        return $new_url_params;
     }
 }

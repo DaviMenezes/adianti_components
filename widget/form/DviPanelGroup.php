@@ -385,7 +385,7 @@ class DviPanelGroup implements IDviWidget
 
     public function addCustomAction(array $callback, string $image, $label = null, array $parameters = null, $tip = null, string $id = null)
     {
-        $id = $id ?? uniqid().mktime();
+        $id = $id ?? uniqid().time();
         $data = ['type' => 'button', 'id' => $id, 'callback' => $callback, 'image' => $image, 'parameters' => $parameters, 'tip' => $tip, 'label' => $label];
 
         $btn = $this->createButton($data);
