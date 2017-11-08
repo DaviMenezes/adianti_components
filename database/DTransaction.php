@@ -20,7 +20,10 @@ class DTransaction
 
     public static function open($database = 'default', array $dbinfo = NULL)
     {
-        TTransaction::open($database, $dbinfo);
+        $conn = TTransaction::get();
+        if (!$conn) {
+            TTransaction::open($database, $dbinfo);
+        }
     }
 
     public static function get()
