@@ -1,6 +1,7 @@
 <?php
 namespace Dvi\Control;
 
+use Adianti\Core\AdiantiCoreApplication;
 use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Form\THidden;
 use Dvi\Database\DTransaction;
@@ -55,7 +56,21 @@ trait DviTPageForm
 
             DTransaction::close();
 
-            $this->reloadIfClassExtendFormAndListing($param);
+            $url_params = explode('?', $_SERVER['HTTP_REFERER']);
+            $url_params = explode('&', $url_params[1]);
+            foreach ($url_params as $url_param) {
+                $value = explode('=', $url_param);
+                if (is_array($value) and ($value[0] == 'class' or $value[0] == 'method')) {
+                    unset($param);
+                } else {
+                    $new_params[$value[0]] = $value[1];
+                }
+            }
+            $new_params['id'] = $obj->id;
+
+//            $this->reloadIfClassExtendFormAndListing($param);
+            AdiantiCoreApplication::loadPage(get_called_class(), 'onEdit', $new_params);
+
 
             return $obj;
         } catch (Exception $e) {
