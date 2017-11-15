@@ -3,8 +3,6 @@ namespace Dvi\Widget\Util;
 
 use Adianti\Control\TAction;
 use Adianti\Widget\Util\TActionLink;
-use Adianti\Widget\Util\TImage;
-use Adianti\Widget\Util\TTextDisplay;
 
 /**
  * Model DActionLink
@@ -16,21 +14,10 @@ use Adianti\Widget\Util\TTextDisplay;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
  */
-class DActionLink extends TTextDisplay
+class DActionLink extends TActionLink
 {
-    public function __construct(TAction $action, string $label = null, string $icon = null, string $color = null, string $size = null, string $decoration = null)
+    public function __construct(TAction $action, string $value = null, string $icon = null, string $color = null, string $size = null, string $decoration = null)
     {
-        if ($icon)
-        {
-            $image = new TImage($icon);
-            $image->style ='float:left;';
-            $image .= '<div class="dvi_btn_label">'.$label.'</div>';;
-        }
-
-        parent::__construct($image, $color, $size, $decoration);
-        parent::setName('a');
-
-        $this->{'href'} = $action->serialize();
-        $this->{'generator'} = 'adianti';
+        parent::__construct($value, $action, $color, $size, $decoration, $icon);
     }
 }

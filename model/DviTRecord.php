@@ -2,12 +2,10 @@
 
 namespace Dvi\Model;
 
-use Adianti\Database\TExpression;
 use Adianti\Database\TRecord;
-use Adianti\Database\TRepository;
 use Adianti\Database\TTransaction;
-use Dvi\Database\DTransaction;
 use Exception;
+use Dvi\Database\DTransaction;
 use PDO;
 use ReflectionObject;
 use ReflectionProperty;
@@ -25,9 +23,6 @@ use ReflectionProperty;
  */
 class DviTRecord extends TRecord
 {
-    const PRIMARYKEY = 'id';
-    const IDPOLICY = 'serial';
-
     private $filters = array();
     protected $sql;
     private $params;
@@ -35,54 +30,12 @@ class DviTRecord extends TRecord
     private $functions = array();
     private $preparedFilters;
 
-    private $privates = array();
-    private $objects = array();
-
     public function __construct($id = null, $callObjectLoad = true)
     {
         parent::__construct($id, $callObjectLoad);
     }
 
-    #region [BUILD MODEL] *******************************************
-    public function __get($property)
-    {
-        if (array_key_exists($property, $this->privates)) {
-            return $this->getMagicObject($property);
-        }
-
-        return parent::__get($property);
-    }
-
-    public function setMap(array $atributes)
-    {
-        foreach ($atributes as $key => $class) {
-            $this->privates[$key] = $class;
-            parent::addAttribute($key.'_id');
-        }
-    }
-
-    private function addPublicAtributes()
-    {
-        $publics = $this->getPublicProperties();
-        foreach ($publics as $key => $public) {
-            if (!array_key_exists($key, $this->privates)) {
-                parent::addAttribute($key);
-            }
-        }
-    }
-
-    private function getMagicObject($atribute)
-    {
-        $obj = $this->objects[$atribute] ?? null;
-        if (empty($obj)) {
-            $atribute_id = $atribute.'_id';
-            $atribute_class = $this->privates[$atribute];
-            $this->objects[$atribute] = new $atribute_class($this->$atribute_id);
-        }
-        return $this->objects[$atribute];
-    }
-
-    private function getPublicProperties()
+    public function getPublicProperties()
     {
         $properties = array();
 
@@ -94,22 +47,13 @@ class DviTRecord extends TRecord
         }
         return $properties;
     }
-    #endregion
-
 
     public static function remove($id = null) : bool
     {
-        /**@var DviTRecord $class*/
         $class = get_called_class();
-        $class::where('id', '=', $id)->delete();
-
+        $obj = new $class();
+        $obj->delete($id);
         return true;
-    }
-
-    //just to use return type
-    public static function where($variable, $operator, $value, $logicOperator = TExpression::AND_OPERATOR): TRepository
-    {
-        return parent::where($variable, $operator, $value, $logicOperator);
     }
 
     public function setFilter(DviTFilter $filter)
@@ -148,7 +92,7 @@ class DviTRecord extends TRecord
         $this->prepare();
 
         $this->pdoPrepare();
-        //        $sql = $this->createQuery($query, $params);
+//        $sql = $this->createQuery($query, $params);
 
 
         $this->bindParam();
@@ -284,7 +228,7 @@ class DviTRecord extends TRecord
     /**@throws */
     protected static function getObject($id, $class)
     {
-        try {
+        try{
             $conn = TTransaction::get();
             if ($conn) {
                 return self::getObjectWithoutConnection($id, $class);
