@@ -6,8 +6,8 @@ use Adianti\Database\TExpression;
 use Adianti\Database\TRecord;
 use Adianti\Database\TRepository;
 use Adianti\Database\TTransaction;
-use Exception;
 use Dvi\Database\DTransaction;
+use Exception;
 use PDO;
 use ReflectionObject;
 use ReflectionProperty;
@@ -46,16 +46,15 @@ class DviTRecord extends TRecord
     #region [BUILD MODEL] *******************************************
     public function __get($property)
     {
-        if(array_key_exists($property, $this->privates))
-        {
+        if (array_key_exists($property, $this->privates)) {
             return $this->getMagicObject($property);
         }
 
         return parent::__get($property);
-
     }
 
-    public function setMap(array $atributes) {
+    public function setMap(array $atributes)
+    {
         foreach ($atributes as $key => $class) {
             $this->privates[$key] = $class;
             parent::addAttribute($key.'_id');
@@ -65,18 +64,17 @@ class DviTRecord extends TRecord
     private function addPublicAtributes()
     {
         $publics = $this->getPublicProperties();
-        foreach($publics as $key => $public) {
+        foreach ($publics as $key => $public) {
             if (!array_key_exists($key, $this->privates)) {
                 parent::addAttribute($key);
             }
-
         }
     }
 
     private function getMagicObject($atribute)
     {
         $obj = $this->objects[$atribute] ?? null;
-        if(empty($obj)) {
+        if (empty($obj)) {
             $atribute_id = $atribute.'_id';
             $atribute_class = $this->privates[$atribute];
             $this->objects[$atribute] = new $atribute_class($this->$atribute_id);
@@ -104,7 +102,7 @@ class DviTRecord extends TRecord
         /**@var DviTRecord $class*/
         $class = get_called_class();
         $class::where('id', '=', $id)->delete();
-        
+
         return true;
     }
 
@@ -150,7 +148,7 @@ class DviTRecord extends TRecord
         $this->prepare();
 
         $this->pdoPrepare();
-//        $sql = $this->createQuery($query, $params);
+        //        $sql = $this->createQuery($query, $params);
 
 
         $this->bindParam();
@@ -286,7 +284,7 @@ class DviTRecord extends TRecord
     /**@throws */
     protected static function getObject($id, $class)
     {
-        try{
+        try {
             $conn = TTransaction::get();
             if ($conn) {
                 return self::getObjectWithoutConnection($id, $class);
