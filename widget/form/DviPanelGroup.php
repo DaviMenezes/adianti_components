@@ -10,6 +10,7 @@ use Adianti\Widget\Container\TPanelGroup;
 use Adianti\Widget\Form\TButton;
 use Adianti\Widget\Form\TForm;
 use Adianti\Widget\Form\TLabel;
+use Adianti\Widget\Util\TActionLink;
 use Adianti\Wrapper\BootstrapNotebookWrapper;
 use Dvi\Widget\Base\DataGridColumn;
 use Dvi\Widget\Base\DGridBootstrap;
@@ -20,6 +21,7 @@ use Dvi\Widget\Bootstrap\Component\DButtonGroup;
 use Dvi\Widget\Container\DHBox;
 use Dvi\Widget\Container\DVBox;
 use Dvi\Widget\IDviWidget;
+use Dvi\Widget\Util\DActionLink;
 
 /**
  * Model DviPanelGroup
@@ -359,7 +361,7 @@ class DviPanelGroup implements IDviWidget
         return $classType;
     }
 
-    /********* ACTIONS ********************/
+    #region [ACTIONS] ***********************************************
     public function addActionSave(string $label = 'Save', string $saveMethod = 'onSave', array $parameters = null, $tip = null)
     {
         $str_label = !empty($label) ? _t($label) : null;
@@ -396,6 +398,16 @@ class DviPanelGroup implements IDviWidget
         return $this;
     }
 
+    public function addCustomActionLink(array $callback, string $image, $label = null, array $parameters = null, $tip = null, string $class = 'btn btn-default')
+    {
+        $data = ['type' => 'link', 'class' => $class, 'callback' => $callback, 'image' => $image, 'parameters' => $parameters, 'tip' => $tip, 'label' => $label];
+        $btn = $this->createButton($data);
+        $this->hboxButtonsFooter->addButton($btn);
+
+        return $this;
+    }
+    #endregion
+
     private function createButton($value)
     {
         if ($value['type'] == 'button') {
@@ -413,11 +425,13 @@ class DviPanelGroup implements IDviWidget
 
             $btn->setImage($value['image']);
             $btn->setTip($value['tip']);
-            $btn->class = 'dvi_panel_action';
+            $btn->class = 'btn btn-default dvi_panel_action';
             $btn->style = 'font-size: 14px;';
         } elseif ($value['type'] == 'link') {
             $action = new TAction($value['callback'], $value['parameters']);
-            $btn = new TActionLink($value['label'], $action, '#333', '', '', $value['image']);
+            $label = $value['label'];
+            $icon = $value['image'];
+            $btn = new DActionLink($action, $label, $icon);
             $btn->class = $value['class'];
         }
 
@@ -474,7 +488,6 @@ class DviPanelGroup implements IDviWidget
         }
         return false;
     }
-    /********* END ACTIONS ********************/
 
     public function setNotebookPageAction(array $callback, array $parameters = null)
     {

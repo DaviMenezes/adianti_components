@@ -43,10 +43,21 @@ class DviControl extends TPage
             if (isset($param['id'])) {
                 TTransaction::open($this->database);
                 $obj = new $this->objectClass($param['id']);
+                unset($param['class']);
+                unset($param['method']);
+                foreach ($param as $key => $value) {
+                    $obj->$key = $value;
+                }
                 $this->panel->setFormData($obj);
                 TTransaction::close();
             } else {
-                $this->panel->getForm()->clear();
+                unset($param['class']);
+                unset($param['method']);
+                $obj = new \stdClass();
+                foreach ($param as $key => $value) {
+                    $obj->$key = $value;
+                }
+                $this->panel->setFormData($obj);
             }
         } catch (Exception $e) {
             TTransaction::rollback();

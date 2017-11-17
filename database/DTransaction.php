@@ -17,10 +17,14 @@ use Adianti\Log\AdiantiLoggerInterface;
 class DTransaction
 {
     private $conn;
+    private static $already_connection;
 
     public static function open($database = 'default', array $dbinfo = NULL)
     {
-        TTransaction::open($database, $dbinfo);
+        self::$already_connection = TTransaction::get();
+        if (!self::$already_connection) {
+            TTransaction::open($database, $dbinfo);
+        }
     }
 
     public static function get()
@@ -33,9 +37,11 @@ class DTransaction
         TTransaction::rollback();
     }
 
-    public static function close()
+    public static function close(bool $force = false)
     {
-        TTransaction::close();
+        if (!self::$already_connection or $force) {
+            TTransaction::close();
+        }
     }
 
     public static function setLoggerFunction(Closure $logger)

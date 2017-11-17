@@ -104,7 +104,7 @@ class DviTRecord extends TRecord
         /**@var DviTRecord $class*/
         $class = get_called_class();
         $class::where('id', '=', $id)->delete();
-
+        
         return true;
     }
 
@@ -157,7 +157,7 @@ class DviTRecord extends TRecord
 
         $this->pdo->execute();
         $objects = $this->pdo->fetchAll(PDO::FETCH_OBJ);
-
+        
         $results = false;
         if (!empty($objects[0])) {
             $results = $objects;
