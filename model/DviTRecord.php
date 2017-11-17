@@ -37,6 +37,46 @@ class DviTRecord extends TRecord
 
     public function getPublicProperties()
     {
+        if(array_key_exists($property, $this->privates))
+        {
+            return $this->getMagicObject($property);
+        }
+
+        return parent::__get($property);
+
+    }
+
+    public function setMap(array $atributes) {
+        foreach ($atributes as $key => $class) {
+            $this->privates[$key] = $class;
+            parent::addAttribute($key.'_id');
+        }
+    }
+
+    private function addPublicAtributes()
+    {
+        $publics = $this->getPublicProperties();
+        foreach($publics as $key => $public) {
+            if (!array_key_exists($key, $this->privates)) {
+                parent::addAttribute($key);
+            }
+
+        }
+    }
+
+    private function getMagicObject($atribute)
+    {
+        $obj = $this->objects[$atribute] ?? null;
+        if(empty($obj)) {
+            $atribute_id = $atribute.'_id';
+            $atribute_class = $this->privates[$atribute];
+            $this->objects[$atribute] = new $atribute_class($this->$atribute_id);
+        }
+        return $this->objects[$atribute];
+    }
+
+    private function getPublicProperties()
+    {
         $properties = array();
 
         $vars = (new ReflectionObject($this))->getProperties(ReflectionProperty::IS_PUBLIC);
@@ -51,8 +91,8 @@ class DviTRecord extends TRecord
     public static function remove($id = null) : bool
     {
         $class = get_called_class();
-        $obj = new $class();
-        $obj->delete($id);
+        $class::where('id', '=', $id)->delete();
+        
         return true;
     }
 
