@@ -2,7 +2,9 @@
 
 namespace Dvi\Model;
 
+use Adianti\Database\TExpression;
 use Adianti\Database\TRecord;
+use Adianti\Database\TRepository;
 use Adianti\Database\TTransaction;
 use Exception;
 use Dvi\Database\DTransaction;
@@ -23,6 +25,9 @@ use ReflectionProperty;
  */
 class DviTRecord extends TRecord
 {
+    const PRIMARYKEY = 'id';
+    const IDPOLICY = 'serial';
+
     private $filters = array();
     protected $sql;
     private $params;
@@ -30,12 +35,16 @@ class DviTRecord extends TRecord
     private $functions = array();
     private $preparedFilters;
 
+    private $privates = array();
+    private $objects = array();
+
     public function __construct($id = null, $callObjectLoad = true)
     {
         parent::__construct($id, $callObjectLoad);
     }
 
-    public function getPublicProperties()
+    #region [BUILD MODEL] *******************************************
+    public function __get($property)
     {
         if(array_key_exists($property, $this->privates))
         {
@@ -87,13 +96,22 @@ class DviTRecord extends TRecord
         }
         return $properties;
     }
+    #endregion
+
 
     public static function remove($id = null) : bool
     {
+        /**@var DviTRecord $class*/
         $class = get_called_class();
         $class::where('id', '=', $id)->delete();
-        
+
         return true;
+    }
+
+    //just to use return type
+    public static function where($variable, $operator, $value, $logicOperator = TExpression::AND_OPERATOR): TRepository
+    {
+        return parent::where($variable, $operator, $value, $logicOperator);
     }
 
     public function setFilter(DviTFilter $filter)
@@ -139,7 +157,7 @@ class DviTRecord extends TRecord
 
         $this->pdo->execute();
         $objects = $this->pdo->fetchAll(PDO::FETCH_OBJ);
-        
+
         $results = false;
         if (!empty($objects[0])) {
             $results = $objects;
