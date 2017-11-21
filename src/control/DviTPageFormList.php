@@ -1,0 +1,72 @@
+<?php
+
+namespace Dvi\Adianti\Control;
+
+use Adianti\Control\TAction;
+use Adianti\Widget\Container\TVBox;
+use Adianti\Widget\Datagrid\TDataGridColumn;
+use Adianti\Widget\Datagrid\TPageNavigation;
+use Dvi\Adianti\Widget\Base\DataGrid;
+use Dvi\Adianti\Widget\Form\DviPanelGroup;
+
+/**
+ * Manipulação de grids bootstraps
+ *
+ * @version    Dvi 1.0
+ * @package    grid bootstrap to Adianti Framework
+ * @subpackage base
+ * @author     Davi Menezes
+ * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
+ * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ */
+
+class DviTPageFormList extends DviControl
+{
+    //essa classe deve focar na construção da tela
+
+    protected $objectClass;
+    /**@var DviPanelGroup $panel*/
+    protected $panel;
+    /**@var DataGrid $datagrid*/
+    protected $datagrid;
+    /**@var TPageNavigation $pageNavigation*/
+    protected $pageNavigation;
+    protected $grid_loaded;
+
+    /**@var TDataGridColumn $column_id*/
+    protected $column_id;
+
+    /**@var TAction $action_delete*/
+    protected $action_delete;
+
+    private $useCheckButton;
+    protected $panel_grid;
+    private $use_grid_panel;
+
+    use DviTPageForm;
+    use DviTPageList;
+
+    public function __construct($param)
+    {
+        parent::__construct();
+
+        $this->createPanelForm($param);
+        $this->createDataGrid();
+        $this->createPageNavigation();
+
+        $vbox = new TVBox();
+        $vbox->style = 'width:100%;';
+        $vbox->add($this->panel);
+
+        $vbox->add($this->datagrid);
+
+        $vbox->add($this->pageNavigation);
+
+        parent::add($vbox);
+    }
+
+    public function useCheckButton()
+    {
+        $this->useCheckButton = true;
+    }
+}

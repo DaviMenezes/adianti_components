@@ -9,8 +9,8 @@
     ],
 	"autoload": {
 		"psr-4" : {
-			"Dvi\\" : "/"
+			"Dvi\\Components\\" : "/src",
 		},
-		"classmap": ["/"]
+		"classmap": ["/src"]
 	}
 }
