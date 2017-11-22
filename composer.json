@@ -1,16 +1,19 @@
 {
 	"name": "davimenezes/adianti_components",
 	"description": "Components for Adianti Framework",
-	"authors": [
-        {
-            "name": "Davi Menezes",
-            "email": "davimenezes.dev@gmail.com"
-        }
-    ],
+	"authors": [ {
+		"name": "Davi Menezes",
+		    "email": "davimenezes.dev@gmail.com"
+	}],
 	"autoload": {
 		"psr-4" : {
 			"Dvi\\Components\\" : "/src"
 		},
 		"classmap": ["/src"]
-	}
+	},
+	"extra": {
+        "installer-paths": {
+            "davimenezes/dvi/adianti/{$name}": ["vendor/package"]
+        }
+    }
 }
