@@ -26,10 +26,31 @@ class DviControl extends TPage
 
     protected $grid_loaded=  false;
 
-    public function onClear()
+    public static function getNewParams($param)
+    {
+        $new_params = array();
+
+        $url_params = explode('?', $_SERVER['HTTP_REFERER']);
+        $url_params = explode('&', $url_params[1]);
+        foreach ($url_params as $url_param) {
+            $value = explode('=', $url_param);
+            if (is_array($value) and ($value[0] == 'class' or $value[0] == 'method')) {
+                unset($param);
+            } else {
+                $new_params[$value[0]] = $value[1];
+            }
+        }
+        return $new_params;
+    }
+
+    public function onClear($param)
     {
         $this->panel->getForm()->clear();
-        AdiantiCoreApplication::loadPage(get_called_class());
+
+        $params = DviControl::getNewParams($param);
+        unset($params['id']);
+
+        AdiantiCoreApplication::loadPage(get_called_class(), null, $params);
     }
 
     public function onInitPage()
