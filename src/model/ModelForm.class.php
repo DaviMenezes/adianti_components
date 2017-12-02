@@ -3,7 +3,9 @@
 namespace Dvi\Adianti\Model;
 
 use Dvi\Adianti\Widget\Base\DGridColumn;
+use Dvi\Adianti\Widget\Container\DVBox;
 use Dvi\Adianti\Widget\Form\DEntry;
+use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use FontLib\Table\Type\name;
 
 /**
@@ -41,9 +43,16 @@ trait ModelForm
     private function setStructureForm($rows)
     {
         foreach ($rows as $key => $row) {
+
             $cols = array();
             foreach ($row as $column) {
-                $cols[] = new DGridColumn($column->getFormField());
+                /**@var DBVarchar $column*/
+//                $columns = DviPanelGroup::getDVBoxColumns($rows);
+                $dvbox = new DVBox();
+                $dvbox->style = 'width: 100%';
+                $dvbox->add($column->getLabel());
+                $dvbox->add($column->getFormField());
+                $cols[] = new DGridColumn($dvbox);
             }
             $rows[$key] = $cols;
         }
