@@ -88,6 +88,28 @@ class DviPanelGroup implements IDviWidget
         $obj = new DviPanelGroup($className, $title, $formName);
         return $obj;
     }
+
+    public static function getDVBoxColumns(array $param_columns): array
+    {
+        $columns = array();
+
+        foreach ($param_columns as $column) {
+            $dvbox = new DVBox();
+            $dvbox->style = 'width: 100%';
+
+            if (is_array($column[0])) {
+                $fields = $column[0];
+                foreach ($fields as $field) {
+                    $dvbox->add($field);
+                }
+            } else {
+                $dvbox->add($column[0]);
+            }
+            $width_column = $column[1] ?? 'col-md-' . floor(12 / count($param_columns));
+            $columns[] = new Col($dvbox, $width_column);
+        }
+        return $columns;
+    }
     /* PROPERTIES***************************************/
 
     /* PROPERTIES***************************************/
@@ -311,21 +333,7 @@ class DviPanelGroup implements IDviWidget
 
     public function addDVBox(array $param_columns)
     {
-        foreach ($param_columns as $column) {
-            $dvbox = new DVBox();
-            $dvbox->style = 'width: 100%';
-
-            if (is_array($column[0])) {
-                $fields = $column[0];
-                foreach ($fields as $field) {
-                    $dvbox->add($field);
-                }
-            } else {
-                $dvbox->add($column[0]);
-            }
-            $width_column = $column[1] ?? 'col-md-'. floor(12 / count($param_columns));
-            $columns[] = new Col($dvbox, $width_column);
-        }
+        $columns = self::getDVBoxColumns($param_columns);
 
         $this->addRow($columns);
 
