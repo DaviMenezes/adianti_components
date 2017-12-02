@@ -33,7 +33,9 @@ trait DviTPageForm
     {
         $id = new THidden('id');
 
-        $name = get_called_class();
+        $class = explode('\\', get_called_class());
+        $name = array_pop($class);
+
         $this->panel = new DviPanelGroup($name, $this->pageTitle);
         $this->panel->addHiddenFields([$id]);
 
@@ -79,6 +81,7 @@ trait DviTPageForm
 //            $this->reloadIfClassExtendFormAndListing($param);
             AdiantiCoreApplication::loadPage(get_called_class(), 'onEdit', $new_params);
 
+            $this->panel->keepFormLoaded();
 
             return $obj;
         } catch (Exception $e) {

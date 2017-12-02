@@ -2,8 +2,6 @@
 
 namespace Dvi\Adianti\Model;
 
-use FontLib\Table\Type\nameRecord;
-
 /**
  * Model DBField
  *
@@ -29,25 +27,25 @@ abstract class DBField
         $this->label= $label;
     }
 
-    public function getName()
+    protected function getName()
     {
         return $this->name;
     }
 
-    public function getType()
+    protected function getType()
     {
         return $this->type;
     }
 
-    public function getRequired()
+    protected function getRequired()
     {
         return $this->required;
     }
 
-    public function getLabel()
+    protected function getLabel()
     {
         return $this->label;
     }
 
-    abstract function getFormField();
+    protected abstract function getFormField();
 }

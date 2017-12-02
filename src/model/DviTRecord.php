@@ -43,7 +43,7 @@ class DviTRecord extends TRecord
     {
         parent::__construct($id, $callObjectLoad);
 
-        $this->addPublicAtributes();
+//        $this->addPublicAtributes();
     }
 
     #region [BUILD MODEL] *******************************************
@@ -68,7 +68,7 @@ class DviTRecord extends TRecord
     private function addPublicAtributes()
     {
         $publics = $this->getPublicProperties();
-        foreach($publics as $key => $public) {
+        foreach($publics as $key => $value) {
             if (!array_key_exists($key, $this->privates)) {
                 parent::addAttribute($key);
             }

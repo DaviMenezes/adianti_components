@@ -3,6 +3,7 @@
 namespace Dvi\Adianti\Model;
 
 use Dvi\Adianti\Widget\Base\DGridColumn;
+use Dvi\Adianti\Widget\Form\DEntry;
 use FontLib\Table\Type\name;
 
 /**
@@ -19,12 +20,22 @@ trait ModelForm
 {
     private $form_rows = array();
 
-    abstract function buildStructureForm();
+    abstract public function buildStructureForm();
 
-    private function setTypeText(string $name,  int $size, bool $required = false, $label = null)
+    private function setTypeText(string $name, int $size, bool $required = false, $label = null)
     {
         $model = get_called_class();
         $this->$name = new DBFieldText($name, 'text', $size, $required, $label);
+    }
+
+    private function addVarchar(string $name, int $size, bool $required = false, $label = null):DBVarchar
+    {
+        $field = DBVarchar::create($name, 'text', $size, $required, $label);
+        $field->setMask('A!');
+
+        $this->$name = $field;
+
+        return $this->$name;
     }
 
     private function setStructureForm($rows)

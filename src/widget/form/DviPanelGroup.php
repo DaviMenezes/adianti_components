@@ -8,9 +8,30 @@ use Adianti\Widget\Container\THBox;
 use Adianti\Widget\Container\TNotebook;
 use Adianti\Widget\Container\TPanelGroup;
 use Adianti\Widget\Form\TButton;
+use Adianti\Widget\Form\TCheckGroup;
+use Adianti\Widget\Form\TColor;
+use Adianti\Widget\Form\TCombo;
+use Adianti\Widget\Form\TDate;
+use Adianti\Widget\Form\TDateTime;
+use Adianti\Widget\Form\TEntry;
+use Adianti\Widget\Form\TField;
+use Adianti\Widget\Form\TFile;
 use Adianti\Widget\Form\TForm;
+use Adianti\Widget\Form\THidden;
+use Adianti\Widget\Form\THtmlEditor;
 use Adianti\Widget\Form\TLabel;
+use Adianti\Widget\Form\TMultiField;
+use Adianti\Widget\Form\TMultiFile;
+use Adianti\Widget\Form\TPassword;
+use Adianti\Widget\Form\TRadioGroup;
+use Adianti\Widget\Form\TSeekButton;
+use Adianti\Widget\Form\TSelect;
+use Adianti\Widget\Form\TSlider;
+use Adianti\Widget\Form\TSpinner;
+use Adianti\Widget\Form\TText;
 use Adianti\Widget\Util\TActionLink;
+use Adianti\Widget\Wrapper\TDBCombo;
+use Adianti\Widget\Wrapper\TDBSeekButton;
 use Adianti\Wrapper\BootstrapNotebookWrapper;
 use Dvi\Adianti\Widget\Base\DataGridColumn;
 use Dvi\Adianti\Widget\Base\DGridBootstrap;
@@ -79,6 +100,7 @@ class DviPanelGroup implements IDviWidget
         }
         return $this;
     }
+
     public function addNotebook()
     {
         $notebook = new TNotebook();
@@ -182,6 +204,7 @@ class DviPanelGroup implements IDviWidget
         }
         $this->addElement($group);
     }
+
     /**
      * Add fields in form quickly.
      * Pass the parameters separated with commas
@@ -230,18 +253,13 @@ class DviPanelGroup implements IDviWidget
 
     private function validateFormField($field)
     {
-        if (!is_subclass_of($field, 'TField')) {
+        if (!is_subclass_of($field, TField::class)) {
             return false;
         }
 
-        $whiteList = ['THidden', 'TEntry', 'TButton', 'TCheckGroup', 'TColor', 'TCombo', 'TDate', 'TDateTime',
-            'THidden', 'THtmlEditor', 'TMultiField', 'TFile', 'TMultiFile', 'TPassword', 'TRadioGroup',
-            'TSeekButton', 'TDBSeekButton', 'TDBCombo', 'TSelect', 'TSlider', 'TSpinner', 'TText','DCKEditor', 'DText',
-            'DEntry', 'DDate', 'DCombo'];
+        $whiteList = $this->getWhiteList();
 
-        $className = self::getClassName($field);
-
-        if (in_array($className, $whiteList)) :
+        if (in_array(get_class($field), $whiteList)) :
             return true;
         endif;
 
@@ -311,32 +329,6 @@ class DviPanelGroup implements IDviWidget
 
         $this->addRow($columns);
 
-        //        $params = (count(func_get_args()) == 1) ? func_get_arg(0) : func_get_args();
-        //
-        //        //todo o primeiro param pode ser TField e string, o segundo apenas TField e o terceiro apenas string
-        //        //todo se não validar lançar excessao
-        //        if (!is_array($params[0])) {
-        //            $field_name = $params[0];
-        //            $field_obj = $params[1];
-        //            $dvbox_elements[] = DVBox::pack($field_name, $field_obj);
-        //            $this->form->addField($field_obj);
-        //            $this->addCols($dvbox_elements);
-        //            return $this;
-        //        }
-        //
-        //        foreach ($params as $elements) {
-        //            if (is_array($elements)) {
-        //                $field_name = $elements[0];
-        //                $field_obj = $elements[1];
-        //                $column_class = $elements[2] ?? null;
-        //            }
-        //
-        //            $dvbox = DVBox::pack($field_name, $field_obj);
-        //            $dvbox_elements[] = $dvbox;
-        //            $columns[] = [$field_name, $field_obj, $column_class];
-        //            $this->form->addField($field_obj);
-        //        }
-        //        $this->addCols($dvbox_elements);
         return $this;
     }
 
@@ -441,7 +433,7 @@ class DviPanelGroup implements IDviWidget
     private function addField($param)
     {
         $fields = array();
-        if (is_a($param, 'DHBox')) {
+        if (is_a($param, DHBox::class)) {
             /**@var DHBox $form_elements*/
             $form_elements = $param;
             $fields = $form_elements->getFormElements();
@@ -453,13 +445,12 @@ class DviPanelGroup implements IDviWidget
             if (!$this->validateFormField($field)) {
                 continue;
             }
+//
+//            if (is_a($field, THidden::class)) {
+//                $this->form->add($field); //important to get data via $param
+//            }
 
-            if (is_a($field, 'THidden')) {
-                $this->form->add($field); //important to get data via $param
-                $this->form->addField($field);
-            } else {
-                $this->form->addField($field);
-            }
+            $this->form->addField($field);
         }
     }
 
@@ -472,7 +463,7 @@ class DviPanelGroup implements IDviWidget
         foreach ($columns as $column) {
             /**@var DGridColumn $element*/
             $element =$column->getChilds(0);
-            if (!is_a($element, 'THidden')) {
+            if (!is_a($element, THidden::class)) {
                 return true;
             }
         }
@@ -482,7 +473,7 @@ class DviPanelGroup implements IDviWidget
     private function hasVisibleField($fields)
     {
         foreach ($fields as $field) {
-            if (!empty($field) and !is_a($field, 'THidden') and !is_a($field, 'TLabel')) {
+            if (!empty($field) and !is_a($field, THidden::class) and !is_a($field, TLabel::class)) {
                 return true;
             }
         }
@@ -520,4 +511,37 @@ class DviPanelGroup implements IDviWidget
         return $this;
     }
 
+    private function getWhiteList(): array
+    {
+        $whiteList = [
+            THidden::class,
+            TEntry::class,
+            TButton::class,
+            TCheckGroup::class,
+            TColor::class,
+            TCombo::class,
+            TDate::class,
+            TDateTime::class,
+            THidden::class,
+            THtmlEditor::class,
+            TMultiField::class,
+            TFile::class,
+            TMultiFile::class,
+            TPassword::class,
+            TRadioGroup::class,
+            TSeekButton::class,
+            TDBSeekButton::class,
+            TDBCombo::class,
+            TSelect::class,
+            TSlider::class,
+            TSpinner::class,
+            TText::class,
+            DCKEditor::class,
+            DText::class,
+            DEntry::class,
+            DDate::class,
+            DCombo::class
+        ];
+        return $whiteList;
+    }
 }
