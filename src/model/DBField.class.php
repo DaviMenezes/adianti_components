@@ -27,22 +27,22 @@ abstract class DBField
         $this->label= $label;
     }
 
-    protected function getName()
+    public function getName()
     {
         return $this->name;
     }
 
-    protected function getType()
+    public function getType()
     {
         return $this->type;
     }
 
-    protected function getRequired()
+    public function getRequired()
     {
         return $this->required;
     }
 
-    protected function getLabel()
+    public function getLabel()
     {
         return $this->label;
     }
