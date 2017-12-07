@@ -2,6 +2,7 @@
 
 namespace Dvi\Adianti\Control;
 
+use Adianti\Control\TAction;
 use Dvi\Adianti\Widget\Container\DVBox;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
@@ -45,7 +46,7 @@ class DviSearchFormList extends DviControl
 
         $this->createPanelForm($param);
         $this->datagrid = $this->createDataGrid();
-        $this->createPageNavigation();
+        $this->createPageNavigation($param);
 
         $vbox = new DVBox();
         $vbox->add($this->panel);
