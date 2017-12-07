@@ -6,6 +6,7 @@ use Adianti\Control\TPage;
 use Adianti\Core\AdiantiCoreApplication;
 use Adianti\Database\TTransaction;
 use Adianti\Widget\Dialog\TMessage;
+use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Exception;
 
 /**
@@ -22,9 +23,11 @@ class DviControl extends TPage
 {
     use DControl;
 
+    /**@var DviPanelGroup $panel*/
+    protected $panel;
     protected $database = 'default';
 
-    protected $grid_loaded=  false;
+    protected $grid_loaded =  false;
 
     public function onClear()
     {
@@ -32,36 +35,10 @@ class DviControl extends TPage
         AdiantiCoreApplication::loadPage(get_called_class());
     }
 
-    public function onInitPage()
+    public function load()
     {
         AdiantiCoreApplication::loadPage(get_called_class());
     }
 
-    public function onEdit($param)
-    {
-        try {
-            if (isset($param['id'])) {
-                TTransaction::open($this->database);
-                $obj = new $this->objectClass($param['id']);
-                unset($param['class']);
-                unset($param['method']);
-                foreach ($param as $key => $value) {
-                    $obj->$key = $value;
-                }
-                $this->panel->setFormData($obj);
-                TTransaction::close();
-            } else {
-                unset($param['class']);
-                unset($param['method']);
-                $obj = new \stdClass();
-                foreach ($param as $key => $value) {
-                    $obj->$key = $value;
-                }
-                $this->panel->setFormData($obj);
-            }
-        } catch (Exception $e) {
-            TTransaction::rollback();
-            new TMessage('error', $e->getMessage());
-        }
-    }
+
 }
