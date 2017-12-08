@@ -4,6 +4,8 @@ namespace Dvi\Adianti\Widget\Base;
 use Adianti\Widget\Datagrid\TDataGrid;
 use Adianti\Widget\Datagrid\TDataGridAction;
 use Adianti\Widget\Datagrid\TDataGridColumn;
+use Dvi\Adianti\Control\DviTPageList;
+use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DataGridColumn;
 
 /**

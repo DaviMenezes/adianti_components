@@ -2,6 +2,7 @@
 
 namespace Dvi\Adianti\Widget\Form;
 
+use Adianti\Validator\TMaxLengthValidator;
 use Adianti\Validator\TRequiredValidator;
 use Adianti\Widget\Form\TText;
 
@@ -41,7 +42,7 @@ class DText extends TText
 
         if ($maxlength) {
             $this->setMaxLength($maxlength);
-            $this->addValidation($ucfirst_placeholder, new TMaxLengthValidator(),[$maxlength]);
+            $this->addValidation($this->ucfirst_placeholder, new TMaxLengthValidator(),[$maxlength]);
         }
     }
 

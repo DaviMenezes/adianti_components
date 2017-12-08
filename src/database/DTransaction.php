@@ -3,6 +3,7 @@ namespace Dvi\Adianti\Database;
 
 use Adianti\Database\TTransaction;
 use Adianti\Log\AdiantiLoggerInterface;
+use Closure;
 
 /**
  * Model DTransaction

@@ -19,8 +19,6 @@ trait ModelForm
 {
     private $form_rows = array();
 
-    abstract function buildStructureForm();
-
     private function setTypeText(string $name,  int $size, bool $required = false, $label = null)
     {
         $model = get_called_class();

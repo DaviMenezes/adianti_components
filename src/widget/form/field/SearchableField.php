@@ -1,9 +1,6 @@
 <?php
 namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Widget\Form\TField;
-use Dvi\Adianti\Widget\IDviWidget;
-
 /**
  * Model SearchableField
  *
@@ -33,6 +30,4 @@ trait SearchableField
     {
         return $this->search_operator == 'like' ? "%{$this->getValue()}%" : $this->getValue();
     }
-
-
 }

@@ -8,10 +8,12 @@ use Adianti\Widget\Container\THBox;
 use Adianti\Widget\Container\TNotebook;
 use Adianti\Widget\Container\TPanelGroup;
 use Adianti\Widget\Form\TButton;
+use Adianti\Widget\Form\TField;
 use Adianti\Widget\Form\TForm;
 use Adianti\Widget\Form\TLabel;
 use Adianti\Widget\Util\TActionLink;
 use Adianti\Wrapper\BootstrapNotebookWrapper;
+use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DataGridColumn;
 use Dvi\Adianti\Widget\Base\DGridBootstrap;
 use Dvi\Adianti\Widget\Base\DGridColumn as Col;
@@ -46,7 +48,7 @@ class DviPanelGroup implements IDviWidget
 
     public function __construct(string $className, string $title = null, string $formName = null)
     {
-        $this->className = $className;
+        $this->className = Route::getClassName($className);
 
         $this->form = new TForm($this->className.'_form_'.($formName ?? uniqid()));
         $this->form->class = 'form-horizontal';
@@ -110,21 +112,7 @@ class DviPanelGroup implements IDviWidget
         $qtd_labels = 0;
         $qtd_cols_to_label = 2;
 
-        $fields = array();
-
-        $dhbox_columns = array();
-        $dgrid_collumns = array();
-        foreach ($param as $column) {
-            if (is_a($column, DGridColumn::class)) {
-                $field = $column->getChilds(0);
-                if (is_a($field, DHBox::class) or is_a($field, DVBox::class)) {
-                    /**@var DHBox $field*/
-                    $fields[] = $field->getChilds();
-                }
-
-                $dgrid_collumns[] = $column;
-            }
-        }
+        $fields = $this->getColumnFields($param);
 
         $columns = array();
         //GET FIELD OF DGRIDCOLUMN AND ADD FIELD IN FORM
@@ -230,7 +218,7 @@ class DviPanelGroup implements IDviWidget
 
     private function validateFormField($field)
     {
-        if (!is_subclass_of($field, 'TField')) {
+        if (!is_subclass_of($field, TField::class)) {
             return false;
         }
 
@@ -458,6 +446,7 @@ class DviPanelGroup implements IDviWidget
                 $this->form->add($field); //important to get data via $param
                 $this->form->addField($field);
             } else {
+//                $this->form->add($field);
                 $this->form->addField($field);
             }
         }
@@ -518,6 +507,23 @@ class DviPanelGroup implements IDviWidget
         }
 
         return $this;
+    }
+
+    private function getColumnFields(array $param): array
+    {
+        $fields = array();
+        foreach ($param as $column) {
+            if (is_a($column, DGridColumn::class)) {
+                $field = $column->getChilds(0);
+                if (is_a($field, DHBox::class) or is_a($field, DVBox::class)) {
+                    /**@var DHBox $field */
+                    $fields[] = $field->getChilds();
+                }
+
+//                $dgrid_collumns[] = $column;
+            }
+        }
+        return $fields;
     }
 
 }
