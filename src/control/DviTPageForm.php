@@ -5,7 +5,9 @@ use Adianti\Core\AdiantiCoreApplication;
 use Adianti\Database\TTransaction;
 use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Form\THidden;
+use Adianti\Widget\Form\TLabel;
 use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Widget\Form\DEntry;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Exception;
 
@@ -34,7 +36,9 @@ trait DviTPageForm
     {
         $id = new THidden('id');
 
-        $name = get_called_class();
+        $class = explode('\\', get_called_class());
+        $name = array_pop($class);
+
         $this->panel = new DviPanelGroup($name, $this->pageTitle);
         $this->panel->addHiddenFields([$id]);
 
@@ -65,21 +69,14 @@ trait DviTPageForm
 
             DTransaction::close();
 
-            $url_params = explode('?', $_SERVER['HTTP_REFERER']);
-            $url_params = explode('&', $url_params[1]);
-            foreach ($url_params as $url_param) {
-                $value = explode('=', $url_param);
-                if (is_array($value) and ($value[0] == 'class' or $value[0] == 'method')) {
-                    unset($param);
-                } else {
-                    $new_params[$value[0]] = $value[1];
-                }
-            }
+            $new_params = DviControl::getNewParams($param);
+
             $new_params['id'] = $obj->id;
 
 //            $this->reloadIfClassExtendFormAndListing($param);
             AdiantiCoreApplication::loadPage(get_called_class(), 'onEdit', $new_params);
 
+            $this->panel->keepFormLoaded();
 
             return $obj;
         } catch (Exception $e) {
@@ -132,4 +129,6 @@ trait DviTPageForm
             $this->onReload($param);
         }
     }
+
+
 }
