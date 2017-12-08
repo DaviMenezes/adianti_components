@@ -4,6 +4,7 @@ namespace Dvi\Adianti\Widget\Base;
 use Adianti\Widget\Datagrid\TDataGrid;
 use Adianti\Widget\Datagrid\TDataGridAction;
 use Adianti\Widget\Datagrid\TDataGridColumn;
+use Dvi\Adianti\Control\DviSearchFormList;
 use Dvi\Adianti\Control\DviTPageList;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DataGridColumn;
@@ -37,10 +38,12 @@ class DataGrid extends TDataGrid
             $this->addCol('id', 'Id', 'left', '7%');
         }
 
-        $this->grid_action_edit = new TDataGridAction([$class_name, 'onEdit']);
-        $this->grid_action_edit->setField('id');
-        $this->grid_action_edit->setLabel('Editar');
-        $this->grid_action_edit->setImage('fa:pencil-square-o blue fa-2x');
+        if (!is_subclass_of($class_name, DviSearchFormList::class)) {
+            $this->grid_action_edit = new TDataGridAction([$class_name, 'onEdit']);
+            $this->grid_action_edit->setField('id');
+            $this->grid_action_edit->setLabel('Editar');
+            $this->grid_action_edit->setImage('fa:pencil-square-o blue fa-2x');
+        }
 
         $this->grid_action_delete = new TDataGridAction([$class_name, $function_prefix . 'OnDelete'], $params_delete);
         $this->grid_action_delete->setField('id');
