@@ -2,6 +2,7 @@
 namespace Dvi\Adianti\Control;
 
 use Adianti\Core\AdiantiCoreApplication;
+use Adianti\Database\TTransaction;
 use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Form\THidden;
 use Adianti\Widget\Form\TLabel;
@@ -91,6 +92,34 @@ trait DviTPageForm
             $object->$key = $value;
         }
         $this->panel->setFormData($object);
+    }
+
+    public function onEdit($param)
+    {
+        try {
+            if (isset($param['id'])) {
+                TTransaction::open($this->database);
+                $obj = new $this->objectClass($param['id']);
+                unset($param['class']);
+                unset($param['method']);
+                foreach ($param as $key => $value) {
+                    $obj->$key = $value;
+                }
+                $this->panel->setFormData($obj);
+                TTransaction::close();
+            } else {
+                unset($param['class']);
+                unset($param['method']);
+                $obj = new \stdClass();
+                foreach ($param as $key => $value) {
+                    $obj->$key = $value;
+                }
+                $this->panel->setFormData($obj);
+            }
+        } catch (Exception $e) {
+            TTransaction::rollback();
+            new TMessage('error', $e->getMessage());
+        }
     }
 
     private function reloadIfClassExtendFormAndListing($param)

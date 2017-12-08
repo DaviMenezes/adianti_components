@@ -3,9 +3,11 @@
 namespace Dvi\Adianti\Widget\Form;
 
 use Adianti\Validator\TRequiredValidator;
+use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Form\TCombo;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
+use Exception;
 
 
 /**
@@ -81,5 +83,11 @@ class DCombo extends TCombo
     {
         $obj = new DCombo($name, $placeholder, $required, $obj_array_value, $tip, $enable_search);
         return $obj;
+    }
+
+    public function items(array $items)
+    {
+        parent::addItems($items);
+        return $this;
     }
 }

@@ -26,6 +26,8 @@ use Dvi\Adianti\Widget\Base\DataGrid;
  */
 trait DviTPageList
 {
+    protected static $form;
+
     /**@var DataGrid $datagrid*/
     protected $datagrid;
     /**@var TPageNavigation $pageNavigation*/
@@ -37,6 +39,13 @@ trait DviTPageList
     protected $action_edit;
     /**@var TAction $action_delete*/
     protected $action_delete;
+
+    private static function getUrlParams(): array
+    {
+        $url_params = explode('?', $_SERVER['HTTP_REFERER']);
+        $url_params = explode('&', $url_params[1]);
+        return $url_params;
+    }
 
     public function onReload($param)
     {
@@ -82,8 +91,8 @@ trait DviTPageList
                 }
             }
 
-            $this->datagrid->clear();
             if ($items) {
+                $this->datagrid->clear();
                 $this->datagrid->addItems($items);
             }
 
@@ -91,6 +100,7 @@ trait DviTPageList
             $count = $repository->count($criteria);
 
             $this->pageNavigation->setCount($count);
+            $this->pageNavigation->setProperties($param);
             $this->pageNavigation->setProperties($param);
             $this->pageNavigation->setLimit($limit);
 
@@ -125,10 +135,13 @@ trait DviTPageList
         $this->datagrid->createModel();
     }
 
-    protected function createPageNavigation()
+    protected function createPageNavigation($param)
     {
         $this->pageNavigation = new TPageNavigation();
-        $this->pageNavigation->setAction(new TAction([$this, 'onReload']));
+
+        $new_params = DviTPageList::getUrlPaginationParameters($param);
+
+        $this->pageNavigation->setAction(new TAction([$this, 'onReload'], $new_params));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
     }
 
@@ -176,10 +189,17 @@ trait DviTPageList
         }
     }
 
-    private function getUrlPaginationParameters(): array
+    public static function getUrlPaginationParameters($param): array
     {
-        $url_params = explode('?', $_SERVER['HTTP_REFERER']);
-        $url_params = explode('&', $url_params[1]);
+        //o carregamento da classe pode ser via ajax então os parametros da url a serem considerados
+        //devem ser do $param ao invés do $_SERVER
+        if (self::callCameAnotherClass($param)) {
+            unset($param['class']);
+            return $param;
+        }
+
+        $url_params = self::getUrlParams();
+
         unset($url_params[0]);//remove class param
 
         $new_url_params = array();
@@ -199,6 +219,28 @@ trait DviTPageList
 
             $new_url_params[$explode[0]] = $explode[1];
         }
+
+        if (empty($new_url_params['back_method'])) {
+            unset($new_url_params['back_method']);
+        }
+
         return $new_url_params;
+    }
+
+    private static function callCameAnotherClass($param):bool
+    {
+        $url_params = self::getUrlParams();
+
+        $class = explode('=', $url_params[0]);
+
+        if ($class[1] !== $param['class']) {
+            return true;
+        }
+        return false;
+    }
+
+    public static function getForm()
+    {
+        return self::$form;
     }
 }
