@@ -8,7 +8,6 @@ use Adianti\Widget\Container\THBox;
 use Adianti\Widget\Container\TNotebook;
 use Adianti\Widget\Container\TPanelGroup;
 use Adianti\Widget\Form\TButton;
-use Adianti\Widget\Form\TField;
 use Adianti\Widget\Form\TCheckGroup;
 use Adianti\Widget\Form\TColor;
 use Adianti\Widget\Form\TCombo;
@@ -30,15 +29,13 @@ use Adianti\Widget\Form\TSelect;
 use Adianti\Widget\Form\TSlider;
 use Adianti\Widget\Form\TSpinner;
 use Adianti\Widget\Form\TText;
-use Adianti\Widget\Util\TActionLink;
 use Adianti\Widget\Wrapper\TDBCombo;
 use Adianti\Widget\Wrapper\TDBSeekButton;
 use Adianti\Wrapper\BootstrapNotebookWrapper;
 use Dvi\Adianti\Route;
-use Dvi\Adianti\Widget\Base\DataGridColumn;
 use Dvi\Adianti\Widget\Base\DGridBootstrap;
-use Dvi\Adianti\Widget\Base\DGridColumn as Col;
 use Dvi\Adianti\Widget\Base\DGridColumn;
+use Dvi\Adianti\Widget\Base\DGridColumn as Col;
 use Dvi\Adianti\Widget\Base\GridElement;
 use Dvi\Adianti\Widget\Bootstrap\Component\DButtonGroup;
 use Dvi\Adianti\Widget\Container\DHBox;
@@ -441,18 +438,12 @@ class DviPanelGroup implements IDviWidget
             if (!$this->validateFormField($field)) {
                 continue;
             }
-//
-//            if (is_a($field, THidden::class)) {
-//                $this->form->add($field); //important to get data via $param
-//            }
 
             if (is_a($field, 'THidden')) {
                 $this->form->add($field); //important to get data via $param
-                $this->form->addField($field);
-            } else {
-//                $this->form->add($field);
-                $this->form->addField($field);
             }
+
+            $this->form->addField($field);
         }
     }
 
@@ -524,7 +515,7 @@ class DviPanelGroup implements IDviWidget
                     $fields[] = $field->getChilds();
                 }
 
-//                $dgrid_collumns[] = $column;
+                //                $dgrid_collumns[] = $column;
             }
         }
         return $fields;
