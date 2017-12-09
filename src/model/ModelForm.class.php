@@ -54,7 +54,7 @@ trait ModelForm
                 //                $columns = DviPanelGroup::getDVBoxColumns($rows);
                 $dvbox = new DVBox();
                 $dvbox->style = 'width: 100%';
-                $dvbox->add($column->getLabel());
+                $dvbox->add(ucfirst($column->getLabel()));
                 $dvbox->add($column->getFormField());
                 $cols[] = new DGridColumn($dvbox);
             }
