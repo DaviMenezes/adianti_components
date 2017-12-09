@@ -10,7 +10,7 @@ namespace Dvi\Adianti\Model;
 
 use Dvi\Adianti\Widget\Form\DEntry;
 
-class DBVarchar extends DBField
+class DBVarchar extends DBFormField
 {
     private $size;
     protected $field;
@@ -27,11 +27,6 @@ class DBVarchar extends DBField
     public static function create(string $name, string $type, int $size, bool $required = false, $label = null):DBVarchar
     {
         return new DBVarchar($name, $type, $size, $required, $label);
-    }
-
-    public function getFormField()
-    {
-        return $this->field;
     }
 
     public function setMask(string $mask): DEntry

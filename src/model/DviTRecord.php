@@ -35,7 +35,7 @@ class DviTRecord extends TRecord
     private $functions = array();
     private $preparedFilters;
 
-    private $privates = array();
+    private $foreign_keys = array();
     private $objects = array();
     private $field_types = array();
 
@@ -43,24 +43,23 @@ class DviTRecord extends TRecord
     {
         parent::__construct($id, $callObjectLoad);
 
-//        $this->addPublicAtributes();
+        //        $this->addPublicAtributes();
     }
 
     #region [BUILD MODEL] *******************************************
     public function __get($property)
     {
-        if(array_key_exists($property, $this->privates))
-        {
+        if (array_key_exists($property, $this->foreign_keys)) {
             return $this->getMagicObject($property);
         }
 
         return parent::__get($property);
-
     }
 
-    public function setMap(array $atributes) {
+    public function setMap(array $atributes)
+    {
         foreach ($atributes as $key => $class) {
-            $this->privates[$key] = $class;
+            $this->foreign_keys[$key] = $class;
             parent::addAttribute($key.'_id');
         }
     }
@@ -68,20 +67,19 @@ class DviTRecord extends TRecord
     private function addPublicAtributes()
     {
         $publics = $this->getPublicProperties();
-        foreach($publics as $key => $value) {
-            if (!array_key_exists($key, $this->privates)) {
+        foreach ($publics as $key => $value) {
+            if (!array_key_exists($key, $this->foreign_keys)) {
                 parent::addAttribute($key);
             }
-
         }
     }
 
     private function getMagicObject($atribute)
     {
         $obj = $this->objects[$atribute] ?? null;
-        if(empty($obj)) {
+        if (empty($obj)) {
             $atribute_id = $atribute.'_id';
-            $atribute_class = $this->privates[$atribute];
+            $atribute_class = $this->foreign_keys[$atribute];
             $this->objects[$atribute] = new $atribute_class($this->$atribute_id);
         }
         return $this->objects[$atribute];
@@ -153,7 +151,7 @@ class DviTRecord extends TRecord
         $this->prepare();
 
         $this->pdoPrepare();
-//        $sql = $this->createQuery($query, $params);
+        //        $sql = $this->createQuery($query, $params);
 
 
         $this->bindParam();
@@ -299,7 +297,7 @@ class DviTRecord extends TRecord
     /**@throws */
     protected static function getObject($id, $class)
     {
-        try{
+        try {
             $conn = TTransaction::get();
             if ($conn) {
                 return self::getObjectWithoutConnection($id, $class);

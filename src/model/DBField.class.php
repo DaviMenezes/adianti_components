@@ -12,19 +12,18 @@ namespace Dvi\Adianti\Model;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-abstract class DBField
+class DBField
 {
     private $name;
     private $type;
     private $required;
-    private $label;
 
-    public function __construct(string $name, string $type, bool $required = false, string $label = null)
+
+    public function __construct(string $name, string $type, bool $required = false)
     {
         $this->name = $name;
         $this->type = $type;
         $this->required = $required;
-        $this->label= $label;
     }
 
     public function getName()
@@ -42,10 +41,7 @@ abstract class DBField
         return $this->required;
     }
 
-    public function getLabel()
-    {
-        return $this->label;
-    }
 
-    protected abstract function getFormField();
+
+//    protected abstract function getFormField();
 }
