@@ -7,6 +7,7 @@ use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Form\THidden;
 use Adianti\Widget\Form\TLabel;
 use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Form\DEntry;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Exception;
@@ -36,8 +37,7 @@ trait DviTPageForm
     {
         $id = new THidden('id');
 
-        $class = explode('\\', get_called_class());
-        $name = array_pop($class);
+        $name = Route::getClassName(get_called_class());
 
         $this->panel = new DviPanelGroup($name, $this->pageTitle);
         $this->panel->addHiddenFields([$id]);

@@ -24,70 +24,63 @@ trait ModelForm
 
     private $form_rows = array();
 
-    private function setTypeText(string $name, int $size, bool $required = false, $label = null)
-    {
-        $model = get_called_class();
-        $this->$name = new DBFieldText($name, 'text', $size, $required, $label);
-    }
-
     private function addVarchar(string $name, int $size, bool $required = false, $label = null):DBVarchar
     {
-        $field = DBVarchar::create($name, 'text', $size, $required, $label);
-        $field->setMask('A!');
+        $this->$name = DBVarchar::create($name, 'text', $size, $required, $label);
+        $this->$name->mask('A!');
 
-        return $this->buildField($name, $field);
+        return $this->buildField($name);
+    }
+
+    private function addText(string $name, int $length, int $height, bool $required, string $label):DBText
+    {
+        $this->$name = DBText::create($name, $length, $height, $required, $label);
+
+        return $this->buildField($name);
     }
 
     private function addDateTime(string $name, $label = null, bool $required = false):DBDateTime
     {
-        $field = DBDateTime::create($name, $required, $label);
+        $this->$name = DBDateTime::create($name, $required, $label);
 
-        return $this->buildField($name, $field);
+        return $this->buildField($name);
     }
 
-    private function setStructureForm(array $rows)
+    private function setStructureForm(array $form_column_structure)
     {
-        foreach ($rows as $key => $row) {
+        $this->form_rows = $form_column_structure;
+    }
+
+    private function setFormStructureColumn()
+    {
+        foreach ($this->form_rows as $key => $row) {
             $cols = array();
             foreach ($row as $column) {
                 /**@var DBVarchar $column*/
-                //                $columns = DviPanelGroup::getDVBoxColumns($rows);
+                $label = ucfirst($column->getLabel());
+                $field = $column->getFormField();
+
                 $dvbox = new DVBox();
                 $dvbox->style = 'width: 100%';
-                $dvbox->add(ucfirst($column->getLabel()));
-                $dvbox->add($column->getFormField());
+                $dvbox->add($label);
+                $dvbox->add($field);
                 $cols[] = new DGridColumn($dvbox);
             }
-            $rows[$key] = $cols;
+            $this->form_rows[$key] = $cols;
         }
-
-        $this->form_rows = $rows;
     }
 
     public function getFormRows()
     {
+        $this->setFormStructureColumn();
+
         return $this->form_rows;
     }
 
-    private function buildField(string $name, $field)
+    private function buildField(string $name)
     {
         parent::addAttribute($name);
 
-        $this->$name = $field;
-
-        $this->addAttributeField($field);
-
         return $this->$name;
     }
-
-    private function addAttributeField($field)
-    {
-        self::$attributes_field[] = $field;
-    }
-
-    public static function getAttributeFields()
-    {
-        return self::$attributes_field;
-    }
-
 }

@@ -2,6 +2,9 @@
 
 namespace Dvi\Adianti\Model;
 
+use Adianti\Validator\TRequiredValidator;
+use Adianti\Widget\Form\TEntry;
+
 /**
  * Model DBFormField
  *
@@ -14,7 +17,9 @@ namespace Dvi\Adianti\Model;
  */
 abstract class DBFormField extends DBField
 {
+    /**@var TEntry $field*/
     protected $field;
+    protected $form_field_class;
     private $label;
 
     public function __construct(string $name, string $type, bool $required = false, string $label = null)
@@ -26,10 +31,21 @@ abstract class DBFormField extends DBField
 
     public function getLabel()
     {
-        return ucfirst($this->label);
+        return $this->label;
     }
 
-    abstract public function setMask(string $mask);
+    public function mask(string $mask)
+    {
+        $this->field->setMask($mask);
+        return $this;
+    }
+
+    public function type(string $class)
+    {
+        $this->form_field_class  = $class;
+
+        return $this;
+    }
 
     public function getFormField()
     {

@@ -20,11 +20,10 @@ class DBDateTime extends DBFormField
     public function __construct(string $name, bool $required = false, string $label = null)
     {
         parent::__construct($name, 'datetime', $required, $label);
-
         $this->field = new TDateTime($name);
-
-        if ($required and $label) {
-            $this->field->addValidation(ucfirst($label), new TRequiredValidator());
+        $this->field->placeholder = $label;
+        if ($required) {
+            $this->field->addValidation($label, new TRequiredValidator());
         }
     }
 
@@ -32,10 +31,5 @@ class DBDateTime extends DBFormField
     {
         $field = new DBDateTime($name, $required, $label);
         return $field;
-    }
-
-    public function setMask(string $mask)
-    {
-        $this->field->setMask($mask);
     }
 }

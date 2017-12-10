@@ -13,7 +13,6 @@ use Dvi\Adianti\Widget\Form\DEntry;
 class DBVarchar extends DBFormField
 {
     private $size;
-    protected $field;
 
     public function __construct(string $name, string $type, int $size, bool $required = false, $label = null)
     {
@@ -27,11 +26,5 @@ class DBVarchar extends DBFormField
     public static function create(string $name, string $type, int $size, bool $required = false, $label = null):DBVarchar
     {
         return new DBVarchar($name, $type, $size, $required, $label);
-    }
-
-    public function setMask(string $mask): DEntry
-    {
-        $this->field->setMask($mask);
-        return $this->field;
     }
 }
