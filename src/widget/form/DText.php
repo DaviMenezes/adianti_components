@@ -42,7 +42,7 @@ class DText extends TText
 
         if ($maxlength) {
             $this->setMaxLength($maxlength);
-            $this->addValidation($this->ucfirst_placeholder, new TMaxLengthValidator(),[$maxlength]);
+            $this->addValidation($this->ucfirst_placeholder, new TMaxLengthValidator(), [$maxlength]);
         }
     }
 
