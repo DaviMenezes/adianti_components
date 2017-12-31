@@ -3,6 +3,9 @@
 namespace Dvi\Adianti\Control;
 
 use Adianti\Control\TAction;
+use Adianti\Widget\Datagrid\TDataGridColumn;
+use Adianti\Widget\Datagrid\TPageNavigation;
+use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Container\DVBox;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
@@ -43,7 +46,10 @@ class DviSearchFormList extends DviControl
     public function __construct($param)
     {
         parent::__construct();
+    }
 
+    public function init($param)
+    {
         $this->createPanelForm($param);
         $this->datagrid = $this->createDataGrid();
         $this->createPageNavigation($param);
