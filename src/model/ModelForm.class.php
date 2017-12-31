@@ -83,4 +83,14 @@ trait ModelForm
 
         return $this->$name;
     }
+
+    public function setMap(string $atribute, $class)
+    {
+        $this->foreign_keys[$atribute] = $class;
+        $this->addAttribute($atribute.'_id');
+
+        if (empty($this->id)) {
+            $this->$atribute = new $class;
+        }
+    }
 }
