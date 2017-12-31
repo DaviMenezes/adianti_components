@@ -33,32 +33,42 @@ class DviControl extends TPage
     {
         $new_params = array();
 
-        $url_params = explode('?', $_SERVER['HTTP_REFERER']);
-        $url_params = explode('&', $url_params[1]);
+        $url_params = explode('&', $_SERVER['HTTP_REFERER']);
+        unset($url_params[0]);
+//        $url_params = explode('&', $url_params[1]);
         foreach ($url_params as $url_param) {
             $value = explode('=', $url_param);
-            if (is_array($value) and ($value[0] == 'class' or $value[0] == 'method')) {
-                unset($param);
-            } else {
-                $new_params[$value[0]] = $value[1];
-            }
+            $new_params[$value[0]] = $value[1];
+
+//            if (is_array($value) and ($value[0] == 'class' or $value[0] == 'method')) {
+//                unset($param);
+//            } else {
+//                $new_params[$value[0]] = $value[1];
+//            }
         }
         return $new_params;
     }
 
     public function onClear($param)
     {
-        $this->panel->getForm()->clear();
+        //Tips of use
+        /*$this->panel->getForm()->clear();
 
         $params = DviControl::getNewParams($param);
         unset($params['id']);
 
-        AdiantiCoreApplication::loadPage(get_called_class(), null, $params);
+        AdiantiCoreApplication::loadPage(get_called_class(), null, $params);*/
     }
 
     public function load()
     {
-        AdiantiCoreApplication::loadPage(get_called_class());
+        $param = null;
+        if (func_get_args()) {
+            $param =  func_get_arg(0);
+        }
+        
+        $param = self::getNewParams($param);
+        AdiantiCoreApplication::loadPage(get_called_class(), null, $param);
     }
 
 
