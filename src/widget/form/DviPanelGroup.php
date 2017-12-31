@@ -32,6 +32,7 @@ use Adianti\Widget\Form\TText;
 use Adianti\Widget\Wrapper\TDBCombo;
 use Adianti\Widget\Wrapper\TDBSeekButton;
 use Adianti\Wrapper\BootstrapNotebookWrapper;
+use Dvi\Adianti\Control\DAction;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DGridBootstrap;
 use Dvi\Adianti\Widget\Base\DGridColumn;
@@ -474,7 +475,7 @@ class DviPanelGroup implements IDviWidget
             $btn->class = 'btn btn-default dvi_panel_action';
             $btn->style = 'font-size: 14px;';
         } elseif ($value['type'] == 'link') {
-            $action = new TAction($value['callback'], $value['parameters']);
+            $action = new DAction($value['callback'], $value['parameters']);
             $label = $value['label'];
             $icon = $value['image'];
             $btn = new DActionLink($action, $label, $icon);

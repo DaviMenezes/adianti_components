@@ -12,7 +12,9 @@ use Adianti\Widget\Datagrid\TPageNavigation;
 use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Dialog\TQuestion;
 use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DataGrid;
+use Exception;
 
 /**
  * Control DviTPageList
@@ -158,15 +160,25 @@ trait DviTPageList
         parent::show();
     }
 
-    public function gridOnDelete($param)
+    public static function gridOnDelete($param)
     {
-        $action = new TAction([$this, 'delete']);
+        $class = $param['class'];
+        $action_yes = new TAction([$class, 'delete']);
+        $action_no = new TAction([$class, 'backToList']);
 
-        $param['url_params'] = $this->getUrlPaginationParameters();
+        $param['url_params'] = self::getUrlPaginationParameters($param);
 
-        $action->setParameters($param);
+        $action_yes->setParameters($param);
+        $action_no->setParameters($param);
 
-        new TQuestion(_t('Do you really want to delete ?'), $action);
+        new TQuestion(_t('Do you really want to delete ?'), $action_yes);
+    }
+
+    public function backToList($param)
+    {
+        $param['url_params']['back_method'] = null;
+
+        $this->onBack($param);
     }
 
     public function delete($param)
@@ -178,11 +190,7 @@ trait DviTPageList
 
             DTransaction::close();
 
-            $back_method = $param['url_params']['back_method'];
-            $back_method = empty($back_method) ? null : $back_method;
-            unset($param['url_params']['back_method']);
-
-            AdiantiCoreApplication::loadPage(get_called_class(), $back_method, $param['url_params']);
+            $this->onBack($param);
         } catch (Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
@@ -242,5 +250,15 @@ trait DviTPageList
     public static function getForm()
     {
         return self::$form;
+    }
+
+    private function onBack($param)
+    {
+        $back_method = $param['url_params']['back_method'];
+        unset($param['url_params']['method']);
+        unset($param['url_params']['back_method']);
+
+        $class = Route::getPath(get_called_class());
+        AdiantiCoreApplication::loadPage($class, $back_method, $param['url_params']);
     }
 }
