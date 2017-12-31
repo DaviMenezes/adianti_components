@@ -62,6 +62,7 @@ class DviPanelGroup implements IDviWidget
     private $form;
     private $hboxButtonsFooter;
     private $form_data;
+    private $btn;
 
 
     public function __construct(string $className, string $title = null, string $formName = null)
@@ -339,53 +340,113 @@ class DviPanelGroup implements IDviWidget
 
     private static function getClassName($field)
     {
-        $instanceClass = (string) \get_class($field);
-        $array = explode('\\', $instanceClass);
+        //        $instanceClass = (string) \get_class($field);
+        $array = explode('\\', $field);
         $classType = array_pop($array);
 
         return $classType;
     }
 
     #region [ACTIONS] ***********************************************
-    public function addActionSave(string $label = 'Save', string $saveMethod = 'onSave', array $parameters = null, $tip = null)
-    {
+    public function addActionSave(
+        string $label = 'Save',
+        string $saveMethod = 'onSave',
+        array $parameters = null,
+        $tip = null
+    ) {
         $str_label = !empty($label) ? _t($label) : null;
-        $this->addCustomAction([$this->className, $saveMethod], 'fa:floppy-o fa-2x', $str_label, $parameters, $tip, 'btnSave');
+        $this->addCustomAction(
+            [$this->className, $saveMethod],
+            'fa:floppy-o fa-2x',
+            $str_label,
+            $parameters,
+            $tip,
+            'btnSave'
+        );
 
         return $this;
     }
 
-    public function addActionClear(string $label = 'Clear', string $clearMethod = 'onClear', array $parameters = null, $tip = null)
-    {
+    public function addActionClear(
+        string $label = 'Clear',
+        string $clearMethod = 'onClear',
+        array $parameters = null,
+        $tip = null
+    ) {
         $str_label = !empty($label) ? _t($label) : null;
-        $this->addCustomAction([$this->className, $clearMethod], 'fa:refresh fa-2x', $str_label, $parameters, $tip, 'btnClear');
+        $this->addCustomAction(
+            [$this->className, $clearMethod],
+            'fa:refresh fa-2x',
+            $str_label,
+            $parameters,
+            $tip,
+            'btnClear'
+        );
 
         return $this;
     }
 
-    public function addActionSearch(string $label = 'Search', $searchMethod = 'onSearch', array $parameters = null, $tip = null)
-    {
-        $this->addCustomAction([$this->className, $searchMethod], 'fa:search fa-2x', _t($label), $parameters, $tip, 'btnSearch');
+    public function addActionSearch(
+        string $label = 'Search',
+        $searchMethod = 'onSearch',
+        array $parameters = null,
+        $tip = null
+    ) {
+        $this->addCustomAction(
+            [$this->className, $searchMethod],
+            'fa:search fa-2x',
+            _t($label),
+            $parameters,
+            $tip,
+            'btnSearch'
+        );
 
         return $this;
     }
 
-    public function addCustomAction(array $callback, string $image, $label = null, array $parameters = null, $tip = null, string $id = null)
-    {
+    public function addCustomAction(
+        array $callback,
+        string $image,
+        $label = null,
+        array $parameters = null,
+        $tip = null,
+        string $id = null
+    ) {
         $id = $id ?? uniqid().time();
-        $data = ['type' => 'button', 'id' => $id, 'callback' => $callback, 'image' => $image, 'parameters' => $parameters, 'tip' => $tip, 'label' => $label];
+        $data = [
+            'type' => 'button',
+            'id' => $id,
+            'callback' => $callback,
+            'image' => $image,
+            'parameters' => $parameters,
+            'tip' => $tip,
+            'label' => $label];
 
-        $btn = $this->createButton($data);
-        $this->hboxButtonsFooter->addButton($btn);
+        $this->btn = $this->createButton($data);
+        $this->hboxButtonsFooter->addButton($this->btn);
 
-        $this->form->addField($btn);
+        $this->form->addField($this->btn);
 
         return $this;
     }
 
-    public function addCustomActionLink(array $callback, string $image, $label = null, array $parameters = null, $tip = null, string $class = 'btn btn-default')
-    {
-        $data = ['type' => 'link', 'class' => $class, 'callback' => $callback, 'image' => $image, 'parameters' => $parameters, 'tip' => $tip, 'label' => $label];
+    public function addCustomActionLink(
+        array $callback,
+        string $image,
+        $label = null,
+        array $parameters = null,
+        $tip = null,
+        string $class = 'btn btn-default'
+    ) {
+        $data = [
+            'type' => 'link',
+            'class' => $class,
+            'callback' => $callback,
+            'image' => $image,
+            'parameters' => $parameters,
+            'tip' => $tip,
+            'label' => $label
+        ];
         $btn = $this->createButton($data);
         $this->hboxButtonsFooter->addButton($btn);
 
@@ -421,6 +482,11 @@ class DviPanelGroup implements IDviWidget
         }
 
         return $btn;
+    }
+
+    public function getButton():TButton
+    {
+        return $this->btn;
     }
 
     private function addField($param)

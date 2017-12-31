@@ -26,7 +26,7 @@ abstract class DBFormField extends DBField
     {
         parent::__construct($name, $type, $required);
 
-        $this->label= $label;
+        $this->label= $label ?? $name;
     }
 
     public function getLabel()

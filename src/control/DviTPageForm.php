@@ -7,6 +7,7 @@ use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Form\THidden;
 use Adianti\Widget\Form\TLabel;
 use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Model\DviTRecord;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Form\DEntry;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
@@ -29,9 +30,7 @@ trait DviTPageForm
     /**@var DviPanelGroup $panel*/
     protected $panel;
 
-    public function __construct()
-    {
-    }
+
 
     public function createPanelForm($param)
     {
@@ -60,8 +59,9 @@ trait DviTPageForm
             $data = $this->panel->getFormData();
 
             $obj = $this->objectClass::get($data->id);
-
-            $obj->fromArray((array)$data);
+            foreach ((array)$data as $key => $value) {
+                $obj->$key = $value;
+            }
             $obj->store();
 
             $param['id'] = $obj->id;
