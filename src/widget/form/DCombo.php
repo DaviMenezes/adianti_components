@@ -24,7 +24,7 @@ class DCombo extends TCombo
 {
     use SearchableField;
 
-    public function __construct($name, string $placeholder = null, $required = false, array $obj_array_value = null, bool $tip = true, bool $enable_search = true)
+    public function __construct(string $name, string $placeholder = null, $required = false, array $obj_array_value = null, bool $tip = true, bool $enable_search = true)
     {
         parent::__construct($name);
 
