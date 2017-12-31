@@ -30,7 +30,8 @@ class DActionLink extends TTextDisplay
         parent::__construct($image, $color, $size, $decoration);
         parent::setName('a');
 
-        $this->{'href'} = $action->serialize();
+        $href = $action->serialize();
+        $this->{'href'} = str_replace('index', 'engine', $href);
         $this->{'generator'} = 'adianti';
     }
 }
