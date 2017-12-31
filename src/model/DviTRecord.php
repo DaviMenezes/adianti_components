@@ -56,6 +56,10 @@ class DviTRecord extends TRecord
         return parent::__get($property);
     }
 
+    public function getInstance($property)
+    {
+        return $this->getMagicObject($property);
+    }
     public function setMap(array $atributes)
     {
         foreach ($atributes as $key => $class) {
