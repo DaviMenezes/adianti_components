@@ -35,7 +35,7 @@ class DviTRecord extends TRecord
     private $functions = array();
     private $preparedFilters;
 
-    private $foreign_keys = array();
+    protected $foreign_keys = array();
     private $objects = array();
     private $field_types = array();
 
@@ -60,13 +60,7 @@ class DviTRecord extends TRecord
     {
         return $this->getMagicObject($property);
     }
-    public function setMap(array $atributes)
-    {
-        foreach ($atributes as $key => $class) {
-            $this->foreign_keys[$key] = $class;
-            parent::addAttribute($key.'_id');
-        }
-    }
+
 
     private function addPublicAtributes()
     {
