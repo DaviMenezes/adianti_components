@@ -2,6 +2,11 @@
 
 namespace Dvi\Adianti\Control;
 
+use Adianti\Control\TAction;
+use Adianti\Widget\Datagrid\TDataGridColumn;
+use Adianti\Widget\Datagrid\TPageNavigation;
+use Adianti\Widget\Form\TButton;
+use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
 /**
@@ -19,21 +24,26 @@ class DviStandardForm extends DviControl
     protected $objectClass;
     /**@var DviPanelGroup $panel*/
     protected $panel;
+    /**@var TAction $button_save*/
+    private $button_save;
+    /**@var TButton $button_clear*/
+    private $button_clear;
+
     /**@var DataGrid $datagrid*/
-    protected $datagrid;
-    /**@var TPageNavigation $pageNavigation*/
-    protected $pageNavigation;
-    protected $grid_loaded;
+//    protected $datagrid;
+//    /**@var TPageNavigation $pageNavigation*/
+//    protected $pageNavigation;
+//    protected $grid_loaded;
 
     /**@var TDataGridColumn $column_id*/
-    protected $column_id;
+//    protected $column_id;
 
     /**@var TAction $action_delete*/
-    protected $action_delete;
+//    protected $action_delete;
 
-    private $useCheckButton;
-    protected $panel_grid;
-    private $use_grid_panel;
+//    private $useCheckButton;
+//    protected $panel_grid;
+//    private $use_grid_panel;
 
     use DviTPageForm;
 
@@ -43,6 +53,27 @@ class DviStandardForm extends DviControl
 
         $this->createPanelForm($param);
 
+        $this->createActions();
+
         parent::add($this->panel);
+    }
+
+    protected function createActions()
+    {
+        $this->panel->addActionSave();
+        $this->button_save = $this->panel->getButton();
+
+        $this->panel->addActionClear();
+        $this->button_clear = $this->panel->getButton();
+    }
+
+    protected function getButtonSave()
+    {
+        return $this->button_save;
+    }
+
+    protected function getButtonClear()
+    {
+        return $this->button_clear;
     }
 }
