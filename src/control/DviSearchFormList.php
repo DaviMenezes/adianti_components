@@ -46,6 +46,8 @@ class DviSearchFormList extends DviControl
     public function __construct($param)
     {
         parent::__construct();
+
+        $this->init($param);
     }
 
     public function init($param)
