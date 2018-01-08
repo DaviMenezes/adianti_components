@@ -458,7 +458,7 @@ class DviPanelGroup implements IDviWidget
     private function createButton($value)
     {
         if ($value['type'] == 'button') {
-            $btn = new TButton($value['id']);
+            $btn = new DButton($value['id']);
             $btn->setAction(new TAction($value['callback'], $value['parameters']));
 
             if (isset($value['label']) and $value['label']) {
@@ -485,7 +485,7 @@ class DviPanelGroup implements IDviWidget
         return $btn;
     }
 
-    public function getButton():TButton
+    public function getButton():DButton
     {
         return $this->btn;
     }
