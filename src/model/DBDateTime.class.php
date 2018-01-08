@@ -25,6 +25,7 @@ class DBDateTime extends DBFormField
         if ($required) {
             $this->field->addValidation($label, new TRequiredValidator());
         }
+        $this->field->setDatabaseMask('yyyy-mm-dd hh:ii:ss');
     }
 
     public static function create(string $name, bool $required = false, string $label = null): DBDateTime
@@ -32,4 +33,5 @@ class DBDateTime extends DBFormField
         $field = new DBDateTime($name, $required, $label);
         return $field;
     }
+
 }
