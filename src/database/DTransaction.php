@@ -20,10 +20,10 @@ class DTransaction
     private $conn;
     private static $already_connection;
 
-    public static function open($database = 'default', array $dbinfo = NULL)
+    public static function open($database = 'default', array $dbinfo = null)
     {
-        self::$already_connection = TTransaction::get();
-        if (!self::$already_connection) {
+        $conn = TTransaction::get();
+        if (!$conn) {
             TTransaction::open($database, $dbinfo);
         }
     }
@@ -35,12 +35,16 @@ class DTransaction
 
     public static function rollback()
     {
-        TTransaction::rollback();
+        if (TTransaction::get()) {
+            TTransaction::rollback();
+        }
     }
 
     public static function close(bool $force = false)
     {
-        if (!self::$already_connection or $force) {
+        $conn = TTransaction::get();
+
+        if ($conn or $force) {
             TTransaction::close();
         }
     }
