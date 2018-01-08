@@ -2,6 +2,7 @@
 namespace Dvi\Adianti\Widget\Bootstrap\Component;
 
 use Adianti\Widget\Base\TElement;
+use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\IDviWidget;
 
 /**
@@ -17,9 +18,10 @@ use Dvi\Adianti\Widget\IDviWidget;
 class DButtonGroup implements IDviWidget
 {
 
-    private static $items = array();
+    private $items = array();
+    private $style;
 
-    public function add($form_name, array $action, $icon = null, array $parameters = null, $label = null)
+    public function add($form_name, array $action, $icon = null, array $parameters = null, $label = null, $style = null)
     {
         $params ='';
         if ($parameters) {
@@ -27,9 +29,11 @@ class DButtonGroup implements IDviWidget
                 $params .= '&'.$key.'='.$value;
             }
         }
-        $function_post_data = '__adianti_post_data(\''.$form_name.'\', \'class='.get_class($action[0]).'&method='.$action[1].'\');';
+        $style = 'style="'.$style.'"';
+        $class = Route::getClassName(get_class($action[0]));
+        $function_post_data = '__adianti_post_data(\''.$form_name.'\', \'class='. $class .'&method='.$action[1].'\');';
         $onclick_btn = 'onclick="Adianti.waitMessage = \'Carregando\'; '.$function_post_data.' return false;";';
-        $btn = '<button type="button" class="btn btn-default " '.$onclick_btn.'>';
+        $btn = '<button class="btn btn-default btn-sm" '.$style.' '.$onclick_btn.'>';
         if ($icon) {
             $icon = str_replace(':', '-', $icon);
             $btn .= '<li class="fa '.$icon.'"></li>';
@@ -37,10 +41,10 @@ class DButtonGroup implements IDviWidget
         $btn .= ($icon ? ' ': '').$label;
         $btn .= '</button>';
 
-        self::$items[] = $btn;
+        $this->items[] = $btn;
     }
 
-    public function addLink(array $action, $icon = null, array $parameters = null, $label = null)
+    public function addLink(array $action, $icon = null, array $parameters = null, $label = null,  $style = null)
     {
         $params ='';
         if ($parameters) {
@@ -48,16 +52,28 @@ class DButtonGroup implements IDviWidget
                 $params .= '&'.$key.'='.$value;
             }
         }
+
+        $style = 'style="'.$style.'"';
+        $class_name = Route::getClassName(get_class($action[0]));
+
         $onclick_link = 'onclick="Adianti.waitMessage = \'Carregando\'; return false;";';
-        $link = '<a href="index.php?class='.get_class($action[0]).'&method='.$action[1].$params.'" class="btn btn-default " generator="adianti" '.$onclick_link.'>';
+        $href = 'href="index.php?class='.$class_name.'&method='.$action[1].$params. '"';
+        $class = 'class="btn btn-default " generator="adianti"';
+
+        $link = '<a '.$href.' '.$class.' '.$style.' '.$onclick_link.'>';
         if ($icon) {
             $icon = str_replace(':', '-', $icon);
-            $link .= '<li class="fa '.$icon.'"></li>';
+            $link .= '<li class="fa '.$icon.'" style="vertical-align:-webkit-baseline-middle;"></li>';
         }
         $link .= ($icon ? ' ': '').$label;
         $link .= '</a>';
 
-        self::$items[] = $link;
+        $this->items[] = $link;
+    }
+
+    public function setStyle($style)
+    {
+        $this->style = $style;
     }
 
     public function show()
@@ -66,7 +82,8 @@ class DButtonGroup implements IDviWidget
         $group->class= 'btn-group';
         $group->role ="group";
         $group->{'aria-label'}="...";
-        foreach (self::$items as $item) {
+        $group->style = $this->style;
+        foreach ($this->items as $item) {
             $group->add($item);
         }
 
