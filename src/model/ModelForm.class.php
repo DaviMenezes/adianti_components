@@ -34,16 +34,22 @@ trait ModelForm
 
     private function addText(string $name, int $length, int $height, bool $required, string $label):DBText
     {
-        $this->$name = DBText::create($name, $length, $height, $required, $label);
+        $this->buildField($name);
 
-        return $this->buildField($name);
+        $field = 'field_'.$name;
+        $this->$field = DBText::create($name, $length, $height, $required, $label);
+
+        return $this->$field;
     }
 
     private function addDateTime(string $name, $label = null, bool $required = false):DBDateTime
     {
-        $this->$name = DBDateTime::create($name, $required, $label);
+        $this->buildField($name);
 
-        return $this->buildField($name);
+        $field = 'field_'.$name;
+        $this->$field = DBDateTime::create($name, $required, $label);
+
+        return $this->$field;
     }
 
     private function setStructureForm(array $form_column_structure)
@@ -56,7 +62,7 @@ trait ModelForm
         foreach ($this->form_rows as $key => $row) {
             $cols = array();
             foreach ($row as $column) {
-                /**@var DBVarchar $column*/
+//                /**@var DBVarchar $column*/
                 $label = ucfirst($column->getLabel());
                 $field = $column->getFormField();
 
@@ -81,7 +87,7 @@ trait ModelForm
     {
         parent::addAttribute($name);
 
-        return $this->$name;
+//        return $this->$name;
     }
 
     public function setMap(string $atribute, $class)
