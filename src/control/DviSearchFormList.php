@@ -52,6 +52,8 @@ class DviSearchFormList extends DviControl
 
     public function init($param)
     {
+        $this->panel = new DviPanelGroup(get_called_class(), $this->pageTitle);
+
         $this->createPanelForm($param);
         $this->datagrid = $this->createDataGrid();
         $this->createPageNavigation($param);
