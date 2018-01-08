@@ -2,6 +2,7 @@
 
 namespace Dvi\Adianti\Control;
 
+use Adianti\Control\TAction;
 use Adianti\Database\TFilter;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
@@ -25,11 +26,12 @@ trait DviTPageSearch
 
     public function createPanelForm($param)
     {
-        $name = get_called_class();
-        $this->panel = new DviPanelGroup($name, $this->pageTitle);
-        $this->panel
-            ->addActionSearch()
-            ->addActionClear();
+        $this->panel->addActionSearch();
+        $this->panel->getButton()
+            ->getAction()
+            ->setParameters(self::getNewParams($param));
+
+        $this->panel->addActionClear();
     }
 
     public function onSearch($param)
