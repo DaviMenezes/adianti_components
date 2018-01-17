@@ -22,7 +22,4 @@ class DataGridColumn extends TDataGridColumn
     {
         parent::__construct($name, $label, $align, $width);
     }
-
-
-
 }
