@@ -38,6 +38,8 @@ class DviTRecord extends TRecord
     protected $foreign_keys = array();
     private $objects = array();
     private $field_types = array();
+    private $isDirty;
+    private $loading;
 
     public function __construct($id = null, $callObjectLoad = true)
     {
@@ -56,11 +58,15 @@ class DviTRecord extends TRecord
         return parent::__get($property);
     }
 
+    public function isDurty()
+    {
+        return $this->isDirty;
+    }
+
     public function getInstance($property)
     {
         return $this->getMagicObject($property);
     }
-
 
     private function addPublicAtributes()
     {
