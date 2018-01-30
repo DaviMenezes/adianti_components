@@ -26,10 +26,13 @@ trait ModelForm
 
     private function addVarchar(string $name, int $size, bool $required = false, $label = null):DBVarchar
     {
-        $this->$name = DBVarchar::create($name, 'text', $size, $required, $label);
-        $this->$name->mask('A!');
+        $this->buildField($name);
 
-        return $this->buildField($name);
+        $field = 'field_'.$name;
+        $this->$field = DBVarchar::create($name, 'text', $size, $required, $label);
+        $this->$field->mask('A!');
+
+        return $this->$field;
     }
 
     private function addText(string $name, int $length, int $height, bool $required, string $label):DBText
