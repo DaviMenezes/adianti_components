@@ -4,9 +4,6 @@ namespace Dvi\Adianti\Model;
 
 use Dvi\Adianti\Widget\Base\DGridColumn;
 use Dvi\Adianti\Widget\Container\DVBox;
-use Dvi\Adianti\Widget\Form\DEntry;
-use Dvi\Adianti\Widget\Form\DviPanelGroup;
-use FontLib\Table\Type\name;
 
 /**
  * Model ModelForm
@@ -26,9 +23,10 @@ trait ModelForm
 
     private function addVarchar(string $name, int $size, bool $required = false, $label = null):DBVarchar
     {
-        $this->buildField($name);
+        parent::addAttribute($name);
 
         $field = 'field_'.$name;
+
         $this->$field = DBVarchar::create($name, 'text', $size, $required, $label);
         $this->$field->mask('A!');
 
@@ -37,7 +35,7 @@ trait ModelForm
 
     private function addText(string $name, int $length, int $height, bool $required, string $label):DBText
     {
-        $this->buildField($name);
+        parent::addAttribute($name);
 
         $field = 'field_'.$name;
         $this->$field = DBText::create($name, $length, $height, $required, $label);
@@ -47,7 +45,7 @@ trait ModelForm
 
     private function addDateTime(string $name, $label = null, bool $required = false):DBDateTime
     {
-        $this->buildField($name);
+        parent::addAttribute($name);
 
         $field = 'field_'.$name;
         $this->$field = DBDateTime::create($name, $required, $label);
@@ -65,7 +63,6 @@ trait ModelForm
         foreach ($this->form_rows as $key => $row) {
             $cols = array();
             foreach ($row as $column) {
-//                /**@var DBVarchar $column*/
                 $label = ucfirst($column->getLabel());
                 $field = $column->getFormField();
 
@@ -81,16 +78,12 @@ trait ModelForm
 
     public function getFormRows()
     {
+        $this->buildFieldTypes();
+        $this->buildStructureForm();
+
         $this->setFormStructureColumn();
 
         return $this->form_rows;
-    }
-
-    private function buildField(string $name)
-    {
-        parent::addAttribute($name);
-
-//        return $this->$name;
     }
 
     public function setMap(string $atribute, $class)

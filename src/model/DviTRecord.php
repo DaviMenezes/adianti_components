@@ -6,8 +6,8 @@ use Adianti\Database\TExpression;
 use Adianti\Database\TRecord;
 use Adianti\Database\TRepository;
 use Adianti\Database\TTransaction;
-use Exception;
 use Dvi\Adianti\Database\DTransaction;
+use Exception;
 use PDO;
 use ReflectionObject;
 use ReflectionProperty;
@@ -102,7 +102,6 @@ class DviTRecord extends TRecord
         return $properties;
     }
     #endregion
-
 
     public static function remove($id = null) : bool
     {

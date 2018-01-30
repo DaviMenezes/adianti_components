@@ -5,11 +5,8 @@ use Adianti\Core\AdiantiCoreApplication;
 use Adianti\Database\TTransaction;
 use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Form\THidden;
-use Adianti\Widget\Form\TLabel;
 use Dvi\Adianti\Database\DTransaction;
-use Dvi\Adianti\Model\DviTRecord;
 use Dvi\Adianti\Route;
-use Dvi\Adianti\Widget\Form\DEntry;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Exception;
 
@@ -29,8 +26,6 @@ trait DviTPageForm
 
     /**@var DviPanelGroup $panel*/
     protected $panel;
-
-
 
     public function createPanelForm($param)
     {
@@ -73,7 +68,6 @@ trait DviTPageForm
 
             $new_params['id'] = $obj->id;
 
-//            $this->reloadIfClassExtendFormAndListing($param);
             AdiantiCoreApplication::loadPage(get_called_class(), 'onEdit', $new_params);
 
             $this->panel->keepFormLoaded();
@@ -99,7 +93,8 @@ trait DviTPageForm
         try {
             if (isset($param['id'])) {
                 TTransaction::open($this->database);
-                $obj = new $this->objectClass($param['id']);
+                $obj = $this->objectClass::find($param['id'] ?? null);
+                $obj = !$obj ? new \stdClass() : $obj;
                 unset($param['class']);
                 unset($param['method']);
                 foreach ($param as $key => $value) {
@@ -129,6 +124,4 @@ trait DviTPageForm
             $this->onReload($param);
         }
     }
-
-
 }
