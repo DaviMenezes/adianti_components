@@ -4,6 +4,7 @@ namespace Dvi\Adianti\Model;
 
 use Dvi\Adianti\Widget\Base\DGridColumn;
 use Dvi\Adianti\Widget\Container\DVBox;
+use Dvi\Adianti\Widget\Form\DBCombo;
 
 /**
  * Model ModelForm
@@ -49,6 +50,14 @@ trait ModelForm
 
         $field = 'field_'.$name;
         $this->$field = DBDateTime::create($name, $required, $label);
+
+        return $this->$field;
+    }
+
+    private function addCombo(string $name, string $model, string $value, string $label = null, bool $required = false):DBCombo
+    {
+        $field = 'field_'.$name;
+        $this->$field = new DBCombo($name, $model, $value, 'combo', $required, $label);
 
         return $this->$field;
     }
