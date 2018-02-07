@@ -72,11 +72,15 @@ trait ModelForm
         foreach ($this->form_rows as $key => $row) {
             $cols = array();
             foreach ($row as $column) {
-                $label = ucfirst($column->getLabel());
+                if (empty($column)) {
+                    throw new \Exception('Verifique o nome do campo ' . ($key +1));
+                }
+
+                $fc = mb_strtoupper(mb_substr($column->getLabel(), 0, 1));
+                $label = $fc.mb_substr($column->getLabel(), 1);
                 $field = $column->getFormField();
 
                 $dvbox = new DVBox();
-                $dvbox->style = 'width: 100%';
                 $dvbox->add($label);
                 $dvbox->add($field);
                 $cols[] = new DGridColumn($dvbox);
