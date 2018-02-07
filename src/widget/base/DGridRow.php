@@ -30,8 +30,6 @@ class DGridRow extends TElement
     {
         parent::__construct('div');
         $this->class = 'row';
-        $this->{'style'} = 'margin-left: -5px; ';
-//        $this->{'style'} = 'margin-right: 15px; ';
         $this->{'style'} .= 'clear:both; ';
         $this->style .= $rowStyle;
 
