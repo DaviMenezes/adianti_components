@@ -20,7 +20,8 @@ class DBVarchar extends DBFormField
 
         parent::__construct($name, $type, $required, $label);
 
-        $this->field = new DEntry($name, $label ?? $name, $size, $required);
+        $placeholder = $label ?? $name;
+        $this->field = new DEntry($name, $placeholder, $size, $required);
     }
 
     public static function create(string $name, string $type, int $size, bool $required = false, $label = null):DBVarchar
