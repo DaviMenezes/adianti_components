@@ -33,7 +33,7 @@ class DButtonGroup implements IDviWidget
         $class = Route::getClassName(get_class($action[0]));
         $function_post_data = '__adianti_post_data(\''.$form_name.'\', \'class='. $class .'&method='.$action[1].'\');';
         $onclick_btn = 'onclick="Adianti.waitMessage = \'Carregando\'; '.$function_post_data.' return false;";';
-        $btn = '<button class="btn btn-default btn-sm" '.$style.' '.$onclick_btn.'>';
+        $btn = '<button class="btn btn-default dvi_btn '.$style.' '.$onclick_btn.'>';
         if ($icon) {
             $icon = str_replace(':', '-', $icon);
             $btn .= '<li class="fa '.$icon.'"></li>';
