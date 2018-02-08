@@ -18,13 +18,20 @@ use Adianti\Widget\Util\TTextDisplay;
  */
 class DActionLink extends TTextDisplay
 {
-    public function __construct(TAction $action, string $label = null, string $icon = null, string $color = null, string $size = null, string $decoration = null)
+    public function __construct(
+        TAction $action,
+        string $label = null,
+        string $icon = null,
+        string $color = null,
+        string $size = null,
+        string $decoration = null
+    )
     {
-        if ($icon)
-        {
+        if ($icon) {
             $image = new TImage($icon);
             $image->style ='float:left;';
-            $image .= '<div class="dvi_btn_label">'.$label.'</div>';;
+            $image .= '<div class="dvi_btn_label">'.$label.'</div>';
+            ;
         }
 
         parent::__construct($image, $color, $size, $decoration);
