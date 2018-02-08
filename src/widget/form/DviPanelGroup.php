@@ -7,6 +7,7 @@ use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Container\THBox;
 use Adianti\Widget\Container\TNotebook;
 use Adianti\Widget\Container\TPanelGroup;
+use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Form\TButton;
 use Adianti\Widget\Form\TCheckGroup;
 use Adianti\Widget\Form\TColor;
@@ -29,6 +30,7 @@ use Adianti\Widget\Form\TSelect;
 use Adianti\Widget\Form\TSlider;
 use Adianti\Widget\Form\TSpinner;
 use Adianti\Widget\Form\TText;
+use Adianti\Widget\Util\TTextDisplay;
 use Adianti\Widget\Wrapper\TDBCombo;
 use Adianti\Widget\Wrapper\TDBSeekButton;
 use Adianti\Wrapper\BootstrapNotebookWrapper;
@@ -37,11 +39,15 @@ use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DGridBootstrap;
 use Dvi\Adianti\Widget\Base\DGridColumn;
 use Dvi\Adianti\Widget\Base\DGridColumn as Col;
+use Dvi\Adianti\Widget\Base\DGridRow;
 use Dvi\Adianti\Widget\Base\GridElement;
+use Dvi\Adianti\Widget\Base\GroupField;
 use Dvi\Adianti\Widget\Bootstrap\Component\DButtonGroup;
+use Dvi\Adianti\Widget\Bootstrap\Component\InputGroup;
 use Dvi\Adianti\Widget\Container\DHBox;
 use Dvi\Adianti\Widget\Container\DVBox;
 use Dvi\Adianti\Widget\IDviWidget;
+use Dvi\Adianti\Widget\IGroupField;
 use Dvi\Adianti\Widget\Util\DActionLink;
 
 /**
@@ -149,53 +155,27 @@ class DviPanelGroup implements IDviWidget
         return $this->notebook;
     }
 
-    public function addRow(array $param)
+    public function addRow(array $columns)
     {
-        $qtd_columns = count($param);
+        $this->validateColumnType($columns);
+
         $qtd_labels = 0;
-        $qtd_cols_to_label = 2;
 
-        $fields = $this->getColumnFields($param);
-
-        $columns = array();
         //GET FIELD OF DGRIDCOLUMN AND ADD FIELD IN FORM
-        foreach ($param as $column) {
-            if (is_a($column, DGridColumn::class)) {
-                /**@var DGridColumn $column */
-                if (is_a($column->getChilds(0), TLabel::class)) {
-                    $qtd_labels ++;
-                }
-                $columns[] = $column;
-
-                $fields[] = $column->getChilds(0);
-            }
-        }
-
-        foreach ($fields as $field) {
-            if (is_array($field)) {
-                foreach ($field as $item) {
-                    $this->addField($item);
-                }
-            } else {
-                $this->addField($field);
-            }
-        }
-
-
-        $qtd_anothers = $qtd_columns - $qtd_labels;
+        /**@var DGridColumn $column */
         foreach ($columns as $column) {
-            if (!$column->getClass()) {
-                if (is_a($column->getChilds(0), TLabel::class)) {
-                    $column->setClass(Col::MD12);
-                    //                    $column->getChilds(0)->class = 'control-label';
-                } else {
-                    $tt_cols_to_label = $qtd_labels * $qtd_cols_to_label;
+            /**@var GroupField $child*/
+            $child = $column->getChilds(0);
+            $columnElements[] = $child;
 
-                    $tt_cols_to_anothers = (12 - $tt_cols_to_label) / $qtd_anothers;
-                    $column->setClass('col-md-'. floor($tt_cols_to_anothers));
-                }
+            if (is_a($child, TLabel::class)) {
+                $qtd_labels ++;
             }
         }
+
+        $this->addFormFields($columns);
+
+        $this->PrepareColumnClass($qtd_labels, $columns);
 
         if ($this->needCreateLine($columns)) {
             $row = $this->getGrid()->addRow();
@@ -209,7 +189,7 @@ class DviPanelGroup implements IDviWidget
         $group = new DButtonGroup();
         $form_name = $this->form->getName();
         foreach ($buttons as $button) {
-            $group::add($form_name, [$button[0], $button[1]], $button[2], $button[3]);
+            $group->add($form_name, [$button[0], $button[1]], $button[2], $button[3]);
         }
         $this->addElement($group);
     }
@@ -490,28 +470,25 @@ class DviPanelGroup implements IDviWidget
         return $this->btn;
     }
 
-    private function addField($param)
+    private function addFormFields($columns)
     {
-        $fields = array();
-        if (is_a($param, DHBox::class)) {
-            /**@var DHBox $form_elements*/
-            $form_elements = $param;
-            $fields = $form_elements->getFormElements();
-        } elseif (count($param) == 1) {
-            $fields[] = $param;
-        }
+        $fields = $this->getComponentFields($columns);
 
         foreach ($fields as $field) {
             if (!$this->validateFormField($field)) {
                 continue;
             }
-
-            if (is_a($field, 'THidden')) {
-                $this->form->add($field); //important to get data via $param
-            }
-
-            $this->form->addField($field);
+            $this->addField($field);
         }
+    }
+
+    private function addField($field)
+    {
+        if (is_a($field, 'THidden')) {
+            $this->form->add($field); //important to get data via $param
+        }
+
+        $this->form->addField($field);
     }
 
     private function needCreateLine($columns)
@@ -571,23 +548,6 @@ class DviPanelGroup implements IDviWidget
         return $this;
     }
 
-    private function getColumnFields(array $param): array
-    {
-        $fields = array();
-        foreach ($param as $column) {
-            if (is_a($column, DGridColumn::class)) {
-                $field = $column->getChilds(0);
-                if (is_a($field, DHBox::class) or is_a($field, DVBox::class)) {
-                    /**@var DHBox $field */
-                    $fields[] = $field->getChilds();
-                }
-
-                //                $dgrid_collumns[] = $column;
-            }
-        }
-        return $fields;
-    }
-
     private function getWhiteList(): array
     {
         $whiteList = [
@@ -620,5 +580,80 @@ class DviPanelGroup implements IDviWidget
             DCombo::class
         ];
         return $whiteList;
+    }
+
+    private function isGroupField($element)
+    {
+        if ($element instanceof IGroupField) {
+            return true;
+        }
+        return false;
+    }
+
+    private function PrepareColumnClass($qtd_labels, $columns)
+    {
+        $qtd_columns = count($columns);
+        $qtd_cols_to_label = 2;
+
+        $qtd_anothers = $qtd_columns - $qtd_labels;
+        foreach ($columns as $column) {
+            if (!$column->getClass()) {
+
+                /**@var GroupField $child*/
+                $child = $column->getChilds(0);
+
+                if (is_a($child, TLabel::class)) {
+                    $column->setClass(Col::MD12);
+                    //$column->getChilds(0)->class = 'control-label';
+                } else {
+                    $tt_cols_to_label = $qtd_labels * $qtd_cols_to_label;
+
+                    $tt_cols_to_anothers = (12 - $tt_cols_to_label) / $qtd_anothers;
+                    $column->setClass('col-md-' . floor($tt_cols_to_anothers));
+                }
+            }
+        }
+    }
+
+    private function validateColumnType($param)
+    {
+        foreach ($param as $item) {
+            if (!is_a($item, DGridColumn::class)) {
+                new TMessage('error', 'Todas as colunas devem ser do tipo ' . DGridColumn::class);
+                die();
+            }
+        }
+    }
+
+    private function extractColumnsComponents($columns): array
+    {
+        $columnElements = array();
+
+        /**@var DGridColumn $column*/
+        foreach ($columns as $column) {
+            $columnElements[] = $column->getChilds(0);
+        }
+        return $columnElements;
+    }
+
+    private function getComponentFields($columns): array
+    {
+        $components = $this->extractColumnsComponents($columns);
+
+        $fields = array();
+        foreach ($components as $element) {
+            if ($this->isGroupField($element)) {
+                $fields[] = $element;
+
+                /**@var IGroupField $element */
+                foreach ($element->getChilds() as $child) {
+                    $fields[] = $child;
+                };
+
+            } else {
+                $fields[] = $element;
+            }
+        }
+        return $fields;
     }
 }
