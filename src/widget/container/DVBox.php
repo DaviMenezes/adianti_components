@@ -3,6 +3,7 @@ namespace Dvi\Adianti\Widget\Container;
 
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Container\TVBox;
+use Dvi\Adianti\Widget\IGroupField;
 
 /**
  * Coluna bootstraps
@@ -14,7 +15,7 @@ use Adianti\Widget\Container\TVBox;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
  */
-class DVBox extends TVBox
+class DVBox extends TVBox implements IGroupField
 {
     private $childs;
 
@@ -53,7 +54,7 @@ class DVBox extends TVBox
         return parent::add($child, $style);
     }
 
-    public function getChilds($position = null)
+    public function getChilds($position = null):array
     {
         if ($position) {
             return $this->childs[$position];
