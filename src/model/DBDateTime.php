@@ -2,8 +2,8 @@
 
 namespace Dvi\Adianti\Model;
 
-use Adianti\Validator\TRequiredValidator;
-use Adianti\Widget\Form\TDateTime;
+use Adianti\Base\Lib\Validator\TRequiredValidator;
+use Adianti\Base\Lib\Widget\Form\TDateTime;
 
 /**
  * Model DBDateTime

@@ -2,10 +2,10 @@
 
 namespace Dvi\Adianti\Control;
 
-use Adianti\Control\TPage;
-use Adianti\Core\AdiantiCoreApplication;
-use Adianti\Database\TTransaction;
-use Adianti\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Core\AdiantiCoreApplication;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Exception;
 

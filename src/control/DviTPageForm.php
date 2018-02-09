@@ -1,10 +1,10 @@
 <?php
 namespace Dvi\Adianti\Control;
 
-use Adianti\Core\AdiantiCoreApplication;
-use Adianti\Database\TTransaction;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Form\THidden;
+use Adianti\Base\Lib\Core\AdiantiCoreApplication;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;

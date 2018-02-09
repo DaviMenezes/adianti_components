@@ -2,38 +2,38 @@
 
 namespace Dvi\Adianti\Widget\Form;
 
-use Adianti\Control\TAction;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Container\THBox;
-use Adianti\Widget\Container\TNotebook;
-use Adianti\Widget\Container\TPanelGroup;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Form\TButton;
-use Adianti\Widget\Form\TCheckGroup;
-use Adianti\Widget\Form\TColor;
-use Adianti\Widget\Form\TCombo;
-use Adianti\Widget\Form\TDate;
-use Adianti\Widget\Form\TDateTime;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Widget\Form\TField;
-use Adianti\Widget\Form\TFile;
-use Adianti\Widget\Form\TForm;
-use Adianti\Widget\Form\THidden;
-use Adianti\Widget\Form\THtmlEditor;
-use Adianti\Widget\Form\TLabel;
-use Adianti\Widget\Form\TMultiField;
-use Adianti\Widget\Form\TMultiFile;
-use Adianti\Widget\Form\TPassword;
-use Adianti\Widget\Form\TRadioGroup;
-use Adianti\Widget\Form\TSeekButton;
-use Adianti\Widget\Form\TSelect;
-use Adianti\Widget\Form\TSlider;
-use Adianti\Widget\Form\TSpinner;
-use Adianti\Widget\Form\TText;
-use Adianti\Widget\Util\TTextDisplay;
-use Adianti\Widget\Wrapper\TDBCombo;
-use Adianti\Widget\Wrapper\TDBSeekButton;
-use Adianti\Wrapper\BootstrapNotebookWrapper;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Container\THBox;
+use Adianti\Base\Lib\Widget\Container\TNotebook;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TButton;
+use Adianti\Base\Lib\Widget\Form\TCheckGroup;
+use Adianti\Base\Lib\Widget\Form\TColor;
+use Adianti\Base\Lib\Widget\Form\TCombo;
+use Adianti\Base\Lib\Widget\Form\TDate;
+use Adianti\Base\Lib\Widget\Form\TDateTime;
+use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\TField;
+use Adianti\Base\Lib\Widget\Form\TFile;
+use Adianti\Base\Lib\Widget\Form\TForm;
+use Adianti\Base\Lib\Widget\Form\THidden;
+use Adianti\Base\Lib\Widget\Form\THtmlEditor;
+use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Form\TMultiField;
+use Adianti\Base\Lib\Widget\Form\TMultiFile;
+use Adianti\Base\Lib\Widget\Form\TPassword;
+use Adianti\Base\Lib\Widget\Form\TRadioGroup;
+use Adianti\Base\Lib\Widget\Form\TSeekButton;
+use Adianti\Base\Lib\Widget\Form\TSelect;
+use Adianti\Base\Lib\Widget\Form\TSlider;
+use Adianti\Base\Lib\Widget\Form\TSpinner;
+use Adianti\Base\Lib\Widget\Form\TText;
+use Adianti\Base\Lib\Widget\Util\TTextDisplay;
+use Adianti\Base\Lib\Widget\Wrapper\TDBCombo;
+use Adianti\Base\Lib\Widget\Wrapper\TDBSeekButton;
+use Adianti\Base\Lib\Wrapper\BootstrapNotebookWrapper;
 use Dvi\Adianti\Control\DAction;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DGridBootstrap;
@@ -548,12 +548,13 @@ class DviPanelGroup implements IDviWidget
         return $this;
     }
 
-    private function getWhiteList(): array
+    protected function getWhiteList(): array
     {
         $whiteList = [
             THidden::class,
             TEntry::class,
             TButton::class,
+            DButton::class,
             TCheckGroup::class,
             TColor::class,
             TCombo::class,

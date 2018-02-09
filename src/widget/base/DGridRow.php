@@ -1,8 +1,8 @@
 <?php
 namespace Dvi\Adianti\Widget\Base;
 
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Form\TLabel;
 
 /**
  * Row to bootstrap grid

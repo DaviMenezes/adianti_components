@@ -2,8 +2,8 @@
 
 namespace Dvi\Adianti\Control;
 
-use Adianti\Control\TAction;
-use Adianti\Database\TFilter;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Database\TFilter;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 

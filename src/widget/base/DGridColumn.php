@@ -1,9 +1,10 @@
 <?php
 namespace Dvi\Adianti\Widget\Base;
 
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Form\TField;
-use Adianti\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Form\TField;
+use Adianti\Base\Lib\Widget\Form\TLabel;
+use Dvi\Adianti\Widget\Bootstrap\Component\InputGroup;
 
 /**
  * Column to bootstrap grid
@@ -123,6 +124,7 @@ class DGridColumn extends TElement
         if (is_null($position)) {
             return $this->childs;
         }
+
         return $this->childs[$position];
     }
 

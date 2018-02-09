@@ -1,7 +1,7 @@
 <?php
 namespace Dvi\Adianti\Widget\Form;
 
-use Adianti\Widget\Form\TDate;
+use Adianti\Base\Lib\Widget\Form\TDate;
 
 /**
  * Model DDate

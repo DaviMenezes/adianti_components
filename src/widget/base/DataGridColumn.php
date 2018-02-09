@@ -12,7 +12,7 @@
 
 namespace Dvi\Adianti\Widget\Base;
 
-use Adianti\Widget\Datagrid\TDataGridColumn;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 
 class DataGridColumn extends TDataGridColumn
 {

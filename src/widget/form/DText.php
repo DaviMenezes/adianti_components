@@ -2,9 +2,9 @@
 
 namespace Dvi\Adianti\Widget\Form;
 
-use Adianti\Validator\TMaxLengthValidator;
-use Adianti\Validator\TRequiredValidator;
-use Adianti\Widget\Form\TText;
+use Adianti\Base\Lib\Validator\TMaxLengthValidator;
+use Adianti\Base\Lib\Validator\TRequiredValidator;
+use Adianti\Base\Lib\Widget\Form\TText;
 
 /**
  * Model DText

@@ -2,14 +2,14 @@
 
 namespace Dvi\Adianti\Widget\Form;
 
-use Adianti\Control\TAction;
-use Adianti\Widget\Container\TNotebook;
-use Adianti\Widget\Container\TPanelGroup;
-use Adianti\Widget\Form\TButton;
-use Adianti\Widget\Form\TForm;
-use Adianti\Widget\Form\TLabel;
-use Adianti\Widget\Util\TActionLink;
-use Adianti\Wrapper\BootstrapNotebookWrapper;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Widget\Container\TNotebook;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
+use Adianti\Base\Lib\Widget\Form\TButton;
+use Adianti\Base\Lib\Widget\Form\TForm;
+use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Util\TActionLink;
+use Adianti\Base\Lib\Wrapper\BootstrapNotebookWrapper;
 use Dvi\Adianti\Widget\Base\DGridRow;
 use Dvi\Adianti\Widget\Base\GridElement;
 use Dvi\Adianti\Widget\Base\GridNotebook;

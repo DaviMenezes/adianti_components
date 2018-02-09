@@ -2,7 +2,7 @@
 
 namespace Dvi\Adianti\Widget\Form;
 
-use Adianti\Widget\Form\THidden;
+use Adianti\Base\Lib\Widget\Form\THidden;
 
 /**
  * Form DHidden

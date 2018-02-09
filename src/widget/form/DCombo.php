@@ -2,9 +2,9 @@
 
 namespace Dvi\Adianti\Widget\Form;
 
-use Adianti\Validator\TRequiredValidator;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Form\TCombo;
+use Adianti\Base\Lib\Validator\TRequiredValidator;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TCombo;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 use Exception;

@@ -1,10 +1,10 @@
 <?php
 namespace Dvi\Adianti\Widget\Form;
 
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Widget\Form\TField;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
+use Adianti\Base\Lib\Widget\Form\TField;
 
 /**
  * Html Editor - DCKEditor

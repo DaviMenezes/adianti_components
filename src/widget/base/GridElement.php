@@ -1,7 +1,7 @@
 <?php
 namespace Dvi\Adianti\Widget\Base;
 
-use Adianti\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Form\TLabel;
 
 /**
  * representa um elemento a ser manipulado

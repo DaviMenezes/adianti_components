@@ -2,9 +2,9 @@
 
 namespace Dvi\Adianti\Widget\Container;
 
-use Adianti\Widget\Container\THBox;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Form\AdiantiWidgetInterface;
+use Adianti\Base\Lib\Widget\Container\THBox;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 use Dvi\Adianti\Widget\IDviWidget;
 use Dvi\Adianti\Widget\IGroupField;
 

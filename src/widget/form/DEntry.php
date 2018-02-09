@@ -1,8 +1,8 @@
 <?php
 namespace Dvi\Adianti\Widget\Form;
 
-use Adianti\Validator\TRequiredValidator;
-use Adianti\Widget\Form\TEntry;
+use Adianti\Base\Lib\Validator\TRequiredValidator;
+use Adianti\Base\Lib\Widget\Form\TEntry;
 use Dvi\Adianti\Widget\Form\Field\FieldEntry;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 use Dvi\Adianti\Widget\IDviWidget;

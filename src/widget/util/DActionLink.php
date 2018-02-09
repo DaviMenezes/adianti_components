@@ -1,10 +1,10 @@
 <?php
 namespace Dvi\Adianti\Widget\Util;
 
-use Adianti\Control\TAction;
-use Adianti\Widget\Util\TActionLink;
-use Adianti\Widget\Util\TImage;
-use Adianti\Widget\Util\TTextDisplay;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Widget\Util\TActionLink;
+use Adianti\Base\Lib\Widget\Util\TImage;
+use Adianti\Base\Lib\Widget\Util\TTextDisplay;
 
 /**
  * Model DActionLink

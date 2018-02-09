@@ -2,7 +2,7 @@
 
 namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Widget\Form\TField;
+use Adianti\Base\Lib\Widget\Form\TField;
 
 /**
  * Field FormField

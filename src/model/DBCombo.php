@@ -1,7 +1,7 @@
 <?php
 
 namespace Dvi\Adianti\Widget\Form;
-use Adianti\Database\TRecord;
+use Adianti\Base\Lib\Database\TRecord;
 use Dvi\Adianti\Model\DBFormField;
 
 /**

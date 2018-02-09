@@ -1,7 +1,7 @@
 <?php
 namespace Dvi\Adianti\Model;
 
-use Adianti\Database\TTransaction;
+use Adianti\Base\Lib\Database\TTransaction;
 use Exception;
 use PDO;
 use PDOStatement;

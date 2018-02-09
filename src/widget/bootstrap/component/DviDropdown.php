@@ -1,7 +1,7 @@
 <?php
 namespace Dvi\Adianti\Widget\Bootstrap\Component;
 
-use Adianti\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TElement;
 
 /**
  * Description of Dropdown

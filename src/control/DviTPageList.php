@@ -2,15 +2,15 @@
 
 namespace Dvi\Adianti\Control;
 
-use Adianti\Control\TAction;
-use Adianti\Core\AdiantiCoreApplication;
-use Adianti\Database\TCriteria;
-use Adianti\Database\TRepository;
-use Adianti\Registry\TSession;
-use Adianti\Widget\Datagrid\TDataGridColumn;
-use Adianti\Widget\Datagrid\TPageNavigation;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Dialog\TQuestion;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreApplication;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TRepository;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
+use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Dialog\TQuestion;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DataGrid;

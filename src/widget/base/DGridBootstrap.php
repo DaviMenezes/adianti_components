@@ -1,7 +1,7 @@
 <?php
 namespace Dvi\Adianti\Widget\Base;
 
-use Adianti\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TElement;
 use Dvi\Adianti\Widget\Base\DGridRow;
 
 /**

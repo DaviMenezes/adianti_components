@@ -1,9 +1,9 @@
 <?php
 namespace Dvi\Adianti\Widget\Base;
 
-use Adianti\Widget\Datagrid\TDataGrid;
-use Adianti\Widget\Datagrid\TDataGridAction;
-use Adianti\Widget\Datagrid\TDataGridColumn;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Dvi\Adianti\Control\DviSearchFormList;
 use Dvi\Adianti\Control\DviTPageList;
 use Dvi\Adianti\Route;

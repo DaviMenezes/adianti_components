@@ -2,10 +2,10 @@
 
 namespace Dvi\Adianti\Model;
 
-use Adianti\Database\TExpression;
-use Adianti\Database\TRecord;
-use Adianti\Database\TRepository;
-use Adianti\Database\TTransaction;
+use Adianti\Base\Lib\Database\TExpression;
+use Adianti\Base\Lib\Database\TRecord;
+use Adianti\Base\Lib\Database\TRepository;
+use Adianti\Base\Lib\Database\TTransaction;
 use Dvi\Adianti\Database\DTransaction;
 use Exception;
 use PDO;

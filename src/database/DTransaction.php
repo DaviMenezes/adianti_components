@@ -1,8 +1,8 @@
 <?php
 namespace Dvi\Adianti\Database;
 
-use Adianti\Database\TTransaction;
-use Adianti\Log\AdiantiLoggerInterface;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Log\AdiantiLoggerInterface;
 use Closure;
 
 /**

@@ -2,10 +2,10 @@
 
 namespace Dvi\Adianti\Control;
 
-use Adianti\Control\TAction;
-use Adianti\Widget\Datagrid\TDataGridColumn;
-use Adianti\Widget\Datagrid\TPageNavigation;
-use Adianti\Widget\Form\TButton;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
+use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
+use Adianti\Base\Lib\Widget\Form\TButton;
 use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 

@@ -2,14 +2,14 @@
 
 namespace Dvi\Adianti\Widget\Form;
 
-use Adianti\Control\TAction;
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Widget\Form\TButton;
-use Adianti\Widget\Form\TField;
-use Adianti\Widget\Form\TLabel;
-use Adianti\Widget\Util\TImage;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
+use Adianti\Base\Lib\Widget\Form\TField;
+use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Util\TImage;
+use Dvi\Adianti\Control\DAction;
 use Exception;
 
 /**
@@ -33,18 +33,26 @@ class DButton extends TField implements AdiantiWidgetInterface
     protected $label;
     protected $formName;
 
-    public function __construct($name)
+    public function __construct(string $name)
     {
         parent::__construct($name);
 
         $this->setClass();
     }
 
-    public static function create($name, $callback, $image, $label = null)
+    /**
+     * @param string $name
+     * @param array $callback
+     * @param string $image
+     * @param string|null $label
+     * @return DButton
+     * @throws Exception
+     */
+    public static function create(string $name, array $callback, string $image, string $label = null)
     {
-        $button = new TButton( $name );
-        $button->setAction(new TAction( $callback ), $label);
-        $button->setImage( $image );
+        $button = new DButton($name);
+        $button->setAction(new DAction($callback), $label);
+        $button->setImage($image);
         $button->setProperty('class', 'btn btn-default btn-sm dvi_btn');
         return $button;
     }
@@ -60,22 +68,25 @@ class DButton extends TField implements AdiantiWidgetInterface
         $this->{'class'} = 'btn btn-default '. $class;
     }
 
-    public function setAction(TAction $action, $label = NULL)
+    public function setAction(TAction $action, $label = null)
     {
         $this->action = $action;
         $this->label  = $label;
     }
 
-    public function getAction():TAction
+    public function getAction():DAction
     {
         return $this->action;
     }
 
-    public function setImage($image)
+    public function setImage(string $image)
     {
         $this->image = $image;
     }
 
+    /**
+     * @param string $label
+     */
     public function setLabel($label)
     {
         $this->label = $label;
@@ -88,46 +99,59 @@ class DButton extends TField implements AdiantiWidgetInterface
 
     public function addFunction($function)
     {
-        if ($function)
-        {
+        if ($function) {
             $this->functions = $function.';';
         }
     }
 
-    public function setProperty($name, $value, $replace = TRUE)
+    /**
+     * @param string $name
+     * @param string $value
+     * @param bool $replace
+     */
+    public function setProperty($name, $value, $replace = true)
     {
         $this->properties[$name] = $value;
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function getProperty($name)
     {
         return $this->properties[$name];
     }
 
+    /**
+     * @param string  $form_name
+     * @param string $field
+     */
     public static function enableField($form_name, $field)
     {
-        TScript::create( " tbutton_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tbutton_enable_field('{$form_name}', '{$field}'); ");
     }
 
+    /**
+     * @param string $form_name
+     * @param string $field
+     */
     public static function disableField($form_name, $field)
     {
-        TScript::create( " tbutton_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tbutton_disable_field('{$form_name}', '{$field}'); ");
     }
 
     public function show()
     {
-        if ($this->action)
-        {
-            if (empty($this->formName))
-            {
+        if ($this->action) {
+            if (empty($this->formName)) {
                 $label = ($this->label instanceof TLabel) ? $this->label->getValue() : $this->label;
-                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $label, 'TForm::setFields()') );
+                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $label, 'TForm::setFields()'));
             }
 
             // get the action as URL
-            $url = $this->action->serialize(FALSE);
-            if ($this->action->isStatic())
-            {
+            $url = $this->action->serialize(false);
+            if ($this->action->isStatic()) {
                 $url .= '&static=1';
             }
             $wait_message = AdiantiCoreTranslator::translate('Loading');
@@ -143,9 +167,7 @@ class DButton extends TField implements AdiantiWidgetInterface
             $button->{'class'}   = 'btn btn-default btn-sm';
             $button->{'onclick'} = $action;
             $action = '';
-        }
-        else
-        {
+        } else {
             $action = $this->functions;
             // creates the button using a div
             $button = new TElement('div');
@@ -155,54 +177,41 @@ class DButton extends TField implements AdiantiWidgetInterface
             $button->{'onclick'} = $action;
         }
 
-        if ($this->properties)
-        {
-            foreach ($this->properties as $property => $value)
-            {
+        if ($this->properties) {
+            foreach ($this->properties as $property => $value) {
                 $button->$property = $value;
             }
         }
 
         $span = new TElement('span');
-        if ($this->image)
-        {
+        if ($this->image) {
             $image = new TElement('span');
 
-            if (substr($this->image,0,3) == 'bs:')
-            {
+            if (substr($this->image, 0, 3) == 'bs:') {
                 $image = new TElement('i');
-                $image->{'class'} = 'glyphicon glyphicon-'.substr($this->image,3);
-            }
-            else if (substr($this->image,0,3) == 'fa:')
-            {
-                $fa_class = substr($this->image,3);
-                if (strstr($this->image, '#') !== FALSE)
-                {
+                $image->{'class'} = 'glyphicon glyphicon-'.substr($this->image, 3);
+            } elseif (substr($this->image, 0, 3) == 'fa:') {
+                $fa_class = substr($this->image, 3);
+                if (strstr($this->image, '#') !== false) {
                     $pieces = explode('#', $fa_class);
                     $fa_class = $pieces[0];
                     $fa_color = $pieces[1];
                 }
                 $image = new TElement('i');
                 $image->{'class'} = 'fa fa-'.$fa_class;
-                if (isset($fa_color))
-                {
+                if (isset($fa_color)) {
                     $image->{'style'} .= "; color: #{$fa_color}";
                 }
-            }
-            else if (file_exists('app/images/'.$this->image))
-            {
+            } elseif (file_exists('app/images/'.$this->image)) {
                 $image = new TImage('app/images/'.$this->image);
-            }
-            else if (file_exists('lib/adianti/images/'.$this->image))
-            {
+            } elseif (file_exists('lib/adianti/images/'.$this->image)) {
                 $image = new TImage('lib/adianti/images/'.$this->image);
             }
             $image->{'style'} .= '; float:left';
             $span->add($image);
         }
 
-        if ($this->label)
-        {
+        if ($this->label) {
             $span->add(' '. $this->label);
         }
         $button->add($span);

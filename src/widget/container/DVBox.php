@@ -1,8 +1,8 @@
 <?php
 namespace Dvi\Adianti\Widget\Container;
 
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Container\TVBox;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Container\TVBox;
 use Dvi\Adianti\Widget\IGroupField;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace Dvi\Adianti\Model;
 
-use Adianti\Registry\TSession;
+use Adianti\Base\Lib\Registry\TSession;
 use Dvi\Adianti\Model\DviTRecord;
 
 /**
