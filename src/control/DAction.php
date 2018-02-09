@@ -2,8 +2,8 @@
 
 namespace Dvi\Adianti\Control;
 
-use Adianti\Control\TAction;
-use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Dvi\Adianti\Route;
 use Exception;
 
@@ -19,7 +19,13 @@ use Exception;
  */
 class DAction extends TAction
 {
-    public function __construct(array $action, $parameters = null)
+    /**
+     * DAction constructor.
+     * @param array $action
+     * @param array|null $parameters
+     * @throws Exception
+     */
+    public function __construct(array $action, array $parameters = null)
     {
         if (!is_object($action[0])) {
             $action[0] = Route::getPath($action[0]);
@@ -29,7 +35,8 @@ class DAction extends TAction
         if (is_array($action) and isset($action[1])) {
             if (!is_callable($this->action)) {
                 $action_string = $this->toString();
-                throw new Exception(AdiantiCoreTranslator::translate('Method ^1 must receive a parameter of type ^2', __METHOD__, 'Callback'). ' <br> '.
+                $str = 'Method ^1 must receive a parameter of type ^2';
+                throw new Exception(AdiantiCoreTranslator::translate($str, __METHOD__, 'Callback'). ' <br> '.
                     AdiantiCoreTranslator::translate('Check if the action (^1) exists', $action_string));
             }
         }
