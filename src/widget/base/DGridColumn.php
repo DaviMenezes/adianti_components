@@ -4,7 +4,7 @@ namespace Dvi\Adianti\Widget\Base;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TLabel;
-use Dvi\Adianti\Widget\Bootstrap\Component\InputGroup;
+use Dvi\Adianti\Widget\Container\DVBox;
 
 /**
  * Column to bootstrap grid
@@ -73,6 +73,8 @@ class DGridColumn extends TElement
     private $custom_class;
     private $default_class = 'col-md-12';
 
+    protected $useLabelField = false;
+
     /**
      * DGridColumn constructor.
      * @param object $child
@@ -85,15 +87,25 @@ class DGridColumn extends TElement
 
         $this->setClass($class);
 
-//        $this->style = 'min-height:20px; margin-bottom:5px; padding-left: 10px; ';
+        //        $this->style = 'min-height:20px; margin-bottom:5px; padding-left: 10px; ';
         $this->style .= 'min-height:20px; margin-bottom:5px;'.$colStyle;
         $this->addChild($child);
     }
 
     public function show()
     {
-
         $this->class = $this->getFormatedClasses();// $this->getClass() ?? $this->default_class;
+
+        if ($this->useLabelField) {
+            $box = new DVBox();
+            $box->add($this->getFormLabel());
+            $box->add($this->childs[0]);
+
+            parent::add($box);
+            parent::show();
+
+            return $this->childs;
+        }
 
         foreach ($this->childs as $child) {
             parent::add($child);
@@ -160,5 +172,34 @@ class DGridColumn extends TElement
 
         $this->custom_class = implode(' ', $classes);
         return $this->custom_class;
+    }
+
+    public static function pack(array $elements, array $class = null, array $style = null)
+    {
+        $box = new DVBox();
+        $box->{'style'} = 'display:block; ';
+
+        if ($elements) {
+            foreach ($elements as $element) {
+                $box->add($element);
+            }
+        }
+        $column = new DGridColumn($box, $class, $style);
+        return $column;
+    }
+
+    public function useLabelField(bool $bool)
+    {
+        $this->useLabelField = $bool;
+    }
+
+    protected function getFormLabel()
+    {
+        if (is_subclass_of($this->childs[0], TField::class)) {
+            $fc = mb_strtoupper(mb_substr($this->childs[0]->getLabel(), 0, 1));
+            $label = $fc.mb_substr($this->childs[0]->getLabel(), 1);
+
+            return $label;
+        }
     }
 }
