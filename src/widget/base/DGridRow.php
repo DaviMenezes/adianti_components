@@ -2,7 +2,6 @@
 namespace Dvi\Adianti\Widget\Base;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Widget\Form\TLabel;
 
 /**
  * Row to bootstrap grid
@@ -21,7 +20,6 @@ class DGridRow extends TElement
     private $defaultColStyle;
     private $columns = array();
     private $maxColumns = 12;
-
 
     private $bootstrapClassDefault;
     private $defaultColType;
@@ -47,18 +45,12 @@ class DGridRow extends TElement
         return $this;
     }
 
-
     public function addCols()
     {
         $array_columns = (count(func_get_args()) == 1) ? func_get_arg(0) : func_get_args();
 
-//        $class = $this->getBootstrapColumnClass($array_columns);
-
         foreach ($array_columns as $position => $column) {
-            if (!is_a($column, 'Dvi\Widget\Base\DGridColumn')) {
-//                $gridColumn = $this->createColumn($column, $position, $class);
-            }
-            parent::add($gridColumn ?? $column);
+            parent::add($column);
         }
     }
 
@@ -75,12 +67,14 @@ class DGridRow extends TElement
 
         return $gridColumn;
     }
+
     private function isInitialLabel($param)
     {
         if (is_string($param) || (is_a($param, 'GridElement') || method_exists($param, 'getElement') && is_a($param->getElement(), 'TLabel'))) {
             return true;
         }
     }
+
     public function getBootstrapColumnClass($columns)
     {
         $qtdColumnsToLabel = 2;
