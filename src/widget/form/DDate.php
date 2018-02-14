@@ -19,6 +19,8 @@ class DDate extends TDate
     {
         parent::__construct($name);
 
+        $this->setLabel($placeholder);
+
         if ($placeholder) {
             $this->placeholder = $placeholder;
         }

@@ -5,6 +5,7 @@ namespace Dvi\Adianti\Widget\Bootstrap\Component;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Form\TEntry;
 use Dvi\Adianti\Widget\Base\GroupField;
+use Dvi\Adianti\Widget\Form\DButton;
 use Dvi\Adianti\Widget\IDviWidget;
 use Dvi\Adianti\Widget\Util\DActionLink;
 
@@ -31,7 +32,7 @@ class InputGroup extends GroupField implements IDviWidget
         $this->addChilds($entry);
     }
 
-    public function addButton($button)
+    public function addButton(DButton $button)
     {
         $this->buttons[] = $button;
         $this->addChilds($button);

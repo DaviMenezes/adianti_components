@@ -28,6 +28,8 @@ class DCombo extends TCombo
     {
         parent::__construct($name);
 
+        $this->setLabel($placeholder);
+
         $this->operator('=');
 
         if ($placeholder) {

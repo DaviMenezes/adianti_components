@@ -24,9 +24,9 @@ class DText extends TText
     {
         parent::__construct($name);
 
-        if ($placeholder) {
-            $this->placeholder = $placeholder;
-        }
+        $this->setLabel($placeholder);
+
+        $this->placeholder = $placeholder;
 
         $this->setSize(0, $height);
 

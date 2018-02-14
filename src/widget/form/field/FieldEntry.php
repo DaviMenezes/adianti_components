@@ -24,6 +24,8 @@ abstract class FieldEntry extends TEntry
     {
         parent::__construct($name);
 
+        $this->setLabel($placeholder);
+
         if ($placeholder) {
             $this->placeholder = $placeholder;
         }
