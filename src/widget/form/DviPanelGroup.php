@@ -71,7 +71,7 @@ class DviPanelGroup implements IDviWidget
     protected $form_data;
     protected $btn;
 
-    protected $useLabelFields;
+    protected $useLabelFields = false;
 
     public function __construct(string $className, string $title = null, string $formName = null)
     {
@@ -321,7 +321,7 @@ class DviPanelGroup implements IDviWidget
             $this->form->addField($field);
         }
         $this->addCols($hbox);
-        
+
         return $this;
     }
 
