@@ -62,15 +62,16 @@ use Dvi\Adianti\Widget\Util\DActionLink;
  */
 class DviPanelGroup implements IDviWidget
 {
-    private $className;
-    private $notebook;
-    private $tpanel;
-    private $grid;
-    private $form;
-    private $hboxButtonsFooter;
-    private $form_data;
-    private $btn;
+    protected $className;
+    protected $notebook;
+    protected $tpanel;
+    protected $grid;
+    protected $form;
+    protected $hboxButtonsFooter;
+    protected $form_data;
+    protected $btn;
 
+    protected $useLabelFields;
 
     public function __construct(string $className, string $title = null, string $formName = null)
     {
@@ -100,19 +101,18 @@ class DviPanelGroup implements IDviWidget
     {
         $columns = array();
 
-        foreach ($param_columns as $column) {
+        foreach ($param_columns as $fields) {
             $dvbox = new DVBox();
             $dvbox->style = 'width: 100%';
 
-            if (is_array($column[0])) {
-                $fields = $column[0];
+            if (is_array($fields)) {
                 foreach ($fields as $field) {
                     $dvbox->add($field);
                 }
             } else {
-                $dvbox->add($column[0]);
+                $dvbox->add($fields);
             }
-            $width_column = $column[1] ?? 'col-md-' . floor(12 / count($param_columns));
+            $width_column = $fields[1] ?? 'col-md-' . floor(12 / count($param_columns));
             $columns[] = new Col($dvbox, $width_column);
         }
         return $columns;
@@ -179,7 +179,12 @@ class DviPanelGroup implements IDviWidget
 
         if ($this->needCreateLine($columns)) {
             $row = $this->getGrid()->addRow();
-            $row->addCols($columns);
+
+            foreach ($columns as $column) {
+                $column->useLabelField($this->useLabelFields);
+                $row->addCol($column);
+            }
+//            $row->addCols($columns);
         }
         return $this;
     }
@@ -316,6 +321,7 @@ class DviPanelGroup implements IDviWidget
             $this->form->addField($field);
         }
         $this->addCols($hbox);
+        
         return $this;
     }
 
@@ -656,5 +662,10 @@ class DviPanelGroup implements IDviWidget
             }
         }
         return $fields;
+    }
+
+    public function useLabelFields(bool $bool)
+    {
+        $this->useLabelFields = $bool;
     }
 }
