@@ -48,5 +48,4 @@ class DEntry extends FieldEntry
 
         return $obj;
     }
-
 }

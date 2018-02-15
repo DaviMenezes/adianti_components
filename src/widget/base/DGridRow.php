@@ -24,7 +24,7 @@ class DGridRow extends TElement
     private $bootstrapClassDefault;
     private $defaultColType;
 
-    public function __construct($rowStyle, $defaultClass = null, $colStyle = null)
+    public function __construct($rowStyle = null, $defaultClass = null, $colStyle = null)
     {
         parent::__construct('div');
         $this->class = 'row';

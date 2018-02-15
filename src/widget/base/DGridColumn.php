@@ -5,6 +5,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Dvi\Adianti\Widget\Container\DVBox;
+use Dvi\Adianti\Widget\Form\DButton;
 
 /**
  * Column to bootstrap grid
@@ -97,14 +98,22 @@ class DGridColumn extends TElement
         $this->class = $this->getFormatedClasses();// $this->getClass() ?? $this->default_class;
 
         if ($this->useLabelField) {
-            $box = new DVBox();
-            $box->add($this->getFormLabel());
-            $box->add($this->childs[0]);
+            if (!is_a($this->childs[0], DButton::class)) {
+                $box = new DVBox();
+                $box->add($this->getFormLabel());
+                $box->add($this->childs[0]);
 
-            parent::add($box);
+                parent::add($box);
+                parent::show();
+
+                return $this->childs;
+            }
+
+            parent::add($this->childs[0]);
             parent::show();
 
             return $this->childs;
+
         }
 
         foreach ($this->childs as $child) {

@@ -30,13 +30,15 @@ abstract class FieldEntry extends TEntry
             $this->placeholder = $placeholder;
         }
 
+        $this->ucfirstPlaceholder = ucfirst($this->placeholder);
+
         if ($maxlength) {
             $this->setMaxLength($maxlength);
             $this->addValidation($this->ucfirstPlaceholder, new TMaxLengthValidator(), [$maxlength]);
         }
 
         if ($required) {
-            $this->addValidation(ucfirst($this->placeholder), new TRequiredValidator());
+            $this->addValidation($this->ucfirstPlaceholder, new TRequiredValidator());
         }
 
         if ($tip) {

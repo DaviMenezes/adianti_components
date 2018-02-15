@@ -75,7 +75,7 @@ class DHBox extends THBox implements IGroupField
         return $box;
     }
 
-    public function add($child, $style = null)
+    public function add($child, $style = 'display:inline-table')
     {
         $this->childs[] = $child;
         return parent::add($child, $style);

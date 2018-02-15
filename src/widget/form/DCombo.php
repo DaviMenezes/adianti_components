@@ -41,7 +41,7 @@ class DCombo extends TCombo
         }
 
         if ($tip) {
-            $this->setTip(ucfirst($this->placeholder));
+//            $this->setTip(ucfirst($this->placeholder));
         }
 
         if ($obj_array_value) {

@@ -33,7 +33,7 @@ class DVBox extends TVBox implements IGroupField
         $args = func_get_args();
         if ($args) {
             foreach ($args as $arg) {
-                $box->addElement($arg);
+                $box->add($arg);
             }
         }
         return $box;

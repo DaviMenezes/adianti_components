@@ -4,7 +4,10 @@ namespace Dvi\Adianti\Widget\Bootstrap\Component;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Form\TEntry;
+use Dvi\Adianti\Widget\Base\DGridColumn;
+use Dvi\Adianti\Widget\Base\DGridRow;
 use Dvi\Adianti\Widget\Base\GroupField;
+use Dvi\Adianti\Widget\Container\DHBox;
 use Dvi\Adianti\Widget\Form\DButton;
 use Dvi\Adianti\Widget\IDviWidget;
 use Dvi\Adianti\Widget\Util\DActionLink;
@@ -21,13 +24,13 @@ use Dvi\Adianti\Widget\Util\DActionLink;
  */
 class InputGroup extends GroupField implements IDviWidget
 {
-    private $input;
+    private $inputs = array();
     private $buttons = array();
     private $links = array();
 
     public function addInput(TEntry $entry)
     {
-        $this->input= $entry;
+        $this->inputs[] = $entry;
 
         $this->addChilds($entry);
     }
@@ -49,7 +52,10 @@ class InputGroup extends GroupField implements IDviWidget
         $input_group = new TElement('div');
         $input_group->class= 'input-group';
 
-        $input_group->add($this->input);
+        $columns = array();
+        foreach ($this->inputs as $input) {
+            $input_group->add($input);
+        }
 
         $input_group_btn = new TElement('div');
         $input_group_btn->class= 'input-group-btn';
