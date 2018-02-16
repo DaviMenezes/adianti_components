@@ -23,6 +23,7 @@ use Adianti\Base\Lib\Widget\Form\THtmlEditor;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Form\TMultiField;
 use Adianti\Base\Lib\Widget\Form\TMultiFile;
+use Adianti\Base\Lib\Widget\Form\TNumeric;
 use Adianti\Base\Lib\Widget\Form\TPassword;
 use Adianti\Base\Lib\Widget\Form\TRadioGroup;
 use Adianti\Base\Lib\Widget\Form\TSeekButton;
@@ -579,6 +580,7 @@ class DviPanelGroup implements IDviWidget
             TSelect::class,
             TSlider::class,
             TSpinner::class,
+            TNumeric::class,
             TText::class,
             DCKEditor::class,
             DText::class,
