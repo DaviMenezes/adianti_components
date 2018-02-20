@@ -108,4 +108,12 @@ trait ModelForm
             $this->$atribute = new $class;
         }
     }
+
+    public function build()
+    {
+        $this->buildFieldTypes();
+        $this->buildStructureForm();
+
+        return $this;
+    }
 }
