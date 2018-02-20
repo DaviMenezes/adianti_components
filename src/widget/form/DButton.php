@@ -74,7 +74,7 @@ class DButton extends TField implements AdiantiWidgetInterface
         $this->label  = $label;
     }
 
-    public function getAction():DAction
+    public function getAction():TAction
     {
         return $this->action;
     }
