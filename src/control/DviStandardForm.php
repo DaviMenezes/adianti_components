@@ -3,8 +3,8 @@
 namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
-use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 use Adianti\Base\Lib\Widget\Form\TButton;
 use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
@@ -30,20 +30,20 @@ class DviStandardForm extends DviControl
     private $button_clear;
 
     /**@var DataGrid $datagrid*/
-//    protected $datagrid;
-//    /**@var TPageNavigation $pageNavigation*/
-//    protected $pageNavigation;
-//    protected $grid_loaded;
+    //    protected $datagrid;
+    //    /**@var TPageNavigation $pageNavigation*/
+    //    protected $pageNavigation;
+    //    protected $grid_loaded;
 
     /**@var TDataGridColumn $column_id*/
-//    protected $column_id;
+    //    protected $column_id;
 
     /**@var TAction $action_delete*/
-//    protected $action_delete;
+    //    protected $action_delete;
 
-//    private $useCheckButton;
-//    protected $panel_grid;
-//    private $use_grid_panel;
+    //    private $useCheckButton;
+    //    protected $panel_grid;
+    //    private $use_grid_panel;
 
     use DviTPageForm;
 
@@ -56,6 +56,8 @@ class DviStandardForm extends DviControl
         $this->createActions();
 
         parent::add($this->panel);
+
+        $this->cancelEnterSubmit();
     }
 
     protected function createActions()
@@ -75,5 +77,14 @@ class DviStandardForm extends DviControl
     protected function getButtonClear()
     {
         return $this->button_clear;
+    }
+
+    private function cancelEnterSubmit()
+    {
+        TScript::create('$("input, select, text").keypress(function (e) {
+            var code = null;
+            code = (e.keyCode ? e.keyCode : e.which);                
+            return (code == 13) ? false : true;
+        });');
     }
 }
