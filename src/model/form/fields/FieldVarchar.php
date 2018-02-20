@@ -6,11 +6,12 @@
  * Time: 18:33
  */
 
-namespace Dvi\Adianti\Model;
+namespace Dvi\Adianti\Component\Model\Form\Fields;
 
+use Dvi\Adianti\Model\DBFormField;
 use Dvi\Adianti\Widget\Form\DEntry;
 
-class DBVarchar extends DBFormField
+class FieldVarchar extends DBFormField
 {
     private $size;
 
@@ -24,8 +25,13 @@ class DBVarchar extends DBFormField
         $this->field = new DEntry($name, $placeholder, $size, $required);
     }
 
-    public static function create(string $name, string $type, int $size, bool $required = false, $label = null):DBVarchar
-    {
-        return new DBVarchar($name, $type, $size, $required, $label);
+    public static function create(
+        string $name,
+        string $type,
+        int $size,
+        bool $required = false,
+        $label = null
+    ):FieldVarchar {
+        return new FieldVarchar($name, $type, $size, $required, $label);
     }
 }

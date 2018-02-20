@@ -1,10 +1,12 @@
 <?php
 
-namespace Dvi\Adianti\Model;
+namespace Dvi\Adianti\Component\Model\Form\Fields;
+
+use Dvi\Adianti\Model\DBFormField;
 use Dvi\Adianti\Widget\Form\DText;
 
 /**
- * Model DBText
+ * Model FieldText
  *
  * @version    Dvi 1.0
  * @package    Model
@@ -13,7 +15,7 @@ use Dvi\Adianti\Widget\Form\DText;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DBText extends DBFormField
+class FieldText extends DBFormField
 {
     public function __construct(string $name, string $label, int $length, int $height, bool $required = false)
     {
@@ -22,8 +24,13 @@ class DBText extends DBFormField
         $this->field = new DText($name, $label, $length, $height, true, $required);
     }
 
-    public static function create(string $name, int $length, int $height, bool $required = false, $label = null):DBText
-    {
-        return new DBText($name, $label, $length, $height, $required);
+    public static function create(
+        string $name,
+        int $length,
+        int $height,
+        bool $required = false,
+        $label = null
+    ):FieldText {
+        return new FieldText($name, $label, $length, $height, $required);
     }
 }

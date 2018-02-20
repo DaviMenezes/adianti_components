@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvi\Adianti\Model;
+namespace Dvi\Adianti\Component\Model\Form\Fields;
 
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Form\TDateTime;
@@ -15,7 +15,7 @@ use Adianti\Base\Lib\Widget\Form\TDateTime;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DBDateTime extends DBFormField
+class FieldDateTime extends DBFormField
 {
     public function __construct(string $name, bool $required = false, string $label = null)
     {
@@ -28,9 +28,9 @@ class DBDateTime extends DBFormField
         $this->field->setDatabaseMask('yyyy-mm-dd hh:ii:ss');
     }
 
-    public static function create(string $name, bool $required = false, string $label = null): DBDateTime
+    public static function create(string $name, bool $required = false, string $label = null): FieldDateTime
     {
-        $field = new DBDateTime($name, $required, $label);
+        $field = new FieldDateTime($name, $required, $label);
         return $field;
     }
 

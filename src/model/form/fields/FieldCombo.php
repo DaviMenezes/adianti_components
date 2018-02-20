@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvi\Adianti\Widget\Form;
+namespace Dvi\Adianti\Component\Model\Form\Fields;
 use Adianti\Base\Lib\Database\TRecord;
 use Dvi\Adianti\Model\DBFormField;
 
@@ -14,7 +14,7 @@ use Dvi\Adianti\Model\DBFormField;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DBCombo extends DBFormField
+class FieldCombo extends DBFormField
 {
     private $value;
     private $criteria;
