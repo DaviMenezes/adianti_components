@@ -53,10 +53,10 @@ trait DviTPageForm
 
             $data = $this->panel->getFormData();
 
-            $obj = $this->objectClass::get($data->id);
-            foreach ((array)$data as $key => $value) {
-                $obj->$key = $value;
-            }
+            $obj = $this->objectClass::get($data->id)->build();
+
+            $obj->fromArray((array)$data);
+
             $obj->store();
 
             $param['id'] = $obj->id;
