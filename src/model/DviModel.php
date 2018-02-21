@@ -3,6 +3,7 @@
 namespace Dvi\Adianti\Model;
 
 use Dvi\Adianti\Component\Model\Form\Fields\FieldCombo;
+use Dvi\Adianti\Component\Model\Form\Fields\FieldCurrency;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldDate;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldDateTime;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldText;
@@ -22,7 +23,7 @@ use Dvi\Adianti\Widget\Container\DVBox;
  */
 abstract class DviModel extends DviTRecord
 {
-    private $form_rows = array();
+    private $form_row_fields = array();
 
     public function __construct($id = null, bool $callObjectLoad = true)
     {
@@ -37,7 +38,25 @@ abstract class DviModel extends DviTRecord
         $field = 'field_'.$name;
 
         $this->$field = FieldVarchar::create($name, 'text', $size, $required, $label);
-        $this->$field->mask('A!');
+
+        return $this->$field;
+    }
+
+    protected function addCurrency($name, $decimals, $decimalsSeparator, $thousandSeparator, $required, $label):FieldCurrency
+    {
+        parent::addAttribute($name);
+
+        $field = 'field_'.$name;
+
+        $this->$field = new FieldCurrency(
+            $name,
+            $decimals,
+            $decimalsSeparator,
+            $thousandSeparator,
+            'currency',
+            $required,
+            $label
+        );
 
         return $this->$field;
     }
@@ -72,51 +91,54 @@ abstract class DviModel extends DviTRecord
         return $this->$field;
     }
 
-    protected function addCombo(string $name, string $model, string $value, string $label = null, bool $required = false):FieldCombo
+    protected function addCombo(string $name, string $label = null, bool $required = false):FieldCombo
     {
-        $field = 'field_'.$name;
-        $this->$field = new FieldCombo($name, $model, $value, 'combo', $required, $label);
+        parent::addAttribute($name);
 
-        return $this->$field;
+        $field_name = 'field_'.$name;
+        $field = new FieldCombo($name, 'combo', $required, $label);
+        $this->$field_name = $field;
+
+        return $this->$field_name;
     }
     #endregion
 
     #region[BUILDING FIELDS]
     protected function setStructureForm(array $form_column_structure)
     {
-        $this->form_rows = $form_column_structure;
+        $this->form_row_fields = $form_column_structure;
     }
 
     private function setFormStructureColumn()
     {
-        foreach ($this->form_rows as $key => $row) {
+        foreach ($this->form_row_fields as $key => $form_row_field) {
             $cols = array();
-            foreach ($row as $column) {
-                if (empty($column)) {
+            foreach ($form_row_field as $row_field) {
+                if (empty($row_field)) {
                     throw new \Exception('Verifique o nome do campo ' . ($key +1));
                 }
 
-                $fc = mb_strtoupper(mb_substr($column->getLabel(), 0, 1));
-                $label = $fc.mb_substr($column->getLabel(), 1);
-                $field = $column->getFormField();
+                $fc = mb_strtoupper(mb_substr($row_field->getLabel(), 0, 1));
+                $label = $fc.mb_substr($row_field->getLabel(), 1);
+                $field = $row_field->getField();
 
                 $dvbox = new DVBox();
                 $dvbox->add($label);
                 $dvbox->add($field);
                 $cols[] = new DGridColumn($dvbox);
             }
-            $this->form_rows[$key] = $cols;
+            $this->form_row_fields[$key] = $cols;
         }
     }
 
-    public function getFormRows()
+    public function getFormRowFields()
     {
         $this->buildFieldTypes();
         $this->buildStructureForm();
 
         $this->setFormStructureColumn();
 
-        return $this->form_rows;
+        return $this->form_row_fields;
     }
 
     public function setMap(string $atribute, $class)
