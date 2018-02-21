@@ -48,4 +48,11 @@ class DEntry extends FieldEntry
 
         return $obj;
     }
+
+    public function validate()
+    {
+        if (isset($this->value)) {
+            parent::validate();
+        }
+    }
 }
