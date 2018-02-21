@@ -1,6 +1,7 @@
 <?php
 namespace Dvi\Adianti\Widget\Form;
 
+use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Form\TDate;
 
 /**
@@ -26,11 +27,14 @@ class DDate extends TDate
         }
 
         if ($required) {
-            $this->addValidation(ucfirst($this->placeholder), new TRequiredValidator());
+            $this->addValidation(ucfirst($placeholder), new TRequiredValidator());
         }
 
         if ($tip) {
             $this->setTip(ucfirst($this->placeholder));
         }
+
+        $this->setMask('dd/mm/yyyy');
+        $this->setDatabaseMask('yyyy-mm-dd');
     }
 }
