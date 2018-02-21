@@ -17,7 +17,6 @@ use Adianti\Base\Lib\Widget\Form\TEntry;
  */
 abstract class DBFormField extends DBField
 {
-    /**@var TEntry $field*/
     protected $field;
     protected $form_field_class;
     private $label;
@@ -47,8 +46,5 @@ abstract class DBFormField extends DBField
         return $this;
     }
 
-    public function getFormField()
-    {
-        return $this->field;
-    }
+    abstract public function getField();
 }
