@@ -33,4 +33,9 @@ class FieldText extends DBFormField
     ):FieldText {
         return new FieldText($name, $label, $length, $height, $required);
     }
+
+    public function getField()
+    {
+        return $this->field;
+    }
 }

@@ -34,4 +34,9 @@ class FieldVarchar extends DBFormField
     ):FieldVarchar {
         return new FieldVarchar($name, $type, $size, $required, $label);
     }
+
+    public function getField(): DEntry
+    {
+        return $this->field;
+    }
 }
