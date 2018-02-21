@@ -21,12 +21,8 @@ class FieldDate extends DBFormField
     public function __construct(string $name, bool $required = false, string $label = null)
     {
         parent::__construct($name, 'datetime', $required, $label);
-        $this->field = new DDate($name, $label);
 
-        if ($required) {
-            $this->field->addValidation($label, new TRequiredValidator());
-        }
-        $this->field->setDatabaseMask('yyyy-mm-dd');
+        $this->field = new DDate($name, $label, $required);
     }
 
     public static function create(string $name, bool $required = false, string $label = null): FieldDate
@@ -35,4 +31,8 @@ class FieldDate extends DBFormField
         return $field;
     }
 
+    public function getField():DDate
+    {
+        return $this->field;
+    }
 }
