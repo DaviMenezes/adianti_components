@@ -6,6 +6,8 @@ use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Model\DviModel;
+use Dvi\Adianti\Model\DviTRecord;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Exception;
@@ -24,6 +26,8 @@ trait DviTPageForm
 {
     protected $pageTitle;
 
+    protected $currentObj;
+
     /**@var DviPanelGroup $panel*/
     protected $panel;
 
@@ -36,8 +40,9 @@ trait DviTPageForm
         $this->panel = new DviPanelGroup($name, $this->pageTitle);
         $this->panel->addHiddenFields([$id]);
 
+        /**@var DviModel $obj*/
         $obj = new $this->objectClass();
-        $rows_form = $obj->getFormRows();
+        $rows_form = $obj->getFormRowFields();
 
         foreach ($rows_form as $rows) {
             $this->panel->addRow($rows);
@@ -52,11 +57,28 @@ trait DviTPageForm
             $this->panel->getForm()->validate();
 
             $data = $this->panel->getFormData();
+            $result = array_merge($param, (array)$data);
 
-            $obj = new $this->objectClass();
+            /**@var DviModel $obj*/
+            $obj = new $this->objectClass($data->id ?? null);
             $obj->build();
 
-            $obj->fromArray((array)$data);
+            $attributes = array_values($obj->getAttributes());
+            $attributes[] = 'id';
+
+            $methods = get_class_methods(get_class($obj));
+
+            foreach ($attributes as $key => $value) {
+                if (in_array($value, array_keys($result))) {
+                    $set_attibute_method = 'set_'.$key;
+
+                    if (in_array($set_attibute_method, $methods)) {
+                        $obj->$key = $value;
+                        continue;
+                    }
+                    $obj->$value = $result[$value];
+                }
+            }
 
             $obj->store();
 
@@ -94,23 +116,30 @@ trait DviTPageForm
         try {
             if (isset($param['id'])) {
                 TTransaction::open($this->database);
-                $obj = $this->objectClass::find($param['id'] ?? null);
-                $obj = !$obj ? new \stdClass() : $obj;
+
+                $this->currentObj = $this->objectClass::find($param['id'] ?? null);
+                $this->currentObj = !$this->currentObj ? new \stdClass() : $this->currentObj;
+
                 unset($param['class']);
                 unset($param['method']);
+
                 foreach ($param as $key => $value) {
-                    $obj->$key = $value;
+                    $this->currentObj->$key = $value;
                 }
-                $this->panel->setFormData($obj);
+
+                $this->panel->setFormData($this->currentObj);
+
                 TTransaction::close();
             } else {
                 unset($param['class']);
                 unset($param['method']);
-                $obj = new \stdClass();
+
+                $this->currentObj = new \stdClass();
                 foreach ($param as $key => $value) {
-                    $obj->$key = $value;
+                    $this->currentObj->$key = $value;
                 }
-                $this->panel->setFormData($obj);
+
+                $this->panel->setFormData($this->currentObj);
             }
         } catch (Exception $e) {
             TTransaction::rollback();
