@@ -8,6 +8,7 @@
 
 namespace Dvi\Adianti\Component\Model\Form\Fields;
 
+use Adianti\Base\Lib\Validator\TEmailValidator;
 use Dvi\Adianti\Model\DBFormField;
 use Dvi\Adianti\Widget\Form\DEntry;
 
@@ -38,5 +39,16 @@ class FieldVarchar extends DBFormField
     public function getField(): DEntry
     {
         return $this->field;
+    }
+
+    public function mask(string $mask)
+    {
+        $this->field->setMask($mask);
+        return $this;
+    }
+
+    public function validateEmail()
+    {
+        $this->field->addValidation($this->field->getLabel(), new TEmailValidator());
     }
 }
