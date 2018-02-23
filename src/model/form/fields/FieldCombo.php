@@ -28,31 +28,22 @@ class FieldCombo extends DBFormField
         $this->field = new DCombo($name, $label ?? $name, $required);
     }
 
-    public function model(string $model, string $value)
+    public function model(string $model, string $value, $criteria = null)
     {
-        $this->model = $model;
-        $this->value = $value;
+        /**@var TRecord $model*/
+        $items = $model::getIndexedArray('id', $value, $criteria);
+        $this->field->items($items);
 
         return $this;
-    }
-
-    public function setCriteria($criteria)
-    {
-        $this->criteria = $criteria;
-        return $this;
-    }
-
-    public function get()
-    {
-        if ($this->model) {
-            /**@var TRecord $model*/
-            $items = $this->model::getIndexedArray('id', $this->value, $this->criteria);
-            $this->field->items($items);
-        }
     }
 
     public function getField(): DCombo
     {
         return $this->field;
+    }
+
+    public function items(array $items)
+    {
+        $this->field->items($items);
     }
 }
