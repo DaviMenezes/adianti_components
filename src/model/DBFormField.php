@@ -2,8 +2,9 @@
 
 namespace Dvi\Adianti\Model;
 
-use Adianti\Base\Lib\Validator\TRequiredValidator;
+use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\TField;
 
 /**
  * Model DBFormField
@@ -17,6 +18,7 @@ use Adianti\Base\Lib\Widget\Form\TEntry;
  */
 abstract class DBFormField extends DBField
 {
+    /**@var TElement $field*/
     protected $field;
     protected $form_field_class;
     private $label;
@@ -31,12 +33,6 @@ abstract class DBFormField extends DBField
     public function getLabel()
     {
         return $this->label;
-    }
-
-    public function mask(string $mask)
-    {
-        $this->field->setMask($mask);
-        return $this;
     }
 
     public function type(string $class)
