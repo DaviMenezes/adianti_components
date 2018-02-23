@@ -35,4 +35,14 @@ class FieldDateTime extends DBFormField
         return $field;
     }
 
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    public function mask(string $mask)
+    {
+        $this->field->setMask($mask);
+        return $this;
+    }
 }
