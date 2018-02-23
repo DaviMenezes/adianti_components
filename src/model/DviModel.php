@@ -2,6 +2,7 @@
 
 namespace Dvi\Adianti\Model;
 
+use App\Adianti\Component\Model\Form\Fields\FieldInteger;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldCombo;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldCurrency;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldDate;
@@ -101,6 +102,17 @@ abstract class DviModel extends DviTRecord
 
         return $this->$field_name;
     }
+
+    protected function addInteger(string $name, int $min, int $max, int $step, string $label, $required = false):FieldInteger
+    {
+        parent::addAttribute($name);
+
+        $field_name = 'field_'.$name;
+        $field = new FieldInteger($name, $min, $max, $step, $required, $label);
+        $this->$field_name = $field;
+
+        return $this->$field_name;
+    }
     #endregion
 
     #region[BUILDING FIELDS]
@@ -113,14 +125,15 @@ abstract class DviModel extends DviTRecord
     {
         foreach ($this->form_row_fields as $key => $form_row_field) {
             $cols = array();
-            foreach ($form_row_field as $row_field) {
-                if (empty($row_field)) {
-                    throw new \Exception('Verifique o nome do campo ' . ($key +1));
+            foreach ($form_row_field as $row_column_key => $row_column_value) {
+                if (empty($row_column_value)) {
+                    $field_label = ucfirst($form_row_field[$row_column_key -1]->getField()->getLabel());
+                    throw new \Exception('Verifique o nome do campo após ' . $field_label);
                 }
 
-                $fc = mb_strtoupper(mb_substr($row_field->getLabel(), 0, 1));
-                $label = $fc.mb_substr($row_field->getLabel(), 1);
-                $field = $row_field->getField();
+                $fc = mb_strtoupper(mb_substr($row_column_value->getLabel(), 0, 1));
+                $label = $fc.mb_substr($row_column_value->getLabel(), 1);
+                $field = $row_column_value->getField();
 
                 $dvbox = new DVBox();
                 $dvbox->add($label);
