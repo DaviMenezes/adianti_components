@@ -3,6 +3,7 @@ namespace Dvi\Adianti\Widget\Form;
 
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Form\TDate;
+use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
  * Model DDate
@@ -16,6 +17,8 @@ use Adianti\Base\Lib\Widget\Form\TDate;
  */
 class DDate extends TDate
 {
+    use SearchableField;
+
     public function __construct($name, string $placeholder = null, bool $required = false, bool $tip = true)
     {
         parent::__construct($name);
