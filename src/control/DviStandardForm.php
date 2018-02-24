@@ -4,9 +4,7 @@ namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TScript;
-use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Form\TButton;
-use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
 /**
@@ -29,22 +27,6 @@ class DviStandardForm extends DviControl
     /**@var TButton $button_clear*/
     private $button_clear;
 
-    /**@var DataGrid $datagrid*/
-    //    protected $datagrid;
-    //    /**@var TPageNavigation $pageNavigation*/
-    //    protected $pageNavigation;
-    //    protected $grid_loaded;
-
-    /**@var TDataGridColumn $column_id*/
-    //    protected $column_id;
-
-    /**@var TAction $action_delete*/
-    //    protected $action_delete;
-
-    //    private $useCheckButton;
-    //    protected $panel_grid;
-    //    private $use_grid_panel;
-
     use DviTPageForm;
 
     public function __construct($param)
@@ -53,20 +35,20 @@ class DviStandardForm extends DviControl
 
         $this->createPanelForm($param);
 
-        $this->createActions();
-
         parent::add($this->panel);
 
         $this->cancelEnterSubmit();
     }
 
-    protected function createActions()
+    public function createPanelForm($param)
     {
-        $this->panel->addActionSave();
-        $this->button_save = $this->panel->getButton();
+        parent::createPanelForm($param);
 
-        $this->panel->addActionClear();
-        $this->button_clear = $this->panel->getButton();
+        $this->mountModelFields($param);
+
+        $this->createActionSave();
+
+        $this->createActionClear();
     }
 
     protected function getButtonSave()

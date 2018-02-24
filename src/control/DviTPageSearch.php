@@ -24,16 +24,6 @@ trait DviTPageSearch
     /**@var DviPanelGroup $panel*/
     protected $panel;
 
-    public function createPanelForm($param)
-    {
-        $this->panel->addActionSearch();
-        $this->panel->getButton()
-            ->getAction()
-            ->setParameters(self::getNewParams($param));
-
-        $this->panel->addActionClear();
-    }
-
     public function onSearch($param)
     {
         $fields = $this->panel->getForm()->getFields();
@@ -55,5 +45,13 @@ trait DviTPageSearch
 
         $param['filters'] = $filters;
         $this->onReload($param);
+    }
+
+    protected function createActionSearch($param)
+    {
+        $this->panel->addActionSearch();
+        $this->panel->getButton()
+            ->getAction()
+            ->setParameters(self::getNewParams($param));
     }
 }

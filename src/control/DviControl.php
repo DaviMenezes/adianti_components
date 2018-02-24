@@ -4,10 +4,8 @@ namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
-use Adianti\Base\Lib\Database\TTransaction;
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
-use Exception;
 
 /**
  * Trait DviControl
@@ -28,6 +26,13 @@ class DviControl extends TPage
     protected $database = 'default';
 
     protected $grid_loaded =  false;
+
+    public function createPanelForm($param)
+    {
+        $called_class = Route::getClassName(get_called_class());
+
+        $this->panel = new DviPanelGroup($called_class, $this->pageTitle);
+    }
 
     public static function getNewParams($param)
     {
@@ -60,6 +65,4 @@ class DviControl extends TPage
         $param = self::getNewParams($param);
         AdiantiCoreApplication::loadPage(get_called_class(), null, $param);
     }
-
-
 }

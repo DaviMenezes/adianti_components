@@ -30,7 +30,6 @@ class DataGrid extends TDataGrid
     {
         parent::__construct();
 
-
         $this->style ='width: 100%';
         $this->disableDefaultClick();
 
@@ -52,8 +51,12 @@ class DataGrid extends TDataGrid
 
     public function createModel($create_header = true)
     {
-        $this->addAction($this->grid_action_edit);
-        $this->addAction($this->grid_action_delete);
+        if ($this->grid_action_edit) {
+            $this->addAction($this->grid_action_edit);
+        }
+        if ($this->grid_action_delete) {
+            $this->addAction($this->grid_action_delete);
+        }
 
         foreach ($this->custom_actions as $action) {
             $this->addAction($action);

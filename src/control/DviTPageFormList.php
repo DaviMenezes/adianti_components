@@ -44,6 +44,7 @@ class DviTPageFormList extends DviControl
     private $use_grid_panel;
 
     use DviTPageForm;
+    use DviTPageSearch;
     use DviTPageList;
 
     public function __construct($param)
@@ -51,8 +52,15 @@ class DviTPageFormList extends DviControl
         parent::__construct();
 
         $this->createPanelForm($param);
+
+        $this->createActionSearch($param);
+
+        $this->createActionSave();
+
+        $this->createActionClear();
+
         $this->createDataGrid();
-        $this->createPageNavigation();
+        $this->createPageNavigation($param);
 
         $vbox = new TVBox();
         $vbox->style = 'width:100%;';

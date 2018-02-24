@@ -118,12 +118,12 @@ trait DviTPageList
     protected function createDataGrid($createModel = true, $showId = false): DataGrid
     {
         $class = get_called_class();
-        $this->datagrid = new DataGrid($class);
+        $this->datagrid = new DataGrid($class, 'grid', $showId);
 
-        if ($showId) {
-            $this->column_id = new TDataGridColumn('id', 'Id', 'left', '5%');
-            $this->datagrid->addColumn($this->column_id);
-        }
+//        if ($showId) {
+//            $this->column_id = new TDataGridColumn('id', 'Id', 'left', '5%');
+//            $this->datagrid->addColumn($this->column_id);
+//        }
 
         if ($createModel) {
             $this->createDatagridModel();
@@ -254,11 +254,12 @@ trait DviTPageList
 
     private function onBack($param)
     {
-        $back_method = $param['url_params']['back_method'];
+        $back_method = $param['url_params']['back_method']?? null;
         unset($param['url_params']['method']);
         unset($param['url_params']['back_method']);
 
         $class = Route::getPath(get_called_class());
-        AdiantiCoreApplication::loadPage($class, $back_method, $param['url_params']);
+        $url_params = $param['url_params'] ?? null;
+        AdiantiCoreApplication::loadPage($class, $back_method, $url_params);
     }
 }

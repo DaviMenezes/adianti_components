@@ -7,8 +7,6 @@ use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Model\DviTRecord;
-use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Exception;
 
@@ -31,13 +29,10 @@ trait DviTPageForm
     /**@var DviPanelGroup $panel*/
     protected $panel;
 
-    public function createPanelForm($param)
+    public function mountModelFields($param)
     {
         $id = new THidden('id');
 
-        $name = Route::getClassName(get_called_class());
-
-        $this->panel = new DviPanelGroup($name, $this->pageTitle);
         $this->panel->addHiddenFields([$id]);
 
         /**@var DviModel $obj*/
@@ -145,6 +140,18 @@ trait DviTPageForm
             TTransaction::rollback();
             new TMessage('error', $e->getMessage());
         }
+    }
+
+    protected function createActionSave()
+    {
+        $this->panel->addActionSave();
+        $this->button_save = $this->panel->getButton();
+    }
+
+    protected function createActionClear()
+    {
+        $this->panel->addActionClear();
+        $this->button_clear = $this->panel->getButton();
     }
 
     private function reloadIfClassExtendFormAndListing($param)
