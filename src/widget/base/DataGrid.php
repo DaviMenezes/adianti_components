@@ -38,10 +38,7 @@ class DataGrid extends TDataGrid
         }
 
         if (!is_subclass_of($class_name, DviSearchFormList::class)) {
-            $this->grid_action_edit = new TDataGridAction([$class_name, 'onEdit']);
-            $this->grid_action_edit->setField('id');
-            $this->grid_action_edit->setLabel('Editar');
-            $this->grid_action_edit->setImage('fa:pencil-square-o blue fa-2x');
+            $this->useEditAction($class_name);
         }
 
         $this->grid_action_delete = new TDataGridAction([$class_name, $function_prefix . 'OnDelete'], $params_delete);
@@ -101,6 +98,14 @@ class DataGrid extends TDataGrid
     public function col($name, $label, $align, $width)
     {
         $this->addCol($name, $label, $align, $width);
+    }
+
+    public function useEditAction($class_name)
+    {
+        $this->grid_action_edit = new TDataGridAction([$class_name, 'onEdit']);
+        $this->grid_action_edit->setField('id');
+        $this->grid_action_edit->setLabel('Editar');
+        $this->grid_action_edit->setImage('fa:pencil-square-o blue fa-2x');
     }
     #endregion
 }

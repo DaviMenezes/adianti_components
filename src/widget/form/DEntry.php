@@ -51,7 +51,7 @@ class DEntry extends FieldEntry
 
     public function validate()
     {
-        if (isset($this->value)) {
+        if (!empty($this->value)) {
             parent::validate();
         }
     }

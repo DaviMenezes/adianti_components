@@ -56,10 +56,10 @@ trait DviTPageForm
 
             /**@var DviModel $obj*/
             $obj = new $this->objectClass($data->id ?? null);
-            $obj->build();
+            $obj->buildFieldTypes();
 
-            $attributes = array_values($obj->getAttributes());
-            $attributes[] = 'id';
+            $obj->addAttribute('id');
+            $attributes = $obj->getAttributes();
 
             $methods = get_class_methods(get_class($obj));
 

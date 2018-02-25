@@ -103,8 +103,14 @@ abstract class DviModel extends DviTRecord
         return $this->$field_name;
     }
 
-    protected function addInteger(string $name, int $min, int $max, int $step, string $label, $required = false):FieldInteger
-    {
+    protected function addInteger(
+        string $name,
+        int $min,
+        int $max,
+        int $step,
+        string $label,
+        $required = false
+    ):FieldInteger {
         parent::addAttribute($name);
 
         $field_name = 'field_'.$name;
@@ -174,7 +180,7 @@ abstract class DviModel extends DviTRecord
     #endregion
 
     #region[ABSTRACT METHODS]
-    abstract protected function buildFieldTypes();
+    abstract public function buildFieldTypes();
 
     abstract protected function buildStructureForm();
     #endregion
