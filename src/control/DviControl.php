@@ -65,4 +65,12 @@ class DviControl extends TPage
         $param = self::getNewParams($param);
         AdiantiCoreApplication::loadPage(get_called_class(), null, $param);
     }
+
+    protected function isEditing($param)
+    {
+        if (!empty($param['method']) and $param['method'] == 'onEdit') {
+            return true;
+        }
+        return false;
+    }
 }
