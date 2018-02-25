@@ -1,6 +1,7 @@
 <?php
 namespace Dvi\Adianti\Widget\Form;
 
+use Adianti\Base\Lib\Validator\TEmailValidator;
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Form\TEntry;
 use Dvi\Adianti\Widget\Form\Field\FieldEntry;
@@ -51,8 +52,17 @@ class DEntry extends FieldEntry
 
     public function validate()
     {
-        if (!empty($this->value)) {
-            parent::validate();
+        if ($this->getValidations()) {
+            foreach ($this->getValidations() as $validation) {
+                $label      = $validation[0];
+                $validator  = $validation[1];
+                $parameters = $validation[2];
+
+                if ($validator instanceof TEmailValidator and !empty($this->value)) {
+                    continue;
+                }
+                $validator->validate($label, $this->getValue(), $parameters);
+            }
         }
     }
 }
