@@ -254,12 +254,9 @@ trait DviTPageList
 
     private function onBack($param)
     {
-        $back_method = $param['url_params']['back_method']?? null;
-        unset($param['url_params']['method']);
-        unset($param['url_params']['back_method']);
+        $back_method = $param['back_method']?? 'onEdit';
+        $back_class = $param['back_class']?? get_called_class();
 
-        $class = Route::getPath(get_called_class());
-        $url_params = $param['url_params'] ?? null;
-        AdiantiCoreApplication::loadPage($class, $back_method, $url_params);
+        AdiantiCoreApplication::loadPage($back_class, $back_method, $param['return_parameters']);
     }
 }

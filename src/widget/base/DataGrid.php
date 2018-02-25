@@ -41,9 +41,7 @@ class DataGrid extends TDataGrid
             $this->useEditAction($class_name);
         }
 
-        $this->grid_action_delete = new TDataGridAction([$class_name, $function_prefix . 'OnDelete'], $params_delete);
-        $this->grid_action_delete->setField('id');
-        $this->grid_action_delete->setImage('fa:trash red fa-2x');
+        $this->useDeleteAction($class_name, $function_prefix, $params_delete);
     }
 
     public function createModel($create_header = true)
@@ -72,9 +70,14 @@ class DataGrid extends TDataGrid
         $this->grid_action_delete = $action;
     }
 
-    public function getActionEdit()
+    public function getEditAction():TDataGridAction
     {
         return $this->grid_action_edit;
+    }
+
+    public function getDeleteAction(): TDataGridAction
+    {
+        return $this->grid_action_delete;
     }
 
     public function addActions(array $actions)
@@ -106,6 +109,15 @@ class DataGrid extends TDataGrid
         $this->grid_action_edit->setField('id');
         $this->grid_action_edit->setLabel('Editar');
         $this->grid_action_edit->setImage('fa:pencil-square-o blue fa-2x');
+    }
+
+    public function useDeleteAction($class_name, $function_prefix = 'grid', $params_delete = null)
+    {
+        $this->grid_action_delete = new TDataGridAction([$class_name, $function_prefix . 'OnDelete'], $params_delete);
+        $this->grid_action_delete->setField('id');
+        $this->grid_action_delete->setImage('fa:trash red fa-2x');
+
+        return $this->grid_action_delete;
     }
     #endregion
 }

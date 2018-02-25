@@ -35,22 +35,22 @@ class DviStandardForm extends DviControl
 
         $this->createPanelForm($param);
 
+        $this->mountModelFields($param);
+
+        $this->createActions();
+
         parent::add($this->panel);
 
         $this->cancelEnterSubmit();
     }
 
-    public function createPanelForm($param)
+    public function createActions()
     {
-        parent::createPanelForm($param);
-
-        $this->mountModelFields($param);
-
         $this->createActionSave();
 
         $this->createActionClear();
     }
-
+    
     protected function getButtonSave()
     {
         return $this->button_save;
