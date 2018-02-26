@@ -50,7 +50,7 @@ class DviStandardForm extends DviControl
 
         $this->createActionClear();
     }
-    
+
     protected function getButtonSave()
     {
         return $this->button_save;

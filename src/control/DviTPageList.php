@@ -82,19 +82,19 @@ trait DviTPageList
             $items = $repository->load($criteria, false);
 
             //include a checkbutton if necessary
-            if ($this->use_grid_panel and $this->useCheckButton) {
+            /*if ($this->use_grid_panel and $this->useCheckButton) {
                 foreach ($items as $key => $item) {
-                    //                    $check = new TCheckButton($key.'_check_');
-//                    $check->setIndexValue($item->id);
-//
-//                    $item->{'check'} = $check;
-//                    $form = $this->panel_grid->getForm();
-//                    $form->addField($check);
-                }
-            }
+                                        $check = new TCheckButton($key.'_check_');
+                    $check->setIndexValue($item->id);
 
+                    $item->{'check'} = $check;
+                    $form = $this->panel_grid->getForm();
+                    $form->addField($check);
+                }
+            }*/
+
+            $this->datagrid->clear();
             if ($items) {
-                $this->datagrid->clear();
                 $this->datagrid->addItems($items);
             }
 
@@ -254,9 +254,9 @@ trait DviTPageList
 
     private function onBack($param)
     {
-        $back_method = $param['back_method']?? 'onEdit';
+        $back_method = $param['back_method']?? 'load';
         $back_class = $param['back_class']?? get_called_class();
 
-        AdiantiCoreApplication::loadPage($back_class, $back_method, $param['return_parameters']);
+        AdiantiCoreApplication::loadPage($back_class, $back_method, $param['return_parameters']??null);
     }
 }
