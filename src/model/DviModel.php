@@ -160,14 +160,15 @@ abstract class DviModel extends DviTRecord
         return $this->form_row_fields;
     }
 
-    public function setMap(string $atribute, $class)
+    public function setMap( $atribute, $class)
     {
-        $this->foreign_keys[$atribute] = $class;
-        $this->addAttribute($atribute.'_id');
+        $this->foreign_keys[(string) $atribute] = $class;
+        $this->addAttribute((string)$atribute.'_id');
 
         if (empty($this->id)) {
             $this->$atribute = new $class;
         }
+        return $this->$atribute;
     }
 
     public function build()
