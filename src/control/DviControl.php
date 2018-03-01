@@ -19,6 +19,8 @@ use Dvi\Adianti\Widget\Form\DviPanelGroup;
  */
 class DviControl extends TPage
 {
+    protected $currentObj;
+
     use DControl;
 
     /**@var DviPanelGroup $panel*/
@@ -68,9 +70,15 @@ class DviControl extends TPage
 
     protected function isEditing($param)
     {
-        if (!empty($param['method']) and $param['method'] == 'onEdit') {
+        if (!empty($param['id']) and $param['id'] != 0) {
             return true;
         }
         return false;
+    }
+
+    protected function createCurrentObject($param)
+    {
+        $this->currentObj = $this->objectClass::find($param['id'] ?? null);
+        $this->currentObj = !$this->currentObj ? new \stdClass() : $this->currentObj;
     }
 }
