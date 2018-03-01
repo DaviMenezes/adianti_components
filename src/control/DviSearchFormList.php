@@ -48,11 +48,6 @@ class DviSearchFormList extends DviControl
     {
         parent::__construct();
 
-        $this->init($param);
-    }
-
-    public function init($param)
-    {
         $this->createPanelForm($param);
 
         $this->datagrid = $this->createDataGrid();

@@ -49,7 +49,7 @@ trait DviTPageSearch
                     $filters[] = new TFilter($name, $searchOperator, $field->getSearchableValue());
                 }
             }
-            
+
             $called_class = DControl::getClassName(get_called_class());
             TSession::setValue($called_class.'_form_data', $data);
             TSession::setValue($called_class.'_filters', $filters);
