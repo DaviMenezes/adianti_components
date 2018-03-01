@@ -28,7 +28,7 @@ class InputGroup extends GroupField implements IDviWidget
     private $buttons = array();
     private $links = array();
 
-    public function addInput(TEntry $entry)
+    public function addInput($entry)
     {
         $this->inputs[] = $entry;
 

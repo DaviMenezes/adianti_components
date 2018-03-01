@@ -12,7 +12,6 @@ use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Dialog\TQuestion;
 use Dvi\Adianti\Database\DTransaction;
-use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DataGrid;
 use Exception;
 
@@ -42,6 +41,9 @@ trait DviTPageList
     /**@var TAction $action_delete*/
     protected $action_delete;
 
+    private $useCheckButton;
+
+
     private static function getUrlParams(): array
     {
         $url_params = explode('?', $_SERVER['HTTP_REFERER']);
@@ -67,7 +69,8 @@ trait DviTPageList
             $criteria->setProperty('limit', $limit);
 
             //get the filters genereted by the child classes
-            $filters = TSession::getValue(get_called_class().'_filters');
+            $called_class = DControl::getClassName(get_called_class());
+            $filters = TSession::getValue($called_class.'_filters');
 
             if (!$filters and isset($param['filters']) and $param['filters']) {
                 $filters = $param['filters'];
@@ -81,7 +84,7 @@ trait DviTPageList
 
             $items = $repository->load($criteria, false);
 
-            //include a checkbutton if necessary
+            //Todo checking (include a checkbutton if necessary)
             /*if ($this->use_grid_panel and $this->useCheckButton) {
                 foreach ($items as $key => $item) {
                                         $check = new TCheckButton($key.'_check_');
@@ -103,7 +106,6 @@ trait DviTPageList
 
             $this->pageNavigation->setCount($count);
             $this->pageNavigation->setProperties($param);
-            $this->pageNavigation->setProperties($param);
             $this->pageNavigation->setLimit($limit);
 
             DTransaction::close();
@@ -120,10 +122,10 @@ trait DviTPageList
         $class = get_called_class();
         $this->datagrid = new DataGrid($class, 'grid', $showId);
 
-//        if ($showId) {
-//            $this->column_id = new TDataGridColumn('id', 'Id', 'left', '5%');
-//            $this->datagrid->addColumn($this->column_id);
-//        }
+        //        if ($showId) {
+        //            $this->column_id = new TDataGridColumn('id', 'Id', 'left', '5%');
+        //            $this->datagrid->addColumn($this->column_id);
+        //        }
 
         if ($createModel) {
             $this->createDatagridModel();
@@ -132,9 +134,9 @@ trait DviTPageList
         return $this->datagrid;
     }
 
-    protected function createDatagridModel()
+    protected function createDatagridModel($create_header = true, $show_default_actions = true)
     {
-        $this->datagrid->createModel();
+        $this->datagrid->createModel($create_header, $show_default_actions);
     }
 
     protected function createPageNavigation($param)
@@ -258,5 +260,10 @@ trait DviTPageList
         $back_class = $param['back_class']?? get_called_class();
 
         AdiantiCoreApplication::loadPage($back_class, $back_method, $param['return_parameters']??null);
+    }
+
+    public function useCheckButton()
+    {
+        $this->useCheckButton = true;
     }
 }
