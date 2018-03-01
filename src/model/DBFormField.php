@@ -32,7 +32,7 @@ abstract class DBFormField extends DBField
 
     public function getLabel()
     {
-        return $this->label;
+        return str_replace('_', ' ', $this->label);
     }
 
     public function type(string $class)

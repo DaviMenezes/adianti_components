@@ -43,8 +43,14 @@ abstract class DviModel extends DviTRecord
         return $this->$field;
     }
 
-    protected function addCurrency($name, $decimals, $decimalsSeparator, $thousandSeparator, $required, $label):FieldCurrency
-    {
+    protected function addCurrency(
+        $name,
+        $decimals,
+        $decimalsSeparator,
+        $thousandSeparator,
+        $required,
+        $label
+    ):FieldCurrency {
         parent::addAttribute($name);
 
         $field = 'field_'.$name;
@@ -62,8 +68,13 @@ abstract class DviModel extends DviTRecord
         return $this->$field;
     }
 
-    protected function addText(string $name, int $length, int $height, bool $required, string $label):FieldText
-    {
+    protected function addText(
+        string $name,
+        int $length,
+        int $height,
+        bool $required = false,
+        string $label = null
+    ):FieldText {
         parent::addAttribute($name);
 
         $field = 'field_'.$name;
@@ -133,8 +144,7 @@ abstract class DviModel extends DviTRecord
             $cols = array();
             foreach ($form_row_field as $row_column_key => $row_column_value) {
                 if (empty($row_column_value)) {
-                    $field_label = ucfirst($form_row_field[$row_column_key -1]->getField()->getLabel());
-                    throw new \Exception('Verifique o nome do campo após ' . $field_label);
+                    throw new \Exception('Verifique o nome dos campos');
                 }
 
                 $fc = mb_strtoupper(mb_substr($row_column_value->getLabel(), 0, 1));

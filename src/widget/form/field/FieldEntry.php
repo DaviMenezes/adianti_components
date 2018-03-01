@@ -18,38 +18,40 @@ use Adianti\Base\Lib\Widget\Form\TEntry;
  */
 abstract class FieldEntry extends TEntry
 {
-    private $ucfirstPlaceholder;
+    private $ucfirstLabel;
 
     public function __construct(string $name, string $placeholder = null, int $maxlength = null, bool $required = false, bool $tip = true)
     {
         parent::__construct($name);
 
-        $this->setLabel($placeholder);
+        $label = str_replace('_', ' ', $placeholder, $count);
+
+        $this->setLabel($label);
 
         if ($placeholder) {
-            $this->placeholder = $placeholder;
+            $this->placeholder = $label;
         }
 
-        $this->ucfirstPlaceholder = ucfirst($this->placeholder);
+        $this->ucfirstLabel = ucfirst($label);
 
         if ($maxlength) {
             $this->setMaxLength($maxlength);
-            $this->addValidation($this->ucfirstPlaceholder, new TMaxLengthValidator(), [$maxlength]);
+            $this->addValidation($this->ucfirstLabel, new TMaxLengthValidator(), [$maxlength]);
         }
 
         if ($required) {
-            $this->addValidation($this->ucfirstPlaceholder, new TRequiredValidator());
+            $this->addValidation($this->ucfirstLabel, new TRequiredValidator());
         }
 
         if ($tip) {
-            $this->setTip(ucfirst($this->placeholder));
+            $this->setTip($this->ucfirstLabel);
         }
     }
 
     public function addValidations(array $array_validations)
     {
         foreach ($array_validations as $validation) {
-            $this->addValidation($this->ucfirstPlaceholder, $validation);
+            $this->addValidation($this->ucfirstLabel, $validation);
         }
     }
 
