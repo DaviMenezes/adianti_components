@@ -1,6 +1,8 @@
 <?php
 namespace Dvi\Adianti\Control;
 
+use ReflectionClass;
+
 /**
  * Model DControl
  *
@@ -19,5 +21,14 @@ trait DControl
             return 'R$ '.number_format($value, 2, ',', '.');
         }
         return $value;
+    }
+
+    public static function getClassName($class)
+    {
+        try {
+            return (new ReflectionClass($class))->getShortName();
+        } catch (\ReflectionException $e) {
+            throw new \Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
+        }
     }
 }
