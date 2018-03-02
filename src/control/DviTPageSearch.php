@@ -2,9 +2,11 @@
 
 namespace Dvi\Adianti\Control;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Database\TFilter;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
+use Dvi\Adianti\Widget\Form\Field\FormField;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
@@ -26,25 +28,36 @@ trait DviTPageSearch
 
     public function onSearch($param)
     {
-        $fields = $this->panel->getForm()->getFields();
-        $data = $this->panel->getFormData();
+        try {
+            $fields = $this->panel->getForm()->getFields();
+            $data = $this->panel->getFormData();
 
-        $filters = array();
-        foreach ($fields as $field) {
-            $traits = class_uses($field);
+            $filters = array();
 
-            if (in_array(SearchableField::class, $traits)) {
-                $name = $field->getName();
-                if (empty($data->$name)) continue;
+            /**@var FormField $field*/
+            foreach ($fields as $field) {
+                $traits = class_uses($field);
 
-                $field->setValue($data->$name);
-                $searchOperator = $field->getSearchOperator();
-                $filters[] = new TFilter($name, $searchOperator, $field->getSearchableValue());
+                if (in_array(SearchableField::class, $traits)) {
+                    $name = $field->getName();
+                    if (empty($data->$name)) {
+                        continue;
+                    }
+
+                    $field->setValue($data->$name);
+                    $searchOperator = $field->getSearchOperator();
+                    $filters[] = new TFilter($name, $searchOperator, $field->getSearchableValue());
+                }
             }
-        }
 
-        $param['filters'] = $filters;
-        $this->onReload($param);
+            $called_class = DControl::getClassName(get_called_class());
+            TSession::setValue($called_class.'_form_data', $data);
+            TSession::setValue($called_class.'_filters', $filters);
+
+            $this->onReload($param);
+        } catch (\Exception $e) {
+            new TMessage('error', $e->getMessage());
+        }
     }
 
     protected function createActionSearch($param)

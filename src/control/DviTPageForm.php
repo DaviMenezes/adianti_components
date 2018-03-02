@@ -3,6 +3,7 @@ namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Database\DTransaction;
@@ -24,8 +25,6 @@ trait DviTPageForm
 {
     protected $pageTitle;
 
-    protected $currentObj;
-
     /**@var DviPanelGroup $panel*/
     protected $panel;
 
@@ -42,6 +41,8 @@ trait DviTPageForm
         foreach ($rows_form as $rows) {
             $this->panel->addRow($rows);
         }
+
+        $this->keepFormLoadedWithDataSearched();
     }
 
     public function onSave($param)
@@ -159,6 +160,19 @@ trait DviTPageForm
         $parent_class = get_parent_class(get_called_class());
         if ($parent_class == DviTPageFormList::class) {
             $this->onReload($param);
+        }
+    }
+
+    protected function keepFormLoadedWithDataSearched()
+    {
+        $called_class = DControl::getClassName(get_called_class());
+
+        $data = TSession::getValue($called_class . '_form_data');
+        if (isset($data)) {
+            if (!isset($this->currentObj) or
+                (isset($this->currentObj) and $this->currentObj->id == $data->current_obj_id)) {
+                $this->panel->setFormData($data);
+            }
         }
     }
 }

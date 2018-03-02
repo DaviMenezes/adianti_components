@@ -33,6 +33,8 @@ class DviStandardForm extends DviControl
     {
         parent::__construct();
 
+        $this->createCurrentObject($param);
+
         $this->createPanelForm($param);
 
         $this->mountModelFields($param);

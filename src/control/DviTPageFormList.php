@@ -22,8 +22,6 @@ use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
 class DviTPageFormList extends DviControl
 {
-    //essa classe deve focar na construção da tela
-
     protected $objectClass;
     /**@var DviPanelGroup $panel*/
     protected $panel;
@@ -39,7 +37,6 @@ class DviTPageFormList extends DviControl
     /**@var TAction $action_delete*/
     protected $action_delete;
 
-    private $useCheckButton;
     protected $panel_grid;
     private $use_grid_panel;
 
@@ -71,10 +68,5 @@ class DviTPageFormList extends DviControl
         $vbox->add($this->pageNavigation);
 
         parent::add($vbox);
-    }
-
-    public function useCheckButton()
-    {
-        $this->useCheckButton = true;
     }
 }

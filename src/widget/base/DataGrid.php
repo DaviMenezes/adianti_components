@@ -44,12 +44,12 @@ class DataGrid extends TDataGrid
         $this->useDeleteAction($class_name, $function_prefix, $params_delete);
     }
 
-    public function createModel($create_header = true)
+    public function createModel($create_header = true, $show_default_actions = true)
     {
-        if ($this->grid_action_edit) {
+        if ($show_default_actions and $this->grid_action_edit) {
             $this->addAction($this->grid_action_edit);
         }
-        if ($this->grid_action_delete) {
+        if ($show_default_actions and $this->grid_action_delete) {
             $this->addAction($this->grid_action_delete);
         }
 
@@ -108,16 +108,19 @@ class DataGrid extends TDataGrid
         $this->grid_action_edit = new TDataGridAction([$class_name, 'onEdit']);
         $this->grid_action_edit->setField('id');
         $this->grid_action_edit->setLabel('Editar');
-        $this->grid_action_edit->setImage('fa:pencil-square-o blue fa-2x');
+        $this->grid_action_edit->setImage('fa:pencil blue fa-2x');
+
+//        return $this->grid_action_edit;
     }
 
     public function useDeleteAction($class_name, $function_prefix = 'grid', $params_delete = null)
     {
         $this->grid_action_delete = new TDataGridAction([$class_name, $function_prefix . 'OnDelete'], $params_delete);
         $this->grid_action_delete->setField('id');
+        $this->grid_action_delete->setLabel('Excluir');
         $this->grid_action_delete->setImage('fa:trash red fa-2x');
 
-        return $this->grid_action_delete;
+//        return $this->grid_action_delete;
     }
     #endregion
 }

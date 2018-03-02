@@ -36,23 +36,17 @@ class DviSearchFormList extends DviControl
     /**@var TAction $action_delete*/
     protected $action_delete;
 
-//    private $useCheckButton;
+    //    private $useCheckButton;
     protected $panel_grid;
-//    private $use_grid_panel;
+    //    private $use_grid_panel;
 
     use DviTPageSearch;
     use DviTPageList;
+    use DviTPageForm;
 
     public function __construct($param)
     {
         parent::__construct();
-
-        $this->init($param);
-    }
-
-    public function init($param)
-    {
-//        $this->panel = new DviPanelGroup(get_called_class(), $this->pageTitle);
 
         $this->createPanelForm($param);
 
