@@ -4,6 +4,8 @@ namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
@@ -36,7 +38,7 @@ class DviControl extends TPage
         $this->panel = new DviPanelGroup($called_class, $this->pageTitle);
     }
 
-    public static function getNewParams($param)
+    public static function getNewParams():array
     {
         $new_params = array();
 
@@ -49,9 +51,9 @@ class DviControl extends TPage
         return $new_params;
     }
 
-    public function onClear($param)
+    public static function onClear($param)
     {
-        $params = DviControl::getNewParams($param);
+        $params = DviControl::getNewParams();
         unset($params['id'], $params['key']);
 
         AdiantiCoreApplication::loadPage(get_called_class(), null, $params);
