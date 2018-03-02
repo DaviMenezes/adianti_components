@@ -4,7 +4,9 @@ namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TButton;
+use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
 /**
@@ -31,19 +33,28 @@ class DviStandardForm extends DviControl
 
     public function __construct($param)
     {
-        parent::__construct();
+        try {
+            DTransaction::open();
 
-        $this->createCurrentObject($param);
+            parent::__construct();
 
-        $this->createPanelForm($param);
+            $this->createCurrentObject($param);
 
-        $this->mountModelFields($param);
+            $this->createPanelForm($param);
 
-        $this->createActions();
+            $this->mountModelFields($param);
 
-        parent::add($this->panel);
+            $this->createActions();
 
-        $this->cancelEnterSubmit();
+            parent::add($this->panel);
+
+            $this->cancelEnterSubmit();
+
+            DTransaction::close();
+        } catch (\Exception $e) {
+            DTransaction::rollback();
+            new TMessage('error', $e->getMessage());
+        }
     }
 
     public function createActions()

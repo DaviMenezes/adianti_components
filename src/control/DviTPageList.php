@@ -203,32 +203,13 @@ trait DviTPageList
     {
         //o carregamento da classe pode ser via ajax então os parametros da url a serem considerados
         //devem ser do $param ao invés do $_SERVER
-        if (self::callCameAnotherClass($param)) {
+        if (self::callCameFromAnotherClass($param)) {
             unset($param['class']);
             return $param;
         }
 
-        $url_params = self::getUrlParams();
-
-        unset($url_params[0]);//remove class param
-
-        $new_url_params = array();
-        $new_url_params['back_method'] = '';
-
-        //get param method
-        foreach ($url_params as $url_param) {
-            $param = explode('=', $url_param);
-            if ($param[0] == 'method') {
-                $new_url_params['back_method'] = $param[1];
-                break;
-            }
-        }
-        //get anothers params
-        foreach ($url_params as $url_param) {
-            $explode = explode('=', $url_param);
-
-            $new_url_params[$explode[0]] = $explode[1];
-        }
+        $new_url_params = DviControl::getNewParams();
+        $new_url_params['back_method'] = $param['method']?? null;
 
         if (empty($new_url_params['back_method'])) {
             unset($new_url_params['back_method']);
@@ -237,7 +218,7 @@ trait DviTPageList
         return $new_url_params;
     }
 
-    private static function callCameAnotherClass($param):bool
+    private static function callCameFromAnotherClass($param):bool
     {
         $url_params = self::getUrlParams();
 
@@ -257,9 +238,8 @@ trait DviTPageList
     private function onBack($param)
     {
         $back_method = $param['back_method']?? 'load';
-        $back_class = $param['back_class']?? get_called_class();
-
-        AdiantiCoreApplication::loadPage($back_class, $back_method, $param['return_parameters']??null);
+        
+        AdiantiCoreApplication::loadPage(get_called_class(), $back_method, $param['return_parameters'] ?? null);
     }
 
     public function useCheckButton()

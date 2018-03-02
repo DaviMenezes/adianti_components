@@ -5,6 +5,8 @@ namespace Dvi\Adianti\Control;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Container\DVBox;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
@@ -46,27 +48,42 @@ class DviSearchFormList extends DviControl
 
     public function __construct($param)
     {
-        parent::__construct();
+        try {
+            DTransaction::open();
 
-        $this->createPanelForm($param);
+            parent::__construct();
 
-        $this->datagrid = $this->createDataGrid();
-        $this->createPageNavigation($param);
+            $this->createPanelForm($param);
 
-        $vbox = new DVBox();
-        $vbox->add($this->panel);
+            $this->createActions($param);
 
-        $vbox->add($this->datagrid);
+            $this->datagrid = $this->createDataGrid();
+            $this->createPageNavigation($param);
 
-        $vbox->add($this->pageNavigation);
+            $vbox = new DVBox();
+            $vbox->add($this->panel);
 
-        parent::add($vbox);
+            $vbox->add($this->datagrid);
+
+            $vbox->add($this->pageNavigation);
+
+            parent::add($vbox);
+
+            DTransaction::close();
+        } catch (\Exception $e) {
+            DTransaction::rollback();
+            new TMessage('error', $e->getMessage());
+        }
     }
 
     public function createPanelForm($param)
     {
         parent::createPanelForm($param);
+    }
 
+    protected function createActions($param)
+    {
+        $this->createActionSave();
         $this->createActionSearch($param);
     }
 }

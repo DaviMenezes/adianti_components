@@ -50,11 +50,7 @@ class DviTPageFormList extends DviControl
 
         $this->createPanelForm($param);
 
-        $this->createActionSearch($param);
-
-        $this->createActionSave();
-
-        $this->createActionClear();
+        $this->createActions($param);
 
         $this->createDataGrid();
         $this->createPageNavigation($param);
@@ -68,5 +64,14 @@ class DviTPageFormList extends DviControl
         $vbox->add($this->pageNavigation);
 
         parent::add($vbox);
+    }
+
+    protected function createActions($param)
+    {
+        $this->createActionSearch($param);
+
+        $this->createActionSave();
+
+        $this->createActionClear();
     }
 }
