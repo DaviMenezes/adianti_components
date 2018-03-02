@@ -40,11 +40,11 @@ class DTransaction
         }
     }
 
-    public static function close(bool $force = false)
+    public static function close()
     {
         $conn = TTransaction::get();
 
-        if ($conn or $force) {
+        if ($conn) {
             TTransaction::close();
         }
     }
