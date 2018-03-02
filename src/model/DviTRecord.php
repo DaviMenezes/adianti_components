@@ -58,7 +58,7 @@ class DviTRecord extends TRecord
         return parent::__get($property);
     }
 
-    public function isDurty()
+    public function isDirty()
     {
         return $this->isDirty;
     }
