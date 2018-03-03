@@ -44,7 +44,7 @@ class DviStandardForm extends DviControl
 
             $this->mountModelFields($param);
 
-            $this->createActions();
+            $this->createActions($param);
 
             parent::add($this->panel);
 
@@ -57,7 +57,7 @@ class DviStandardForm extends DviControl
         }
     }
 
-    public function createActions()
+    public function createActions($param = null)
     {
         $this->createActionSave();
 
