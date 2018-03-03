@@ -59,13 +59,8 @@ class DviControl extends TPage
         AdiantiCoreApplication::loadPage(get_called_class(), null, $params);
     }
 
-    public function load()
+    public function load($param = null)
     {
-        $param = null;
-        if (func_get_args()) {
-            $param =  func_get_arg(0);
-        }
-        
         $param = self::getNewParams($param);
         AdiantiCoreApplication::loadPage(get_called_class(), null, $param);
     }
