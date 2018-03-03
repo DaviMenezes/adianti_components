@@ -2,7 +2,6 @@
 namespace Dvi\Adianti\Widget\Util;
 
 use Adianti\Base\Lib\Control\TAction;
-use Adianti\Base\Lib\Widget\Util\TActionLink;
 use Adianti\Base\Lib\Widget\Util\TImage;
 use Adianti\Base\Lib\Widget\Util\TTextDisplay;
 
@@ -18,27 +17,51 @@ use Adianti\Base\Lib\Widget\Util\TTextDisplay;
  */
 class DActionLink extends TTextDisplay
 {
+    private $label;
+    private $image;
+
     public function __construct(
-        TAction $action,
+        TAction $action = null,
         string $label = null,
         string $icon = null,
         string $color = null,
         string $size = null,
         string $decoration = null
-    )
-    {
+    ) {
+        $this->label = $label;
+
         if ($icon) {
-            $image = new TImage($icon);
-            $image->style ='float:left;';
-            $image .= '<div class="dvi_btn_label">'.$label.'</div>';
-            ;
+            $this->image($icon);
         }
 
-        parent::__construct($image, $color, $size, $decoration);
+        parent::__construct($this->image, $color, $size, $decoration);
         parent::setName('a');
 
-        $href = $action->serialize();
-        $this->{'href'} = str_replace('index', 'engine', $href);
-        $this->{'generator'} = 'adianti';
+        $this->action($action);
+    }
+
+    public function image($image)
+    {
+        $this->image = new TImage($image);
+        $this->image->style ='float:left;';
+        if ($this->label) {
+            $this->image .= '<div class="dvi_btn_label">'.$this->label.'</div>';
+        }
+    }
+
+    public function action($action, array $params = null)
+    {
+
+        if (is_array($action) or is_a($action, TAction::class)) {
+            if (is_array($action)) {
+                if (count($action)) {
+                    $action = new TAction($action, $params);
+                }
+            }
+
+            $href = $action->serialize();
+            $this->{'href'} = str_replace('index', 'engine', $href);
+            $this->{'generator'} = 'adianti';
+        }
     }
 }
