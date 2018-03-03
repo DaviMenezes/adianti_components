@@ -3,6 +3,7 @@
 namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Dvi\Adianti\Route;
 use Exception;
@@ -43,6 +44,39 @@ class DAction extends TAction
 
         if (!empty($parameters)) {
             $this->setParameters($parameters);
+        }
+    }
+
+    public function serialize($format_action = true)
+    {
+        // check if the callback is a method of an object
+        if (is_array($this->action)) {
+            $class = $this->action[0];
+            // get the class name
+            $url['class'] = is_object($class) ? Route::getClassName(get_class($class)) : Route::getClassName($this->action[0]);
+            // get the method name
+            $url['method'] = $this->action[1] ?? null;
+
+        } elseif (is_string($this->action)) {
+            // otherwise the callback is a function
+
+            // get the function name
+            $url['method'] = $this->action;
+        }
+
+        // check if there are parameters
+        if ($this->param) {
+            $url = array_merge($url, $this->param);
+        }
+
+        if ($format_action) {
+            if ($router = AdiantiCoreApplication::getRouter()) {
+                return $router(http_build_query($url));
+            } else {
+                return 'index.php?'.http_build_query($url);
+            }
+        } else {
+            return http_build_query($url);
         }
     }
 }
