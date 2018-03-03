@@ -47,6 +47,7 @@ class DActionLink extends TTextDisplay
         if ($this->label) {
             $this->image .= '<div class="dvi_btn_label">'.$this->label.'</div>';
         }
+        return $this;
     }
 
     public function action($action, array $params = null)
@@ -63,5 +64,7 @@ class DActionLink extends TTextDisplay
             $this->{'href'} = str_replace('index', 'engine', $href);
             $this->{'generator'} = 'adianti';
         }
+
+        return $this;
     }
 }
