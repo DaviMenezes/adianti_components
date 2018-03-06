@@ -20,9 +20,13 @@ class FieldVarchar extends DBFormField
     {
         $this->size = $size;
 
+        $array = explode('_', $name);
+        $field_name = array_pop($array);
+
+        $placeholder = $label ?? $field_name;
+
         parent::__construct($name, $type, $required, $label);
 
-        $placeholder = $label ?? $name;
         $this->field = new DEntry($name, $placeholder, $size, $required);
     }
 

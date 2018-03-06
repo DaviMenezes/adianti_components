@@ -19,6 +19,11 @@ class FieldText extends DBFormField
 {
     public function __construct(string $name, int $length, int $height, bool $required = false, string $label = null)
     {
+        $array = explode('_', $name);
+        $field_name = array_pop($array);
+
+        $label = $label ?? $field_name;
+
         parent::__construct($name, 'text', $required, $label);
 
         $this->field = new DText($name, $label, $length, $height, true, $required);

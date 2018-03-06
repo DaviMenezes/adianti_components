@@ -23,9 +23,14 @@ class FieldCombo extends DBFormField
 
     public function __construct(string $name, string $type, bool $required = false, string $label = null)
     {
+        $array = explode('_', $name);
+        $field_name = array_pop($array);
+
+        $placeholder = $label ?? $field_name;
+
         parent::__construct($name, $type, $required, $label);
 
-        $this->field = new DCombo($name, $label ?? $name, $required);
+        $this->field = new DCombo($name, $placeholder, $required);
     }
 
     public function model(string $model, string $value = 'name', $criteria = null)

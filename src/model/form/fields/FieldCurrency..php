@@ -27,9 +27,14 @@ class FieldCurrency extends DBFormField
         bool $required = false,
         string $label = null
     ) {
+        $array = explode('_', $name);
+        $field_name = array_pop($array);
+
+        $label = $label ?? $field_name;
+
         parent::__construct($name, $type, $required, $label);
 
-        $label = $label ?? $name;
+
         $this->field = new TNumeric($name, $decimals, $decimalsSeparator, $thousandSeparator);
         $this->field->placeholder = $label;
         if ($required) {

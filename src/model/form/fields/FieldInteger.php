@@ -19,6 +19,11 @@ class FieldInteger extends DBFormField
 {
     public function __construct(string $name, int $min, int $max, int $step, bool $required = false, string $label = null, string $type = 'numeric')
     {
+        $array = explode('_', $name);
+        $field_name = array_pop($array);
+
+        $label = $label ?? $field_name;
+
         parent::__construct($name, $type, $required, $label);
 
         $this->field = new TSpinner($name);

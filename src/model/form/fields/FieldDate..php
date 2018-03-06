@@ -20,6 +20,11 @@ class FieldDate extends DBFormField
 {
     public function __construct(string $name, bool $required = false, string $label = null)
     {
+        $array = explode('_', $name);
+        $field_name = array_pop($array);
+
+        $label = $label ?? $field_name;
+
         parent::__construct($name, 'datetime', $required, $label);
 
         $this->field = new DDate($name, $label, $required);
