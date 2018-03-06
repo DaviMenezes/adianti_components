@@ -37,8 +37,8 @@ abstract class DviModel extends DviTRecord
         parent::addAttribute($name);
 
         $field = 'field_'.$name;
-
-        $this->$field = FieldVarchar::create($name, 'text', $size, $required, $label);
+        $table_field_name = $this->getTableFieldName($name);
+        $this->$field = FieldVarchar::create($table_field_name, 'text', $size, $required, $label);
 
         return $this->$field;
     }
@@ -48,15 +48,16 @@ abstract class DviModel extends DviTRecord
         $decimals,
         $decimalsSeparator,
         $thousandSeparator,
-        $required,
-        $label
+        $required = false,
+        $label = null
     ):FieldCurrency {
         parent::addAttribute($name);
 
         $field = 'field_'.$name;
+        $table_field_name = $this->getTableFieldName($name);
 
         $this->$field = new FieldCurrency(
-            $name,
+            $table_field_name,
             $decimals,
             $decimalsSeparator,
             $thousandSeparator,
@@ -78,7 +79,10 @@ abstract class DviModel extends DviTRecord
         parent::addAttribute($name);
 
         $field = 'field_'.$name;
-        $this->$field = FieldText::create($name, $length, $height, $required, $label);
+
+        $table_field_name = $this->getTableFieldName($name);
+
+        $this->$field = FieldText::create($table_field_name, $length, $height, $required, $label);
 
         return $this->$field;
     }
@@ -88,7 +92,10 @@ abstract class DviModel extends DviTRecord
         parent::addAttribute($name);
 
         $field = 'field_'.$name;
-        $this->$field = FieldDate::create($name, $required, $label);
+
+        $table_field_name = $this->getTableFieldName($name);
+
+        $this->$field = FieldDate::create($table_field_name, $required, $label);
 
         return $this->$field;
     }
@@ -98,7 +105,9 @@ abstract class DviModel extends DviTRecord
         parent::addAttribute($name);
 
         $field = 'field_'.$name;
-        $this->$field = FieldDateTime::create($name, $required, $label);
+
+        $table_field_name = $this->getTableFieldName($name);
+        $this->$field = FieldDateTime::create($table_field_name, $required, $label);
 
         return $this->$field;
     }
@@ -108,7 +117,10 @@ abstract class DviModel extends DviTRecord
         parent::addAttribute($name);
 
         $field_name = 'field_'.$name;
-        $field = new FieldCombo($name, 'combo', $required, $label);
+
+        $table_field_name = $this->getTableFieldName($name);
+        $field = new FieldCombo($table_field_name, 'combo', $required, $label);
+
         $this->$field_name = $field;
 
         return $this->$field_name;
@@ -125,10 +137,20 @@ abstract class DviModel extends DviTRecord
         parent::addAttribute($name);
 
         $field_name = 'field_'.$name;
-        $field = new FieldInteger($name, $min, $max, $step, $required, $label);
+
+        $table_field_name = $this->getTableFieldName($name);
+
+        $field = new FieldInteger($table_field_name, $min, $max, $step, $required, $label);
+
         $this->$field_name = $field;
 
         return $this->$field_name;
+    }
+
+    protected function getTableFieldName(string $name): string
+    {
+        $table_field_name = (new \ReflectionClass(get_called_class()))->getShortName() . '_' . $name;
+        return $table_field_name;
     }
     #endregion
 
@@ -136,6 +158,11 @@ abstract class DviModel extends DviTRecord
     protected function setStructureForm(array $form_column_structure)
     {
         $this->form_row_fields = $form_column_structure;
+    }
+
+    protected function getStructureFields()
+    {
+        return $this->form_row_fields;
     }
 
     private function setFormStructureColumn()
@@ -170,15 +197,16 @@ abstract class DviModel extends DviTRecord
         return $this->form_row_fields;
     }
 
-    public function setMap( $atribute, $class)
+    public function setMap($atribute_name, $class)
     {
-        $this->foreign_keys[(string) $atribute] = $class;
-        $this->addAttribute((string)$atribute.'_id');
+        $this->foreign_keys[strtolower((new \ReflectionClass($class))->getShortName())] = $class;
+        $this->addAttribute((string)$atribute_name.'_id');
 
         if (empty($this->id)) {
-            $this->$atribute = new $class;
+            $obj = new $class();
+            return $obj;
         }
-        return $this->$atribute;
+//        return $obj;
     }
 
     public function build()
