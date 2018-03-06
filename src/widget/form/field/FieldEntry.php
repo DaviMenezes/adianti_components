@@ -2,9 +2,12 @@
 
 namespace Dvi\Adianti\Widget\Form\Field;
 
+use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Validator\TMaxLengthValidator;
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Form\TEntry;
+use Dvi\Adianti\Model\DviModel;
+use Dvi\Adianti\Model\DviTRecord;
 
 /**
  * Field FieldEntry
