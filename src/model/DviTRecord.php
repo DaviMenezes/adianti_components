@@ -6,6 +6,7 @@ use Adianti\Base\Lib\Database\TExpression;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Database\DTransaction;
 use Exception;
 use PDO;
@@ -25,6 +26,7 @@ use ReflectionProperty;
  */
 class DviTRecord extends TRecord
 {
+    const TABLENAME = '';
     const PRIMARYKEY = 'id';
     const IDPOLICY = 'serial';
 
@@ -44,8 +46,6 @@ class DviTRecord extends TRecord
     public function __construct($id = null, $callObjectLoad = true)
     {
         parent::__construct($id, $callObjectLoad);
-
-        //        $this->addPublicAtributes();
     }
 
     #region [BUILD MODEL] *******************************************
@@ -56,6 +56,22 @@ class DviTRecord extends TRecord
         }
 
         return parent::__get($property);
+    }
+
+    protected function getEntity()
+    {
+        $class = get_class($this);
+        $tablename =  constant("{$class}::TABLENAME");
+
+        if (empty($tablename)) {
+            return (new \ReflectionClass($this))->getShortName();
+        }
+        return $tablename;
+    }
+
+    public function getForeignKeys()
+    {
+        return $this->foreign_keys;
     }
 
     public function isDirty()
@@ -107,6 +123,14 @@ class DviTRecord extends TRecord
     {
         /**@var DviTRecord $class*/
         $class = get_called_class();
+
+        $obj = new $class($id);
+        $foreignKeys = $obj->getForeignKeys();
+        foreach ($foreignKeys as $key => $foreign_key) {
+            $attribute = $key.'_id';
+            $foreign_key::remove($obj->$attribute);
+        }
+
         $class::where('id', '=', $id)->delete();
         
         return true;
@@ -143,9 +167,10 @@ class DviTRecord extends TRecord
         return $this;
     }
 
-    // deprecated
+
     public function setQueryProperties($params)
     {
+        // deprecated
         $this->params = $params;
     }
 
