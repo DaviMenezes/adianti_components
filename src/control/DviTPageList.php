@@ -122,16 +122,20 @@ trait DviTPageList
         $class = get_called_class();
         $this->datagrid = new DataGrid($class, 'grid', $showId);
 
-        //        if ($showId) {
-        //            $this->column_id = new TDataGridColumn('id', 'Id', 'left', '5%');
-        //            $this->datagrid->addColumn($this->column_id);
-        //        }
+        $this->datagrid->useEditAction(get_called_class());
+
+        $this->createDatagridColumns($showId);
 
         if ($createModel) {
             $this->createDatagridModel();
         }
 
         return $this->datagrid;
+    }
+
+    protected function createDatagridColumns($showId = false)
+    {
+        $this->datagrid->col('name', 'Nome', 'left', !$showId ? '100%' : '93%');
     }
 
     protected function createDatagridModel($create_header = true, $show_default_actions = true)
