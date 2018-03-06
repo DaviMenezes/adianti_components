@@ -59,9 +59,9 @@ class DviStandardForm extends DviControl
 
     public function createActions($param = null)
     {
-        $this->createActionSave();
+        $this->createActionSave($param);
 
-        $this->createActionClear();
+        $this->createActionClear($param);
     }
 
     protected function getButtonSave()

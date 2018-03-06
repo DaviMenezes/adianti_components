@@ -30,7 +30,7 @@ class DviSearchFormList extends DviControl
     protected $datagrid;
     /**@var TPageNavigation $pageNavigation*/
     protected $pageNavigation;
-    protected $grid_loaded;
+
 
     /**@var TDataGridColumn $column_id*/
     protected $column_id;
@@ -79,11 +79,14 @@ class DviSearchFormList extends DviControl
     public function createPanelForm($param)
     {
         parent::createPanelForm($param);
+
+        $this->mountModelFields($param);
     }
 
     protected function createActions($param)
     {
-        $this->createActionSave();
+        $this->createActionSave($param);
         $this->createActionSearch($param);
+        $this->createActionClear($param);
     }
 }
