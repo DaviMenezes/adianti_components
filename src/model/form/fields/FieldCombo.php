@@ -28,7 +28,7 @@ class FieldCombo extends DBFormField
         $this->field = new DCombo($name, $label ?? $name, $required);
     }
 
-    public function model(string $model, string $value, $criteria = null)
+    public function model(string $model, string $value = 'name', $criteria = null)
     {
         /**@var TRecord $model*/
         $items = $model::getIndexedArray('id', $value, $criteria);
