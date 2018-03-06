@@ -78,17 +78,20 @@ trait DviTPageForm
                 $this->saveCurrentModel($model, $obj_master_class_name, $current_obj, $objMaster);
             }
 
-            $param['id'] = $objMaster->id;
+            $param['id'] = $current_obj->id;
 
             DTransaction::close();
 
             $new_params = DviControl::getNewParams($param);
+            $new_params['id'] = $current_obj->id;
 
-//            $new_params['id'] = $objMaster->id;
+            if (empty($data->id)) {
+                $class = (new \ReflectionClass(get_called_class()))->getShortName();
+                AdiantiCoreApplication::loadPage($class, 'onEdit', $new_params);
+            } else {
+                return $objMaster;
+            }
 
-            AdiantiCoreApplication::loadPage(get_called_class(), 'onEdit', $new_params);
-
-            return $objMaster;
         } catch (Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
@@ -157,13 +160,13 @@ trait DviTPageForm
         }
     }
 
-    protected function createActionSave()
+    protected function createActionSave($param)
     {
         $this->panel->addActionSave();
         $this->button_save = $this->panel->getButton();
     }
 
-    protected function createActionClear()
+    protected function createActionClear($param)
     {
         $this->panel->addActionClear();
         $this->button_clear = $this->panel->getButton();
@@ -214,7 +217,7 @@ trait DviTPageForm
         }
     }
 
-    protected function setAttributeValue($objMaster, TRecord &$current_obj, $attribute_name, $value): void
+    protected function setAttributeValue($objMaster, TRecord &$current_obj, $attribute_name, $value)
     {
         $methods =  get_class_methods(get_class($current_obj));
         $set_attibute_method = 'set_' . $attribute_name;
@@ -226,7 +229,7 @@ trait DviTPageForm
         $current_obj->$attribute_name = $value;
     }
 
-    protected function saveCurrentModel($model, $obj_master_class_name, $current_obj, $objMaster): void
+    protected function saveCurrentModel($model, $obj_master_class_name, $current_obj, $objMaster)
     {
         if ($model !== $obj_master_class_name) {
             $foreign_key_attribute = strtolower($model) . '_id';
