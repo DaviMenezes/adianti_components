@@ -174,14 +174,9 @@ abstract class DviModel extends DviTRecord
                     throw new \Exception('Verifique o nome dos campos');
                 }
 
-                $fc = mb_strtoupper(mb_substr($row_column_value->getLabel(), 0, 1));
-                $label = $fc.mb_substr($row_column_value->getLabel(), 1);
                 $field = $row_column_value->getField();
 
-                $dvbox = new DVBox();
-                $dvbox->add($label);
-                $dvbox->add($field);
-                $cols[] = new DGridColumn($dvbox);
+                $cols[] = new DGridColumn($field);
             }
             $this->form_row_fields[$key] = $cols;
         }
