@@ -29,7 +29,6 @@ class DviTPageFormList extends DviControl
     protected $datagrid;
     /**@var TPageNavigation $pageNavigation*/
     protected $pageNavigation;
-    protected $grid_loaded;
 
     /**@var TDataGridColumn $column_id*/
     protected $column_id;
