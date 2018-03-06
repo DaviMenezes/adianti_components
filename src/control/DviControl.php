@@ -6,6 +6,7 @@ use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
@@ -21,6 +22,7 @@ use Dvi\Adianti\Widget\Form\DviPanelGroup;
  */
 class DviControl extends TPage
 {
+    /**@var DviModel $currentObj*/
     protected $currentObj;
 
     use DControl;
