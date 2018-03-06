@@ -41,6 +41,8 @@ trait DviTPageList
     /**@var TAction $action_delete*/
     protected $action_delete;
 
+    protected $grid_loaded =  false;
+
     private $useCheckButton;
 
 
@@ -149,6 +151,7 @@ trait DviTPageList
 
         $new_params = DviTPageList::getUrlPaginationParameters($param);
 
+        unset($new_params['back_method']);
         $this->pageNavigation->setAction(new TAction([$this, 'onReload'], $new_params));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
     }
@@ -173,6 +176,7 @@ trait DviTPageList
         $action_no = new TAction([$class, 'backToList']);
 
         $param['url_params'] = self::getUrlPaginationParameters($param);
+        $param['back_method'] = $param['url_params']['method'];
 
         $action_yes->setParameters($param);
         $action_no->setParameters($param);
@@ -213,11 +217,11 @@ trait DviTPageList
         }
 
         $new_url_params = DviControl::getNewParams();
-        $new_url_params['back_method'] = $param['method']?? null;
+//        $new_url_params['back_method'] = $param['method']?? null;
 
-        if (empty($new_url_params['back_method'])) {
-            unset($new_url_params['back_method']);
-        }
+//        if (empty($new_url_params['back_method'])) {
+//            unset($new_url_params['back_method']);
+//        }
 
         return $new_url_params;
     }
@@ -242,8 +246,10 @@ trait DviTPageList
     private function onBack($param)
     {
         $back_method = $param['back_method']?? 'load';
-        
-        AdiantiCoreApplication::loadPage(get_called_class(), $back_method, $param['return_parameters'] ?? null);
+
+        unset($param['url_params']['method']);
+
+        AdiantiCoreApplication::loadPage(get_called_class(), $back_method, $param['url_params'] ?? null);
     }
 
     public function useCheckButton()
