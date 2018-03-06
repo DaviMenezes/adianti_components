@@ -31,13 +31,17 @@ class DviControl extends TPage
     protected $panel;
     protected $database = 'default';
 
-    protected $grid_loaded =  false;
+
 
     public function createPanelForm($param)
     {
         $called_class = Route::getClassName(get_called_class());
 
         $this->panel = new DviPanelGroup($called_class, $this->pageTitle);
+
+        if ($this->isEditing($param)) {
+            $this->panel->useLabelFields(true);
+        }
     }
 
     public static function getNewParams():array
