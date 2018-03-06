@@ -23,11 +23,11 @@ class FieldVarchar extends DBFormField
         $array = explode('_', $name);
         $field_name = array_pop($array);
 
-        $placeholder = $label ?? $field_name;
+        $label = $label ?? $field_name;
 
         parent::__construct($name, $type, $required, $label);
 
-        $this->field = new DEntry($name, $placeholder, $size, $required);
+        $this->field = new DEntry($name, $label, $size, $required);
     }
 
     public static function create(
