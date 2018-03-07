@@ -5,6 +5,8 @@ namespace Dvi\Adianti\Control;
 use Adianti\Base\Lib\Database\TFilter;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Dvi\Adianti\Widget\Form\Field\FormField;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
@@ -29,24 +31,44 @@ trait DviTPageSearch
     public function onSearch($param)
     {
         try {
-            $fields = $this->panel->getForm()->getFields();
-            $data = $this->panel->getFormData();
+            //Todo check post 143
+            DTransaction::open();
+
+            $data = (array)$this->panel->getFormData();
+
+            $obj_master_class_name = strtolower((new \ReflectionClass($this->objectClass))->getShortName());
+
+            /**@var DviModel $objMaster*/
+            $objMaster = new $this->objectClass();
+            $objMaster->addAttribute('id');
+
+            $models_to_save = $objMaster->getForeignKeys();
+            $models_to_save[$obj_master_class_name] = $this->objectClass;
+
+            $array_models = $this->createArrayModels($data, $models_to_save);
 
             $filters = array();
 
-            /**@var FormField $field*/
-            foreach ($fields as $field) {
-                $traits = class_uses($field);
+            foreach ($array_models as $model => $array_model) {
+                /**@var FormField $field*/
+                foreach ($array_model as $attribute => $value) {
+                    $modelShortName = DControl::getClassName($models_to_save[$model]);
+                    $field = $this->panel->getForm()->getField($modelShortName.'_'.$attribute);
 
-                if (in_array(SearchableField::class, $traits)) {
-                    $name = $field->getName();
-                    if (empty($data->$name)) {
+                    if (!$field) {
                         continue;
                     }
+                    $traits = class_uses($field);
 
-                    $field->setValue($data->$name);
-                    $searchOperator = $field->getSearchOperator();
-                    $filters[] = new TFilter($name, $searchOperator, $field->getSearchableValue());
+                    if (in_array(SearchableField::class, $traits)) {
+                        if (empty($value)) {
+                            continue;
+                        }
+
+                        $field->setValue($value);
+                        $searchOperator = $field->getSearchOperator();
+                        $filters[] = new TFilter($attribute, $searchOperator, $field->getSearchableValue());
+                    }
                 }
             }
 
@@ -54,8 +76,11 @@ trait DviTPageSearch
             TSession::setValue($called_class.'_form_data', $data);
             TSession::setValue($called_class.'_filters', $filters);
 
+            DTransaction::close();
+
             $this->onReload($param);
         } catch (\Exception $e) {
+            DTransaction::rollback();
             new TMessage('error', $e->getMessage());
         }
     }
