@@ -71,7 +71,7 @@ abstract class DviModel extends DviTRecord
 
     protected function addText(
         string $name,
-        int $length,
+        int $maxlength,
         int $height,
         bool $required = false,
         string $label = null
@@ -82,7 +82,7 @@ abstract class DviModel extends DviTRecord
 
         $table_field_name = $this->getTableFieldName($name);
 
-        $this->$field = FieldText::create($table_field_name, $length, $height, $required, $label);
+        $this->$field = FieldText::create($table_field_name, $maxlength, $height, $required, $label);
 
         return $this->$field;
     }
@@ -201,7 +201,6 @@ abstract class DviModel extends DviTRecord
             $obj = new $class();
             return $obj;
         }
-//        return $obj;
     }
 
     public function build()
@@ -218,4 +217,12 @@ abstract class DviModel extends DviTRecord
 
     abstract protected function buildStructureForm();
     #endregion
+
+    public function getAttributes()
+    {
+        $this->buildFieldTypes();
+        $attributes = parent::getAttributes();
+
+        return $attributes;
+    }
 }

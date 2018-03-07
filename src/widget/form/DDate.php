@@ -37,6 +37,7 @@ class DDate extends TDate
             $this->setTip(ucfirst($this->placeholder));
         }
 
+        //Todo check location user
         $this->setMask('dd/mm/yyyy');
         $this->setDatabaseMask('yyyy-mm-dd');
     }

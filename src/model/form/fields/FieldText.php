@@ -17,7 +17,7 @@ use Dvi\Adianti\Widget\Form\DText;
  */
 class FieldText extends DBFormField
 {
-    public function __construct(string $name, int $length, int $height, bool $required = false, string $label = null)
+    public function __construct(string $name, int $maxlength, int $height, bool $required = false, string $label = null)
     {
         $array = explode('_', $name);
         $field_name = array_pop($array);
@@ -26,17 +26,17 @@ class FieldText extends DBFormField
 
         parent::__construct($name, 'text', $required, $label);
 
-        $this->field = new DText($name, $label, $length, $height, true, $required);
+        $this->field = new DText($name, $label, $maxlength, $height, true, $required);
     }
 
     public static function create(
         string $name,
-        int $length,
+        int $maxlength,
         int $height,
         bool $required = false,
         $label = null
     ):FieldText {
-        return new FieldText($name, $length, $height, $required, $label);
+        return new FieldText($name, $maxlength, $height, $required, $label);
     }
 
     public function getField()
