@@ -176,7 +176,7 @@ trait DviTPageList
         $action_no = new TAction([$class, 'backToList']);
 
         $param['url_params'] = self::getUrlPaginationParameters($param);
-        $param['back_method'] = $param['url_params']['method'];
+        $param['back_method'] = $param['url_params']['method'] ?? null;
 
         $action_yes->setParameters($param);
         $action_no->setParameters($param);
@@ -245,7 +245,7 @@ trait DviTPageList
 
     private function onBack($param)
     {
-        $back_method = $param['back_method']?? 'load';
+        $back_method = $param['back_method']?? null;
 
         unset($param['url_params']['method']);
 
