@@ -70,27 +70,31 @@ trait DviTPageForm
             $array_models = $this->createArrayModels($result, $models_to_save);
 
             foreach ($array_models as $model => $attributes) {
-                /**@var TRecord $current_obj*/
-                $current_obj = new $models_to_save[$model]();
+                if ($obj_master_class_name !== $model) {
+                    /**@var TRecord $current_obj*/
+                    $current_obj = new $models_to_save[$model]();
 
-                $this->fillModelsWithAttributeValues($attributes, $objMaster, $current_obj);
+                    $this->fillModelsWithAttributeValues($attributes, $current_obj);
 
-                $this->saveCurrentModel($model, $obj_master_class_name, $current_obj, $objMaster);
+                    $foreign_key_attribute = strtolower($model) . '_id';
+                    $current_obj->id = $objMaster->$foreign_key_attribute;
+                    $current_obj->store();
+
+                    $objMaster->$foreign_key_attribute = $current_obj->id;
+                } else {
+                    $this->fillModelsWithAttributeValues($attributes, $objMaster);
+                    $objMaster->store();
+                }
             }
-
-            $param['id'] = $current_obj->id;
 
             DTransaction::close();
 
-            $new_params = DviControl::getNewParams($param);
-            $new_params['id'] = $current_obj->id;
+            $new_params = DviControl::getNewParams();
+            $new_params['id'] = $objMaster->id;
 
-            if (empty($data->id)) {
-                $class = (new \ReflectionClass(get_called_class()))->getShortName();
-                AdiantiCoreApplication::loadPage($class, 'onEdit', $new_params);
-            } else {
-                return $objMaster;
-            }
+            $class = (new \ReflectionClass(get_called_class()))->getShortName();
+            AdiantiCoreApplication::loadPage($class, 'onEdit', $new_params);
+
 
         } catch (Exception $e) {
             DTransaction::rollback();
@@ -115,7 +119,7 @@ trait DviTPageForm
 
                 /**@var DviModel $this->currentObj*/
                 $this->currentObj = $this->objectClass::find($param['id'] ?? null);
-                $this->currentObj = !$this->currentObj ? new \stdClass() : $this->currentObj;
+                $this->currentObj = $this->currentObj ? $this->currentObj : new $this->objectClass();
 
                 unset($param['class']);
                 unset($param['method']);
@@ -206,24 +210,24 @@ trait DviTPageForm
         return $array_models;
     }
 
-    protected function fillModelsWithAttributeValues($attributes, $objMaster, TRecord &$current_obj)
+    protected function fillModelsWithAttributeValues($attributes, TRecord &$current_obj)
     {
         $obj_attributes = $current_obj->getAttributes();
 
         foreach ($attributes as $attribute_name => $value) {
             if (in_array($attribute_name, array_keys($obj_attributes))) {
-                $this->setAttributeValue($objMaster, $current_obj, $attribute_name, $value);
+                $this->setAttributeValue($current_obj, $attribute_name, $value);
             }
         }
     }
 
-    protected function setAttributeValue($objMaster, TRecord &$current_obj, $attribute_name, $value)
+    protected function setAttributeValue(TRecord &$current_obj, $attribute_name, $value)
     {
         $methods =  get_class_methods(get_class($current_obj));
         $set_attibute_method = 'set_' . $attribute_name;
 
         if (in_array($set_attibute_method, $methods)) {
-            $objMaster->$attribute_name = $value;
+            $current_obj->$set_attibute_method($value);
             return;
         }
         $current_obj->$attribute_name = $value;
@@ -240,7 +244,7 @@ trait DviTPageForm
 
             return;
         }
-        $current_obj->store();
+        $objMaster->store();
     }
 
     protected function isObjectAttribute($atribute)
