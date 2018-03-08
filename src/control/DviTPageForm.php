@@ -43,8 +43,6 @@ trait DviTPageForm
         foreach ($rows_form as $rows) {
             $this->panel->addRow($rows);
         }
-
-        $this->keepFormLoadedWithDataSearched();
     }
 
     public function onSave($param)
