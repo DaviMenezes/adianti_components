@@ -203,7 +203,7 @@ trait DviTPageForm
 
         $obj_master_class_name = strtolower((new \ReflectionClass($this->objectClass))->getShortName());
 
-        $array_models[$obj_master_class_name]['id'] = $result['id'];
+        $array_models[$obj_master_class_name]['id'] = $result['id'] ?? null;
 
         return $array_models;
     }

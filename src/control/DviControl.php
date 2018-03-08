@@ -4,6 +4,7 @@ namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
+use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Model\DviModel;
@@ -59,6 +60,9 @@ class DviControl extends TPage
 
     public static function onClear($param)
     {
+        TSession::setValue(self::getClassName(get_called_class()) . '_form_data', null);
+        TSession::setValue(self::getClassName(get_called_class()) . '_filters', null);
+
         $params = DviControl::getNewParams();
         unset($params['id'], $params['key']);
 
