@@ -3,6 +3,7 @@
 namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
@@ -68,6 +69,9 @@ class DviSearchFormList extends DviControl
             $vbox->add($this->pageNavigation);
 
             parent::add($vbox);
+
+            $data = TSession::getValue(self::getClassName(get_called_class()) . '_form_data');
+            $this->panel->setFormData((object)$data);
 
             DTransaction::close();
         } catch (\Exception $e) {
