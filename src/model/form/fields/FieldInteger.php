@@ -28,6 +28,7 @@ class FieldInteger extends DBFormField
 
         $this->field = new TSpinner($name);
         $this->field->setRange($min, $max, $step);
+        $this->field->setLabel($label);
         $this->field->placeholder = $this->getLabel();
     }
 
