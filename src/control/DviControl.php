@@ -62,7 +62,7 @@ class DviControl extends TPage
     {
         TSession::setValue(self::getClassName(get_called_class()) . '_form_data', null);
         TSession::setValue(self::getClassName(get_called_class()) . '_filters', null);
-        
+
         $params = DviControl::getNewParams();
         unset($params['id'], $params['key']);
 
