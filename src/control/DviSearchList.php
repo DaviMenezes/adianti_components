@@ -49,9 +49,12 @@ class DviSearchList extends DviControl
 
         $this->createPanelForm($param);
 
+        $this->mountModelFields($param);
+
         $this->createActions($param);
 
         $this->createDataGrid();
+
         $this->createPageNavigation($param);
 
         $vbox = new TVBox();
@@ -63,6 +66,11 @@ class DviSearchList extends DviControl
         $vbox->add($this->pageNavigation);
 
         parent::add($vbox);
+    }
+
+    public function mountModelFields($param)
+    {
+
     }
 
     protected function createActions($param)
