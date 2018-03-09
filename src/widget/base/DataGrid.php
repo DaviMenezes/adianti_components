@@ -103,14 +103,14 @@ class DataGrid extends TDataGrid
         $this->addCol($name, $label, $align, $width);
     }
 
-    public function useEditAction($class_name)
+    public function useEditAction($class_name): TDataGridAction
     {
         $this->grid_action_edit = new TDataGridAction([$class_name, 'onEdit']);
         $this->grid_action_edit->setField('id');
         $this->grid_action_edit->setLabel('Editar');
         $this->grid_action_edit->setImage('fa:pencil blue fa-2x');
 
-//        return $this->grid_action_edit;
+        return $this->grid_action_edit;
     }
 
     public function useDeleteAction($class_name, $function_prefix = 'grid', $params_delete = null)

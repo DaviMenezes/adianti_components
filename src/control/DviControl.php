@@ -26,13 +26,11 @@ class DviControl extends TPage
     /**@var DviModel $currentObj*/
     protected $currentObj;
 
-    use DControl;
-
     /**@var DviPanelGroup $panel*/
     protected $panel;
     protected $database = 'default';
 
-
+    use DControl;
 
     public function createPanelForm($param)
     {

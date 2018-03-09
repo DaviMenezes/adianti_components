@@ -23,6 +23,8 @@ use Dvi\Adianti\Widget\Form\DviPanelGroup;
 class DviTPageFormList extends DviControl
 {
     protected $objectClass;
+    protected $formController;
+
     /**@var DviPanelGroup $panel*/
     protected $panel;
     /**@var DataGrid $datagrid*/
@@ -69,8 +71,15 @@ class DviTPageFormList extends DviControl
     {
         $this->createActionSearch($param);
 
-        $this->createActionSave();
 
-        $this->createActionClear();
+        $this->createActionClear($param);
+
+        $this->createActionNew();
+    }
+
+    protected function createActionNew($param = null, $label = 'New')
+    {
+        $label = _t($label);
+        $this->panel->addCustomActionLink([$this->formController, 'onEdit'], 'fa:plus', $label, $param);
     }
 }

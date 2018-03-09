@@ -90,6 +90,6 @@ trait DviTPageSearch
         $this->panel->addActionSearch();
         $this->panel->getButton()
             ->getAction()
-            ->setParameters(self::getNewParams($param));
+            ->setParameters(self::getNewParams());
     }
 }
