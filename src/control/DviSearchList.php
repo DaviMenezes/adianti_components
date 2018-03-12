@@ -20,9 +20,10 @@ use Dvi\Adianti\Widget\Form\DviPanelGroup;
  * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
  */
 
-class DviSearchList extends DviControl
+abstract class DviSearchList extends DviControl
 {
     protected $objectClass;
+
     /**@var DviPanelGroup $panel*/
     protected $panel;
     /**@var DataGrid $datagrid*/
@@ -68,17 +69,14 @@ class DviSearchList extends DviControl
         parent::add($vbox);
     }
 
-    public function mountModelFields($param)
-    {
-
-    }
+    abstract protected function mountModelFields($param);
 
     protected function createActions($param)
     {
         $this->createActionSearch($param);
 
-        $this->createActionSave($param);
-
         $this->createActionClear($param);
+
+        $this->createActionNew($param);
     }
 }
