@@ -192,10 +192,10 @@ abstract class DviModel extends DviTRecord
         return $this->form_row_fields;
     }
 
-    public function setMap($atribute_name, $class)
+    public function setMap($attribute_name, $class)
     {
-        $this->foreign_keys[strtolower((new \ReflectionClass($class))->getShortName())] = $class;
-        $this->addAttribute((string)$atribute_name.'_id');
+        $this->foreign_keys[$attribute_name] = $class;
+        $this->addAttribute((string)$attribute_name.'_id');
 
         if (empty($this->id)) {
             $obj = new $class();

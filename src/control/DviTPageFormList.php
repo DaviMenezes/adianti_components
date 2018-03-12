@@ -51,6 +51,8 @@ class DviTPageFormList extends DviControl
 
         $this->createPanelForm($param);
 
+        $this->mountModelFields($param);
+
         $this->createActions($param);
 
         $this->createDataGrid();
@@ -70,8 +72,7 @@ class DviTPageFormList extends DviControl
     protected function createActions($param)
     {
         $this->createActionSearch($param);
-
-
+        
         $this->createActionClear($param);
 
         $this->createActionNew();

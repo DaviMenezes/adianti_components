@@ -51,6 +51,7 @@ class DviTRecord extends TRecord
     #region [BUILD MODEL] *******************************************
     public function __get($property)
     {
+        $new_property = str_replace('_', '', $property);
         if (array_key_exists($property, $this->foreign_keys)) {
             return $this->getMagicObject($property);
         }
@@ -84,7 +85,7 @@ class DviTRecord extends TRecord
         return $this->getMagicObject($property);
     }
 
-    private function addPublicAtributes()
+    private function addPublicAttributes()
     {
         $publics = $this->getPublicProperties();
         foreach ($publics as $key => $value) {
@@ -94,15 +95,17 @@ class DviTRecord extends TRecord
         }
     }
 
-    private function getMagicObject($atribute)
+    private function getMagicObject($attribute)
     {
-        $obj = $this->objects[$atribute] ?? null;
+        $obj = $this->objects[$attribute] ?? null;
         if (empty($obj)) {
-            $atribute_id = $atribute.'_id';
-            $atribute_class = $this->foreign_keys[$atribute];
-            $this->objects[$atribute] = new $atribute_class($this->$atribute_id);
+            $atribute_id = $attribute.'_id';
+            $atribute_class = $this->foreign_keys[$attribute];
+            $obj = new $atribute_class($this->$atribute_id);
+            $this->$attribute = $obj;
+            $this->objects[$attribute] = $obj;
         }
-        return $this->objects[$atribute];
+        return $this->objects[$attribute];
     }
 
     public function getPublicProperties()

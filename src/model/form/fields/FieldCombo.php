@@ -2,8 +2,11 @@
 
 namespace Dvi\Adianti\Component\Model\Form\Fields;
 use Adianti\Base\Lib\Database\TRecord;
+use Adianti\Base\Lib\Database\TRepository;
+use Adianti\Base\Lib\Database\TTransaction;
 use Dvi\Adianti\Model\DBFormField;
 use Dvi\Adianti\Widget\Form\DCombo;
+use Dvi\Module\Finance\Model\Transaction;
 
 /**
  * Model DBCombo
@@ -36,7 +39,23 @@ class FieldCombo extends DBFormField
     public function model(string $model, string $value = 'name', $criteria = null)
     {
         /**@var TRecord $model*/
-        $items = $model::getIndexedArray('id', $value, $criteria);
+        $repository = new TRepository($model);
+        $objs = $repository->load($criteria);
+
+        $items = array();
+
+        foreach ($objs as $obj) {
+            $relationship_obj = explode('->', $value);
+            if (count($relationship_obj) > 0) {
+                $prop_value = null;
+                foreach ($relationship_obj as $key => $item_value) {
+                    $prop_name = $relationship_obj[$key];
+                    $prop_value = $prop_value ? $prop_value->$prop_name : $obj->$prop_name;
+                }
+            }
+            $items[$obj->id] = $prop_value;
+        }
+
         $this->field->items($items);
 
         return $this;
