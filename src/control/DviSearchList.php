@@ -10,7 +10,7 @@ use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
 /**
- * Manipulação de grids bootstraps
+ * Cria tela com formulário de pesquisa com listagem paginada
  *
  * @version    Dvi 1.0
  * @package    grid bootstrap to Adianti Framework
@@ -20,11 +20,9 @@ use Dvi\Adianti\Widget\Form\DviPanelGroup;
  * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
  */
 
-class DviTPageFormList extends DviControl
+class DviSearchList extends DviControl
 {
     protected $objectClass;
-    protected $formController;
-
     /**@var DviPanelGroup $panel*/
     protected $panel;
     /**@var DataGrid $datagrid*/
@@ -56,6 +54,7 @@ class DviTPageFormList extends DviControl
         $this->createActions($param);
 
         $this->createDataGrid();
+
         $this->createPageNavigation($param);
 
         $vbox = new TVBox();
@@ -69,18 +68,17 @@ class DviTPageFormList extends DviControl
         parent::add($vbox);
     }
 
+    public function mountModelFields($param)
+    {
+
+    }
+
     protected function createActions($param)
     {
         $this->createActionSearch($param);
-        
+
+        $this->createActionSave($param);
+
         $this->createActionClear($param);
-
-        $this->createActionNew();
-    }
-
-    protected function createActionNew($param = null, $label = 'New')
-    {
-        $label = _t($label);
-        $this->panel->addCustomActionLink([$this->formController, 'onEdit'], 'fa:plus', $label, $param);
     }
 }

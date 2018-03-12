@@ -257,7 +257,7 @@ trait DviTPageForm
     private function reloadIfClassExtendFormAndListing($param)
     {
         $parent_class = get_parent_class(get_called_class());
-        if ($parent_class == DviTPageFormList::class) {
+        if ($parent_class == DviSearchList::class) {
             $this->onReload($param);
         }
     }
