@@ -13,6 +13,7 @@ use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Dialog\TQuestion;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Widget\Base\DataGrid;
+use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Exception;
 
 /**
@@ -27,6 +28,9 @@ use Exception;
  */
 trait DviTPageList
 {
+    /**@var DviPanelGroup $panel*/
+    protected $panel;
+
     protected static $form;
 
     /**@var DataGrid $datagrid*/
@@ -44,6 +48,8 @@ trait DviTPageList
     protected $grid_loaded =  false;
 
     private $useCheckButton;
+
+    protected $formController;
 
 
     private static function getUrlParams(): array
@@ -209,19 +215,12 @@ trait DviTPageList
 
     public static function getUrlPaginationParameters($param): array
     {
-        //o carregamento da classe pode ser via ajax então os parametros da url a serem considerados
-        //devem ser do $param ao invés do $_SERVER
         if (self::callCameFromAnotherClass($param)) {
             unset($param['class']);
             return $param;
         }
 
         $new_url_params = DviControl::getNewParams();
-//        $new_url_params['back_method'] = $param['method']?? null;
-
-//        if (empty($new_url_params['back_method'])) {
-//            unset($new_url_params['back_method']);
-//        }
 
         return $new_url_params;
     }
@@ -255,5 +254,10 @@ trait DviTPageList
     public function useCheckButton()
     {
         $this->useCheckButton = true;
+    }
+
+    protected function createActionNew($param)
+    {
+        $this->panel->addCustomActionLink([$this->formController], 'fa:plus fa-2x', _t('New'), $param['params']);
     }
 }
