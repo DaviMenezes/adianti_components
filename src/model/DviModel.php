@@ -7,6 +7,7 @@ use Dvi\Adianti\Component\Model\Form\Fields\FieldCombo;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldCurrency;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldDate;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldDateTime;
+use Dvi\Adianti\Component\Model\Form\Fields\FieldHtml;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldText;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldVarchar;
 use Dvi\Adianti\Widget\Base\DGridColumn;
@@ -83,6 +84,24 @@ abstract class DviModel extends DviTRecord
         $table_field_name = $this->getTableFieldName($name);
 
         $this->$field = FieldText::create($table_field_name, $maxlength, $height, $required, $label);
+
+        return $this->$field;
+    }
+
+    protected function addHtml(
+        string $name,
+        int $maxlength,
+        int $height,
+        bool $required = false,
+        string $label = null
+    ):FieldHtml {
+        parent::addAttribute($name);
+
+        $field = 'field_'.$name;
+
+        $table_field_name = $this->getTableFieldName($name);
+
+        $this->$field = new FieldHtml($table_field_name, $maxlength, $height, $required, $label);
 
         return $this->$field;
     }
@@ -170,13 +189,20 @@ abstract class DviModel extends DviTRecord
         foreach ($this->form_row_fields as $key => $form_row_field) {
             $cols = array();
             foreach ($form_row_field as $row_column_key => $row_column_value) {
-                if (empty($row_column_value)) {
+                $class = null;
+                if (is_array($row_column_value)) {
+                    $column_value = $row_column_value[0];
+                    $class = $row_column_value[1];
+                } else {
+                    $column_value = $row_column_value;
+                }
+                if (empty($column_value)) {
                     throw new \Exception('Verifique o nome dos campos');
                 }
 
-                $field = $row_column_value->getField();
+                $field = $column_value->getField();
 
-                $cols[] = new DGridColumn($field);
+                $cols[] = new DGridColumn($field, $class);
             }
             $this->form_row_fields[$key] = $cols;
         }
