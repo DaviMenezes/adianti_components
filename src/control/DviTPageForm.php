@@ -91,8 +91,6 @@ trait DviTPageForm
             $new_params['id'] = $objMaster->id;
 
             $this->afterSave($new_params);
-
-
         } catch (Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());

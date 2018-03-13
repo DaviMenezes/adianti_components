@@ -2,6 +2,7 @@
 namespace Dvi\Adianti\Widget\Util;
 
 use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Util\TImage;
 use Adianti\Base\Lib\Widget\Util\TTextDisplay;
 
@@ -18,7 +19,7 @@ use Adianti\Base\Lib\Widget\Util\TTextDisplay;
 class DActionLink extends TTextDisplay
 {
     private $label;
-    private $image;
+    private $a_content;
 
     public function __construct(
         TAction $action = null,
@@ -34,18 +35,20 @@ class DActionLink extends TTextDisplay
             $this->image($icon);
         }
 
-        parent::__construct($this->image, $color, $size, $decoration);
+        parent::__construct($this->a_content, $color, $size, $decoration);
         parent::setName('a');
 
         $this->action($action);
     }
 
-    public function image($image)
+    public function image($icon)
     {
-        $this->image = new TImage($image);
-        $this->image->style ='float:left;';
+        $this->a_content = new TElement('span');
+        $image =  new TImage($icon);
+        $image->style ='float:left;';
+        $this->a_content->add($image);
         if ($this->label) {
-            $this->image .= '<div class="dvi_btn_label">'.$this->label.'</div>';
+            $this->a_content->add('<div class="dvi_btn_label">'.$this->label.'</div>');
         }
         return $this;
     }

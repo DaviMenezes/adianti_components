@@ -58,7 +58,7 @@ class DEntry extends FieldEntry
                 $validator  = $validation[1];
                 $parameters = $validation[2];
 
-                if ($validator instanceof TEmailValidator and !empty($this->value)) {
+                if ($validator instanceof TEmailValidator and empty($this->value)) {
                     continue;
                 }
                 $validator->validate($label, $this->getValue(), $parameters);

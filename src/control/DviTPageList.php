@@ -51,7 +51,6 @@ trait DviTPageList
 
     protected $formController;
 
-
     private static function getUrlParams(): array
     {
         $url_params = explode('?', $_SERVER['HTTP_REFERER']);
@@ -130,7 +129,7 @@ trait DviTPageList
         $class = get_called_class();
         $this->datagrid = new DataGrid($class, 'grid', $showId);
 
-        $this->datagrid->useEditAction(get_called_class());
+        $this->datagrid->useEditAction($this->formController ?? get_called_class());
 
         $this->createDatagridColumns($showId);
 
@@ -258,6 +257,6 @@ trait DviTPageList
 
     protected function createActionNew($param)
     {
-        $this->panel->addCustomActionLink([$this->formController], 'fa:plus fa-2x', _t('New'), $param['params']);
+        $this->panel->addCustomActionLink([$this->formController], 'fa:plus fa-2x', _t('New'), $param['params']?? null);
     }
 }
