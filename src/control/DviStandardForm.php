@@ -7,6 +7,7 @@ use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TButton;
 use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Widget\Form\DButton;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
 /**
@@ -24,9 +25,9 @@ class DviStandardForm extends DviControl
     protected $objectClass;
     /**@var DviPanelGroup $panel*/
     protected $panel;
-    /**@var TAction $button_save*/
+    /**@var DButton $button_save*/
     private $button_save;
-    /**@var TButton $button_clear*/
+    /**@var DButton $button_clear*/
     private $button_clear;
 
     use DviTPageForm;
