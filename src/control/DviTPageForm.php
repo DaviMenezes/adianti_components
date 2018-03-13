@@ -90,14 +90,19 @@ trait DviTPageForm
             $new_params = DviControl::getNewParams();
             $new_params['id'] = $objMaster->id;
 
-            $class = (new \ReflectionClass(get_called_class()))->getShortName();
-            AdiantiCoreApplication::loadPage($class, 'onEdit', $new_params);
+            $this->afterSave($new_params);
 
 
         } catch (Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
         }
+    }
+
+    protected function afterSave($param)
+    {
+        $class = (new \ReflectionClass(get_called_class()))->getShortName();
+        AdiantiCoreApplication::loadPage($class, 'onEdit', $param);
     }
 
     protected function setFormWithParams($params)
@@ -166,12 +171,14 @@ trait DviTPageForm
     {
         $this->panel->addActionSave();
         $this->button_save = $this->panel->getButton();
+        return $this->button_save;
     }
 
     protected function createActionClear($param)
     {
         $this->panel->addActionClear();
         $this->button_clear = $this->panel->getButton();
+        return $this->button_clear;
     }
 
     protected function populateFormDataWithObjectMaster(&$form_data)
