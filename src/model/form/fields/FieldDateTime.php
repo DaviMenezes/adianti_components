@@ -32,12 +32,11 @@ class FieldDateTime extends DBFormField
         if ($required) {
             $this->field->addValidation($label, new TRequiredValidator());
         }
-        $this->field->setDatabaseMask('yyyy-mm-dd hh:ii:ss');
 
         $this->field->setLabel($label);
 
-        $this->field->setMask('dd/mm/yyyy');
-        $this->field->setDatabaseMask('yyyy-mm-dd');
+        $this->field->setMask('dd/mm/yyyy hh:ii:ss');
+        $this->field->setDatabaseMask('yyyy-mm-dd hh:ii:ss');
     }
 
     public static function create(string $name, bool $required = false, string $label = null): FieldDateTime
