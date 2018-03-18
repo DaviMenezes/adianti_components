@@ -7,7 +7,7 @@ namespace Dvi\Adianti\Model;
  * @package    model
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 
 interface IDviRecord

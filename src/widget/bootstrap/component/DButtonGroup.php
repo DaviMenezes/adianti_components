@@ -13,11 +13,10 @@ use Dvi\Adianti\Widget\IDviWidget;
  * @subpackage widget
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class DButtonGroup implements IDviWidget
 {
-
     private $items = array();
     private $style;
 
@@ -44,7 +43,7 @@ class DButtonGroup implements IDviWidget
         $this->items[] = $btn;
     }
 
-    public function addLink(array $action, $icon = null, array $parameters = null, $label = null,  $style = null)
+    public function addLink(array $action, $icon = null, array $parameters = null, $label = null, $style = null)
     {
         $params ='';
         if ($parameters) {

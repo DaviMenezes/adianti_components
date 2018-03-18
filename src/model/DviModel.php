@@ -11,7 +11,6 @@ use Dvi\Adianti\Component\Model\Form\Fields\FieldHtml;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldText;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldVarchar;
 use Dvi\Adianti\Widget\Base\DGridColumn;
-use Dvi\Adianti\Widget\Container\DVBox;
 
 /**
  * Model DviModel

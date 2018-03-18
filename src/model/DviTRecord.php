@@ -6,7 +6,6 @@ use Adianti\Base\Lib\Database\TExpression;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Database\TTransaction;
-use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Database\DTransaction;
 use Exception;
 use PDO;
@@ -22,7 +21,7 @@ use ReflectionProperty;
  * @package    model
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class DviTRecord extends TRecord
 {

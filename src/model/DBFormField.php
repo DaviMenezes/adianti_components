@@ -3,8 +3,6 @@
 namespace Dvi\Adianti\Model;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Widget\Form\TEntry;
-use Adianti\Base\Lib\Widget\Form\TField;
 
 /**
  * Model DBFormField

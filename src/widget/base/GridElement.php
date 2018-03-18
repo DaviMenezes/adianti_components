@@ -11,7 +11,7 @@ use Adianti\Base\Lib\Widget\Form\TLabel;
  * @subpackage base
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class GridElement
 {

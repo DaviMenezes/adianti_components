@@ -13,7 +13,7 @@ use Dvi\Adianti\Widget\Form\Field\SearchableField;
  * @subpackage widget
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class DDate extends TDate
 {

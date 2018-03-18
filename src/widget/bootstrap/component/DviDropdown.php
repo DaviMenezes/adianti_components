@@ -8,8 +8,8 @@ use Adianti\Base\Lib\Widget\Base\TElement;
  *
  * @author DAVIO
  */
-class DviDropdown {
-
+class DviDropdown
+{
     private $items = array();
     private $label;
     private $button_id;
@@ -25,24 +25,27 @@ class DviDropdown {
     public function addAction($programName, $method, $label, $faIcon, array $arrayParams = null)
     {
         $params = '';
-        if($arrayParams)
-            foreach ( $arrayParams as $key => $parameter )
+        if ($arrayParams) {
+            foreach ($arrayParams as $key => $parameter) {
                 $params .= '&'.$key.'='.$parameter;
+            }
+        }
 
         $link= ['href'=>'class='.$programName.'&method='.$method.$params, 'label'=>$label, 'icon'=>$faIcon];
-        $this->addItems($link, 'link'); 
+        $this->addItems($link, 'link');
     }
     public function addEditAction($id, $programName)
     {
         $link= ['href'=>'class='.$programName.'&method='.'onEdit&id='.$id, 'label'=>_t('Edit'), 'icon'=>'fa-pencil-square-o blue fa-2x'];
-        $this->addItems($link, 'link');        
+        $this->addItems($link, 'link');
     }
     public function addDeleteAction($id, $programName)
     {
         $link= ['href'=>'class='.$programName.'&method='.'onDelete&id='.$id, 'label'=>_t('Delete'), 'icon'=>'fa-trash-o red fa-2x'];
-        $this->addItems($link, 'link');        
+        $this->addItems($link, 'link');
     }
-    public function addSeparator() {
+    public function addSeparator()
+    {
         $li = new TElement('li');
         $li->role = 'separator';
         $li->class = 'divider';
@@ -116,9 +119,8 @@ class DviDropdown {
         $ul->class = 'dropdown-menu dropdown-menu-'.$this->menu_align;
         $ul->tag('aria-labelledby', $this->button_id);
         
-        foreach ( $this->items as $item ) {
-           
-            if(isset($item['link'])){
+        foreach ($this->items as $item) {
+            if (isset($item['link'])) {
                 $link = $item['link'];
                 $li = '<li>'
                         . '<a href = index.php?'.$link['href'].' generator="adianti" style = "height: 30px; style="cursor: pointer"">'
@@ -128,13 +130,11 @@ class DviDropdown {
                         . '</li>';
                 
                 $ul->add($li);
-            }else if( isset( $item['separator'])){
-                 $ul->add($item['separator']);
+            } elseif (isset($item['separator'])) {
+                $ul->add($item['separator']);
             }
-            
         }
         
         return $ul;
-        
     }
 }

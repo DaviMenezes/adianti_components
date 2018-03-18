@@ -7,11 +7,11 @@
  * @package    model
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 namespace Dvi\Adianti\Helpers;
 
-use TMail;
+use Adianti\Base\App\Lib\Util\TMail;
 
 /**
  * Dvi Mail

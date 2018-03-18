@@ -18,7 +18,6 @@ class DBField
     private $type;
     private $required;
 
-
     public function __construct(string $name, string $type, bool $required = false)
     {
         $this->name = $name;
@@ -40,8 +39,4 @@ class DBField
     {
         return $this->required;
     }
-
-
-
-//    protected abstract function getFormField();
 }

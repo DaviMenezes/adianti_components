@@ -14,7 +14,7 @@ use Adianti\Base\Lib\Widget\Util\TTextDisplay;
  * @subpackage widget
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class DActionLink extends TTextDisplay
 {
@@ -55,7 +55,6 @@ class DActionLink extends TTextDisplay
 
     public function action($action, array $params = null)
     {
-
         if (is_array($action) or is_a($action, TAction::class)) {
             if (is_array($action)) {
                 if (count($action)) {

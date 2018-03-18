@@ -31,7 +31,6 @@ use Adianti\Base\Lib\Widget\Form\TSelect;
 use Adianti\Base\Lib\Widget\Form\TSlider;
 use Adianti\Base\Lib\Widget\Form\TSpinner;
 use Adianti\Base\Lib\Widget\Form\TText;
-use Adianti\Base\Lib\Widget\Util\TTextDisplay;
 use Adianti\Base\Lib\Widget\Wrapper\TDBCombo;
 use Adianti\Base\Lib\Widget\Wrapper\TDBSeekButton;
 use Adianti\Base\Lib\Wrapper\BootstrapNotebookWrapper;
@@ -40,11 +39,9 @@ use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DGridBootstrap;
 use Dvi\Adianti\Widget\Base\DGridColumn;
 use Dvi\Adianti\Widget\Base\DGridColumn as Col;
-use Dvi\Adianti\Widget\Base\DGridRow;
 use Dvi\Adianti\Widget\Base\GridElement;
 use Dvi\Adianti\Widget\Base\GroupField;
 use Dvi\Adianti\Widget\Bootstrap\Component\DButtonGroup;
-use Dvi\Adianti\Widget\Bootstrap\Component\InputGroup;
 use Dvi\Adianti\Widget\Container\DHBox;
 use Dvi\Adianti\Widget\Container\DVBox;
 use Dvi\Adianti\Widget\IDviWidget;
@@ -59,7 +56,7 @@ use Dvi\Adianti\Widget\Util\DActionLink;
  * @subpackage Widget
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class DviPanelGroup implements IDviWidget
 {
@@ -185,7 +182,7 @@ class DviPanelGroup implements IDviWidget
                 $column->useLabelField($this->useLabelFields);
                 $row->addCol($column);
             }
-//            $row->addCols($columns);
+            //            $row->addCols($columns);
         }
         return $this;
     }
@@ -668,7 +665,6 @@ class DviPanelGroup implements IDviWidget
                 foreach ($element->getChilds() as $child) {
                     $fields[] = $child;
                 };
-
             } else {
                 $fields[] = $element;
             }

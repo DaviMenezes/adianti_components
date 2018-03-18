@@ -3,7 +3,6 @@
 namespace Dvi\Adianti\Model;
 
 use Adianti\Base\Lib\Registry\TSession;
-use Dvi\Adianti\Model\DviTRecord;
 
 /**
  * Model ObjectDvi
@@ -12,7 +11,7 @@ use Dvi\Adianti\Model\DviTRecord;
  * @package    model
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class ObjectDvi extends DviTRecord
 {
