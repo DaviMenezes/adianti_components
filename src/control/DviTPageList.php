@@ -257,6 +257,8 @@ trait DviTPageList
 
     protected function createActionNew($param)
     {
-        $this->panel->addCustomActionLink([$this->formController], 'fa:plus fa-2x', _t('New'), $param['params']?? null);
+        if (!empty($this->formController)) {
+            $this->panel->addCustomActionLink([$this->formController], 'fa:plus fa-2x', _t('New'), $param['params']?? null);
+        }
     }
 }
