@@ -4,6 +4,7 @@ namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
+use Adianti\Base\Lib\Core\TApplication;
 use Adianti\Base\Lib\Registry\TSession;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Route;
@@ -85,6 +86,8 @@ class DviControl extends TPage
             return;
         }
         $this->currentObj = $this->objectClass::find($param['id'] ?? null);
-        $this->currentObj = !$this->currentObj ? new \stdClass() : $this->currentObj;
+        if (!$this->currentObj) {
+            TApplication::loadPage(get_called_class());
+        }
     }
 }
