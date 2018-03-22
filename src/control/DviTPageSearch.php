@@ -31,7 +31,6 @@ trait DviTPageSearch
     public function onSearch($param)
     {
         try {
-            //Todo check post 143
             DTransaction::open();
 
             $data = (array)$this->panel->getFormData();
@@ -52,6 +51,10 @@ trait DviTPageSearch
             foreach ($array_models as $model => $array_model) {
                 /**@var FormField $field*/
                 foreach ($array_model as $attribute => $value) {
+                    if (empty($value)) {
+                        continue;
+                    }
+
                     $modelShortName = DControl::getClassName($models_to_save[$model]);
                     $field = $this->panel->getForm()->getField($modelShortName.'_'.$attribute);
 
@@ -61,10 +64,6 @@ trait DviTPageSearch
                     $traits = class_uses($field);
 
                     if (in_array(SearchableField::class, $traits)) {
-                        if (empty($value)) {
-                            continue;
-                        }
-
                         $field->setValue($value);
                         $searchOperator = $field->getSearchOperator();
                         $filters[] = new TFilter($attribute, $searchOperator, $field->getSearchableValue());

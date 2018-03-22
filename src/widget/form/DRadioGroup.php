@@ -20,13 +20,15 @@ class DRadioGroup extends TRadioGroup
 {
     use SearchableField;
 
-    public function __construct(string $name, $placeholder, $label = null, $required = false)
+    public function __construct(string $name, $placeholder, $required = false)
     {
         try {
             parent::__construct($name);
 
-            $fc = mb_strtoupper(mb_substr($label, 0, 1));
-            $label = $fc.mb_substr($label, 1);
+            $this->setLayout('horizontal');
+
+            $fc = mb_strtoupper(mb_substr($placeholder, 0, 1));
+            $label = $fc.mb_substr($placeholder, 1);
 
             $this->setLabel($label);
 
@@ -40,7 +42,7 @@ class DRadioGroup extends TRadioGroup
             new TMessage('info', $e->getMessage());
         }
     }
-    public function addItems(array $items)
+    public function items(array $items)
     {
         parent::addItems($items);
     }

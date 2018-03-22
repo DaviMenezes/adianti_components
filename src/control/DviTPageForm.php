@@ -119,8 +119,7 @@ trait DviTPageForm
                 TTransaction::open($this->database);
 
                 /**@var DviModel $this->currentObj*/
-                $this->currentObj = $this->objectClass::find($param['id'] ?? null);
-                $this->currentObj = $this->currentObj ? $this->currentObj : new $this->objectClass();
+                $this->currentObj = $this->objectClass::find($param['id'] ?? new $this->objectClass());
 
                 unset($param['class']);
                 unset($param['method']);
@@ -129,25 +128,13 @@ trait DviTPageForm
                 $form_data->id = $param['id'];
                 $this->populateFormDataWithObjectMaster($form_data);
 
-                $associated_objects = $this->currentObj->getForeignKeys();
-                foreach ($associated_objects as $associated) {
-                    $associated_model = (new \ReflectionClass($associated))->getShortName();
-                    $short_name = strtolower($associated_model);
-
-                    /**@var DviModel $associated_obj*/
-                    $foreign_key_attribute_name = $short_name . '_id';
-                    $associated_obj = $associated::find($this->currentObj->$foreign_key_attribute_name);
-                    if ($associated_obj) {
-                        foreach ($associated_obj->getAttributes() as $attribute) {
-                            $model_attribute_name = $associated_model.'_'.$attribute;
-                            $form_data->$model_attribute_name = $associated_obj->$attribute;
-                        }
-                    }
-                }
+                $this->populateFormDataWithAssociatedObjects($form_data);
 
                 $this->panel->setFormData($form_data);
 
                 TTransaction::close();
+
+                return $form_data;
             } else {
                 unset($param['class']);
                 unset($param['method']);
@@ -181,9 +168,13 @@ trait DviTPageForm
 
     protected function populateFormDataWithObjectMaster(&$form_data)
     {
+        $current_obj_class_name = ucfirst((new \ReflectionClass(get_class($this->currentObj)))->getShortName());
+        $attribute_id = $current_obj_class_name.'_id';
+        $form_data->$attribute_id = $form_data->id;
+
         foreach ($this->currentObj->getAttributes() as $attribute) {
-            $attribute_name = ucfirst((new \ReflectionClass(get_class($this->currentObj)))->getShortName()) . '_' . $attribute;
-            $form_data->$attribute_name = $this->currentObj->$attribute;
+            $attribute_id = $current_obj_class_name . '_' . $attribute;
+            $form_data->$attribute_id = $this->currentObj->$attribute;
         }
     }
 
@@ -208,7 +199,7 @@ trait DviTPageForm
 
         $obj_master_class_name = strtolower((new \ReflectionClass($this->objectClass))->getShortName());
 
-        $array_models[$obj_master_class_name]['id'] = $result['id'] ?? null;
+//        $array_models[$obj_master_class_name]['id'] = $result['id'] ?? null;
 
         return $array_models;
     }
@@ -257,6 +248,25 @@ trait DviTPageForm
             return false;
         }
         return true;
+    }
+
+    protected function populateFormDataWithAssociatedObjects(&$form_data)
+    {
+        $associated_objects = $this->currentObj->getForeignKeys();
+        foreach ($associated_objects as $associated) {
+            $associated_model = (new \ReflectionClass($associated))->getShortName();
+            $short_name = strtolower($associated_model);
+
+            /**@var DviModel $associated_obj */
+            $foreign_key_attribute_name = $short_name . '_id';
+            $associated_obj = $associated::find($this->currentObj->$foreign_key_attribute_name);
+            if ($associated_obj) {
+                foreach ($associated_obj->getAttributes() as $attribute) {
+                    $model_attribute_name = $associated_model . '_' . $attribute;
+                    $form_data->$model_attribute_name = $associated_obj->$attribute;
+                }
+            }
+        }
     }
 
     private function reloadIfClassExtendFormAndListing($param)

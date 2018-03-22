@@ -75,7 +75,7 @@ class DviControl extends TPage
 
     protected function isEditing($param)
     {
-        if (!empty($param['id']) and $param['id'] != 0) {
+        if (!empty($param['method']) and $param['method'] == 'onEdit' and !empty($param['id']) and $param['id'] != 0) {
             return true;
         }
         return false;
@@ -83,6 +83,9 @@ class DviControl extends TPage
 
     protected function createCurrentObject($param)
     {
+        if (!$this->isEditing($param)) {
+            return;
+        }
         $this->currentObj = $this->objectClass::find($param['id'] ?? null);
         $this->currentObj = !$this->currentObj ? new \stdClass() : $this->currentObj;
     }
