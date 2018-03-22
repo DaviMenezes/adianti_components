@@ -2,7 +2,6 @@
 namespace Dvi\Adianti\Widget\Base;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Dvi\Adianti\Widget\Base\DGridRow;
 
 /**
  * Manipulation to the bootstraps grids
@@ -12,7 +11,7 @@ use Dvi\Adianti\Widget\Base\DGridRow;
  * @subpackage base
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class DGridBootstrap
 {
@@ -25,7 +24,7 @@ class DGridBootstrap
     public function __construct($defaultColClass = null, $colStyle = null)
     {
         $this->grid = new TElement('div');
-//        $this->grid->style = 'margin-left: 15px; margin-right: 15px;';
+        //        $this->grid->style = 'margin-left: 15px; margin-right: 15px;';
         //$this->setContainerDefault();
         $this->defaultColClass = $defaultColClass;
         $this->defaultColStyle = $colStyle;
@@ -50,10 +49,10 @@ class DGridBootstrap
 
     public function show()
     {
-//        foreach ($this->rows as $row) {
-//            /**@var DGridRow $row */
-//            $row->prepareColumns();
-//        }
+        //        foreach ($this->rows as $row) {
+        //            /**@var DGridRow $row */
+        //            $row->prepareColumns();
+        //        }
         $this->grid->show();
     }
 }

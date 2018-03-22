@@ -2,7 +2,6 @@
 
 namespace Dvi\Adianti\Component\Model\Form\Fields;
 
-use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Dvi\Adianti\Model\DBFormField;
 use Dvi\Adianti\Widget\Form\DDate;
 

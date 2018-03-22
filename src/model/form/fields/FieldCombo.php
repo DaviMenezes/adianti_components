@@ -3,10 +3,8 @@
 namespace Dvi\Adianti\Component\Model\Form\Fields;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TRepository;
-use Adianti\Base\Lib\Database\TTransaction;
 use Dvi\Adianti\Model\DBFormField;
 use Dvi\Adianti\Widget\Form\DCombo;
-use Dvi\Module\Finance\Model\Transaction;
 
 /**
  * Model DBCombo

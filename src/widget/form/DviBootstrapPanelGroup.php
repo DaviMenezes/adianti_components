@@ -7,15 +7,13 @@ use Adianti\Base\Lib\Widget\Container\TNotebook;
 use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Form\TButton;
 use Adianti\Base\Lib\Widget\Form\TForm;
-use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Util\TActionLink;
 use Adianti\Base\Lib\Wrapper\BootstrapNotebookWrapper;
-use Dvi\Adianti\Widget\Base\DGridRow;
+use Dvi\Adianti\Widget\Base\DGridBootstrap;
 use Dvi\Adianti\Widget\Base\GridElement;
 use Dvi\Adianti\Widget\Base\GridNotebook;
 use Dvi\Adianti\Widget\Container\DHBox;
 use Dvi\Adianti\Widget\Container\DVBox;
-use Dvi\Adianti\Widget\Base\DGridBootstrap;
 
 /**
  * Cria painéis com formulários personalisados
@@ -25,7 +23,7 @@ use Dvi\Adianti\Widget\Base\DGridBootstrap;
  * @subpackage base
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class DviBootstrapPanelGroup
 {

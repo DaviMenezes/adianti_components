@@ -2,10 +2,8 @@
 
 namespace Dvi\Adianti\Widget\Container;
 
-use Adianti\Base\Lib\Widget\Container\THBox;
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
-use Dvi\Adianti\Widget\IDviWidget;
+use Adianti\Base\Lib\Widget\Container\THBox;
 use Dvi\Adianti\Widget\IGroupField;
 
 /**
@@ -16,7 +14,7 @@ use Dvi\Adianti\Widget\IGroupField;
  * @subpackage base
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class DHBox extends THBox implements IGroupField
 {

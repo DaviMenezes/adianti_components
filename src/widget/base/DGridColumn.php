@@ -15,7 +15,7 @@ use Dvi\Adianti\Widget\Form\DButton;
  * @subpackage base
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class DGridColumn extends TElement
 {
@@ -113,7 +113,6 @@ class DGridColumn extends TElement
             parent::show();
 
             return $this->childs;
-
         }
 
         foreach ($this->childs as $child) {

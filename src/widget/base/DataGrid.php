@@ -5,19 +5,16 @@ use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Dvi\Adianti\Control\DviSearchFormList;
-use Dvi\Adianti\Control\DviTPageList;
-use Dvi\Adianti\Route;
-use Dvi\Adianti\Widget\Base\DataGridColumn;
 
 /**
- * Manipulação de grids bootstraps
+ * Widget Base DataGrid
  *
  * @version    Dvi 1.0
- * @package    grid bootstrap to Adianti Framework
- * @subpackage base
+ * @package    Base
+ * @subpackage Widget
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class DataGrid extends TDataGrid
 {
@@ -113,14 +110,14 @@ class DataGrid extends TDataGrid
         return $this->grid_action_edit;
     }
 
-    public function useDeleteAction($class_name, $function_prefix = 'grid', $params_delete = null)
+    public function useDeleteAction($class_name, $function_prefix = 'grid', $params_delete = null): TDataGridAction
     {
         $this->grid_action_delete = new TDataGridAction([$class_name, $function_prefix . 'OnDelete'], $params_delete);
         $this->grid_action_delete->setField('id');
         $this->grid_action_delete->setLabel('Excluir');
         $this->grid_action_delete->setImage('fa:trash red fa-2x');
 
-//        return $this->grid_action_delete;
+        return $this->grid_action_delete;
     }
     #endregion
 }

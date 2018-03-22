@@ -9,7 +9,6 @@ use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 use Exception;
 
-
 /**
  * Model DCombo
  *
@@ -18,7 +17,7 @@ use Exception;
  * @subpackage widget
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class DCombo extends TCombo
 {
@@ -41,7 +40,7 @@ class DCombo extends TCombo
         }
 
         if ($tip) {
-//            $this->setTip(ucfirst($this->placeholder));
+            //            $this->setTip(ucfirst($this->placeholder));
         }
 
         if ($obj_array_value) {
@@ -74,7 +73,6 @@ class DCombo extends TCombo
             DTransaction::close();
 
             return $items;
-
         } catch (Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());

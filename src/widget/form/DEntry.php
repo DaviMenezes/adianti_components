@@ -2,21 +2,18 @@
 namespace Dvi\Adianti\Widget\Form;
 
 use Adianti\Base\Lib\Validator\TEmailValidator;
-use Adianti\Base\Lib\Validator\TRequiredValidator;
-use Adianti\Base\Lib\Widget\Form\TEntry;
 use Dvi\Adianti\Widget\Form\Field\FieldEntry;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
-use Dvi\Adianti\Widget\IDviWidget;
 
 /**
- * Model DEntry
+ * Widget Form DEntry
  *
  * @version    Dvi 1.0
  * @package    form
  * @subpackage widget
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes/Dvi-PHP-Framework-for-Adianti
+ * @link https://github.com/DaviMenezes
  */
 class DEntry extends FieldEntry
 {

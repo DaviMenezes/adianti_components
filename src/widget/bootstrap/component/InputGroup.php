@@ -3,11 +3,7 @@
 namespace Dvi\Adianti\Widget\Bootstrap\Component;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Widget\Form\TEntry;
-use Dvi\Adianti\Widget\Base\DGridColumn;
-use Dvi\Adianti\Widget\Base\DGridRow;
 use Dvi\Adianti\Widget\Base\GroupField;
-use Dvi\Adianti\Widget\Container\DHBox;
 use Dvi\Adianti\Widget\Form\DButton;
 use Dvi\Adianti\Widget\IDviWidget;
 use Dvi\Adianti\Widget\Util\DActionLink;
