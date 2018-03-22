@@ -114,11 +114,12 @@ trait DviTPageForm
     public function onEdit($param)
     {
         try {
+            if (isset($param['tab']) and $param['tab']) {
+                $this->panel->setCurrentNotebookPage($param['tab']);
+            }
+
             if (isset($param['id'])) {
                 TTransaction::open($this->database);
-
-                /**@var DviModel $this->currentObj*/
-                $this->currentObj = $this->objectClass::find($param['id'] ?? new $this->objectClass());
 
                 unset($param['class']);
                 unset($param['method']);
@@ -134,16 +135,6 @@ trait DviTPageForm
                 TTransaction::close();
 
                 return $form_data;
-            } else {
-                unset($param['class']);
-                unset($param['method']);
-
-                $this->currentObj = new \stdClass();
-                foreach ($param as $attribute => $value) {
-                    $this->currentObj->$attribute = $value;
-                }
-
-                $this->panel->setFormData($this->currentObj);
             }
         } catch (Exception $e) {
             TTransaction::rollback();

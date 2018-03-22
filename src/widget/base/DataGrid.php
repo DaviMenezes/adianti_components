@@ -46,7 +46,7 @@ class DataGrid extends TDataGrid
         if ($show_default_actions and $this->grid_action_edit) {
             $this->addAction($this->grid_action_edit);
         }
-        if ($show_default_actions and $this->grid_action_delete) {
+        if ($show_default_actions or $this->grid_action_delete) {
             $this->addAction($this->grid_action_delete);
         }
 
@@ -120,9 +120,12 @@ class DataGrid extends TDataGrid
         return $this->grid_action_delete;
     }
 
-    public function items(array $items)
+    public function items(array $items, bool $clear = true)
     {
         if (count($items)) {
+            if ($clear) {
+                $this->clear();
+            }
             $this->addItems($items);
         }
     }
