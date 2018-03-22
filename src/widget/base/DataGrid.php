@@ -119,5 +119,12 @@ class DataGrid extends TDataGrid
 
         return $this->grid_action_delete;
     }
+
+    public function items(array $items)
+    {
+        if (count($items)) {
+            $this->addItems($items);
+        }
+    }
     #endregion
 }

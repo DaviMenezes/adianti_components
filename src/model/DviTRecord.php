@@ -126,13 +126,6 @@ class DviTRecord extends TRecord
         /**@var DviTRecord $class*/
         $class = get_called_class();
 
-        $obj = new $class($id);
-        $foreignKeys = $obj->getForeignKeys();
-        foreach ($foreignKeys as $key => $foreign_key) {
-            $attribute = $key.'_id';
-            $foreign_key::remove($obj->$attribute);
-        }
-
         $class::where('id', '=', $id)->delete();
         
         return true;

@@ -6,6 +6,8 @@ use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
@@ -46,27 +48,38 @@ abstract class DviSearchList extends DviControl
 
     public function __construct($param)
     {
-        parent::__construct();
+        try {
+            DTransaction::open();
 
-        $this->createPanelForm($param);
+            parent::__construct();
 
-        $this->mountModelFields($param);
+            $this->createCurrentObject($param);
 
-        $this->createActions($param);
+            $this->createPanelForm($param);
 
-        $this->createDataGrid();
+            $this->mountModelFields($param);
 
-        $this->createPageNavigation($param);
+            $this->createActions($param);
 
-        $vbox = new TVBox();
-        $vbox->style = 'width:100%;';
-        $vbox->add($this->panel);
+            $this->createDataGrid();
 
-        $vbox->add($this->datagrid);
+            $this->createPageNavigation($param);
 
-        $vbox->add($this->pageNavigation);
+            $vbox = new TVBox();
+            $vbox->style = 'width:100%;';
+            $vbox->add($this->panel);
 
-        parent::add($vbox);
+            $vbox->add($this->datagrid);
+
+            $vbox->add($this->pageNavigation);
+
+            parent::add($vbox);
+
+            DTransaction::close();
+        } catch (\Exception $e) {
+            DTransaction::rollback();
+            new TMessage('error', $e->getMessage());
+        }
     }
 
     abstract protected function mountModelFields($param);

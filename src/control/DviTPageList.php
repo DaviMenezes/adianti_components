@@ -63,61 +63,10 @@ trait DviTPageList
         try {
             DTransaction::open($this->database);
 
-            $repository = new TRepository($this->objectClass);
-
-            if (empty($param['order'])) {
-                $param['order'] = 'id';
-                $param['direction'] = 'asc';
-            }
-
-            $limit = 10;
-            $criteria = new TCriteria();
-            $criteria->setProperties($param);
-            $criteria->setProperty('limit', $limit);
-
-            //get the filters genereted by the child classes
-            $called_class = DControl::getClassName(get_called_class());
-            $filters = TSession::getValue($called_class.'_filters');
-
-            if (!$filters and isset($param['filters']) and $param['filters']) {
-                $filters = $param['filters'];
-            }
-
-            if ($filters) {
-                foreach ($filters as $filter) {
-                    $criteria->add($filter);
-                }
-            }
-
-            $items = $repository->load($criteria, false);
-
-            //Todo checking (include a checkbutton if necessary)
-            /*if ($this->use_grid_panel and $this->useCheckButton) {
-                foreach ($items as $key => $item) {
-                                        $check = new TCheckButton($key.'_check_');
-                    $check->setIndexValue($item->id);
-
-                    $item->{'check'} = $check;
-                    $form = $this->panel_grid->getForm();
-                    $form->addField($check);
-                }
-            }*/
-
-            $this->datagrid->clear();
-            if ($items) {
-                $this->datagrid->addItems($items);
-            }
-
-            $criteria->resetProperties();
-            $count = $repository->count($criteria);
-
-            $this->pageNavigation->setCount($count);
-            $this->pageNavigation->setProperties($param);
-            $this->pageNavigation->setLimit($limit);
+            $this->populateGrids($param);
 
             DTransaction::close();
 
-            $this->grid_loaded = true;
         } catch (Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
@@ -260,5 +209,49 @@ trait DviTPageList
         if (!empty($this->formController)) {
             $this->panel->addCustomActionLink([$this->formController], 'fa:plus fa-2x', _t('New'), $param['params']?? null);
         }
+    }
+
+    protected function populateGrids($param)
+    {
+        $repository = new TRepository($this->objectClass);
+
+        if (empty($param['order'])) {
+            $param['order'] = 'id';
+            $param['direction'] = 'asc';
+        }
+
+        $limit = 10;
+        $criteria = new TCriteria();
+        $criteria->setProperties($param);
+        $criteria->setProperty('limit', $limit);
+
+        //get the filters genereted by the child classes
+        $called_class = DControl::getClassName(get_called_class());
+        $filters = TSession::getValue($called_class . '_filters');
+
+        if (!$filters and isset($param['filters']) and $param['filters']) {
+            $filters = $param['filters'];
+        }
+
+        if ($filters) {
+            foreach ($filters as $filter) {
+                $criteria->add($filter);
+            }
+        }
+
+        $items = $repository->load($criteria, false);
+
+        $this->datagrid->clear();
+        if ($items) {
+            $this->datagrid->addItems($items);
+        }
+        $this->grid_loaded = true;
+
+        $criteria->resetProperties();
+        $count = $repository->count($criteria);
+
+        $this->pageNavigation->setCount($count);
+        $this->pageNavigation->setProperties($param);
+        $this->pageNavigation->setLimit($limit);
     }
 }
