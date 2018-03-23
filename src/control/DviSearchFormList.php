@@ -54,6 +54,8 @@ class DviSearchFormList extends DviControl
 
             parent::__construct();
 
+            $this->createCurrentObject($param);
+
             $this->createPanelForm($param);
 
             $this->createActions($param);
