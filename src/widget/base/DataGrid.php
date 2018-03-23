@@ -46,7 +46,7 @@ class DataGrid extends TDataGrid
         if ($show_default_actions and $this->grid_action_edit) {
             $this->addAction($this->grid_action_edit);
         }
-        if ($show_default_actions or $this->grid_action_delete) {
+        if ($show_default_actions and $this->grid_action_delete) {
             $this->addAction($this->grid_action_delete);
         }
 
