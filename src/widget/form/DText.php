@@ -20,7 +20,7 @@ class DText extends TText
 {
     private $ucfirst_placeholder;
 
-    public function __construct(string $name, string $placeholder = null, int $maxlength = null, $height = '50', bool $tip = true, bool $required = false)
+    public function __construct(string $name, string $placeholder = null, int $max_length = null, $height = '50', bool $tip = true, bool $required = false)
     {
         parent::__construct($name);
 
@@ -40,9 +40,9 @@ class DText extends TText
             $this->addValidation($this->ucfirst_placeholder, new TRequiredValidator());
         }
 
-        if ($maxlength) {
-            $this->setMaxLength($maxlength);
-            $this->addValidation($this->ucfirst_placeholder, new TMaxLengthValidator(), [$maxlength]);
+        if ($max_length) {
+            $this->setMaxLength($max_length);
+            $this->addValidation($this->ucfirst_placeholder, new TMaxLengthValidator(), [$max_length]);
         }
     }
 

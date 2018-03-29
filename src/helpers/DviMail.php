@@ -31,8 +31,7 @@ class DviMail
         $this->mail = new TMail();
         
         $this->setBody($body);
-        $this->setSubject('Você tem uma nova mensagem');
-        
+
         $this->toEmails[] = $mails;
         
         //habilite para testar
@@ -59,10 +58,12 @@ class DviMail
         
         return $this;
     }
+
     private function getSubject()
     {
         return $this->subject;
     }
+
     public function send()
     {
         $ini = parse_ini_file('app/config/email.ini');

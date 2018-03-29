@@ -20,7 +20,7 @@ abstract class FieldEntry extends TEntry
 {
     private $ucfirstLabel;
 
-    public function __construct(string $name, string $placeholder = null, int $maxlength = null, bool $required = false, bool $tip = true)
+    public function __construct(string $name, string $placeholder = null, int $max_length = null, bool $required = false, bool $tip = true)
     {
         parent::__construct($name);
 
@@ -34,9 +34,11 @@ abstract class FieldEntry extends TEntry
 
         $this->ucfirstLabel = ucfirst($label);
 
-        if ($maxlength) {
-            $this->setMaxLength($maxlength);
-            $this->addValidation($this->ucfirstLabel, new TMaxLengthValidator(), [$maxlength]);
+        if ($max_length) {
+            $this->setMaxLength($max_length);
+            $this->addValidation($this->ucfirstLabel, new TMaxLengthValidator(), [$max_length]);
+
+            $this->placeholder = $label. ' max length. '.$max_length;
         }
 
         if ($required) {

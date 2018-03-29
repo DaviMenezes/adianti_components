@@ -22,27 +22,23 @@ class DEntry extends FieldEntry
     public function __construct(
         string $name,
         string $placeholder = null,
-        int $maxlength = null,
+        int $max_length = null,
         bool $required = false,
         bool $tip = true
     ) {
-        parent::__construct($name, $placeholder, $maxlength, $required, $tip);
+        parent::__construct($name, $placeholder, $max_length, $required, $tip);
 
         $this->operator('like');
     }
 
-    /**
-     * @param string $name
-     * @return DEntry
-     */
     public static function create(
         string $name,
         string $placeholder = null,
-        int $maxlength = null,
+        int $max_length = null,
         bool $required = false,
         bool $tip = true
-    ) {
-        $obj = new DEntry($name, $placeholder, $maxlength, $required, $tip);
+    ):DEntry {
+        $obj = new DEntry($name, $placeholder, $max_length, $required, $tip);
 
         return $obj;
     }
