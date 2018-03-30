@@ -23,7 +23,7 @@ class DataGrid extends TDataGrid
 
     protected $custom_actions = array();
 
-    public function __construct($class_name, $function_prefix = 'grid', $use_column_id = true, $params_delete = null)
+    public function __construct($class_name, $function_prefix = 'grid', $use_column_id = true, $use_delete_action = null, $params_delete = null)
     {
         parent::__construct();
 
@@ -38,7 +38,9 @@ class DataGrid extends TDataGrid
             $this->useEditAction($class_name);
         }
 
-        $this->useDeleteAction($class_name, $function_prefix, $params_delete);
+        if ($use_delete_action) {
+            $this->useDeleteAction($class_name, $function_prefix, $params_delete);
+        }
     }
 
     public function createModel($create_header = true, $show_default_actions = true)
