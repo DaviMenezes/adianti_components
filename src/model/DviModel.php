@@ -8,6 +8,7 @@ use Dvi\Adianti\Component\Model\Form\Fields\FieldCurrency;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldDate;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldDateTime;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldHtml;
+use Dvi\Adianti\Component\Model\Form\Fields\FieldRadio;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldText;
 use Dvi\Adianti\Component\Model\Form\Fields\FieldVarchar;
 use Dvi\Adianti\Widget\Base\DGridColumn;
@@ -39,6 +40,17 @@ abstract class DviModel extends DviTRecord
         $field = 'field_'.$name;
         $table_field_name = $this->getTableFieldName($name);
         $this->$field = FieldVarchar::create($table_field_name, 'text', $size, $required, $label);
+
+        return $this->$field;
+    }
+
+    protected function addRadioGroup(string $name, bool $required = false, $label = null):FieldRadio
+    {
+        parent::addAttribute($name);
+
+        $field = 'field_'.$name;
+        $table_field_name = $this->getTableFieldName($name);
+        $this->$field = new FieldRadio($table_field_name, 'text', $required, $label);
 
         return $this->$field;
     }
