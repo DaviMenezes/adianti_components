@@ -26,6 +26,7 @@ class DRadioGroup extends TRadioGroup
             parent::__construct($name);
 
             $this->setLayout('horizontal');
+            $this->setUseButton();
 
             $fc = mb_strtoupper(mb_substr($placeholder, 0, 1));
             $label = $fc.mb_substr($placeholder, 1);
