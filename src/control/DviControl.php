@@ -74,7 +74,7 @@ class DviControl extends TPage
 
     protected function isEditing($param)
     {
-        if (!empty($param['method']) and $param['method'] == 'onEdit' and !empty($param['id']) and $param['id'] != 0) {
+        if (!empty($param['id']) and $param['id'] != 0) {
             return true;
         }
         return false;
