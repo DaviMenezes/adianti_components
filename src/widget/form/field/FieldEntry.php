@@ -37,8 +37,6 @@ abstract class FieldEntry extends TEntry
         if ($max_length) {
             $this->setMaxLength($max_length);
             $this->addValidation($this->ucfirstLabel, new TMaxLengthValidator(), [$max_length]);
-
-            $this->placeholder = $label. ' max length. '.$max_length;
         }
 
         if ($required) {
