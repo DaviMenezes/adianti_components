@@ -67,5 +67,6 @@ class FieldCombo extends DBFormField
     public function items(array $items)
     {
         $this->field->items($items);
+        return $this;
     }
 }
