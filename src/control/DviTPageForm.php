@@ -200,6 +200,12 @@ trait DviTPageForm
 
         foreach ($attributes as $attribute_name => $value) {
             if (in_array($attribute_name, array_keys($obj_attributes))) {
+                $class_name = parent::getClassName($current_obj);
+                $attribute_class_name = $class_name.'_'.$attribute_name;
+                $formField = $this->panel->getForm()->getField($attribute_class_name);
+                if ($formField->isDisabled()) {
+                    continue;
+                }
                 $this->setAttributeValue($current_obj, $attribute_name, $value);
             }
         }

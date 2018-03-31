@@ -19,6 +19,7 @@ use Adianti\Base\Lib\Widget\Form\TText;
 class DText extends TText
 {
     private $ucfirst_placeholder;
+    private $field_disabled;
 
     public function __construct(string $name, string $placeholder = null, int $max_length = null, $height = '50', bool $tip = true, bool $required = false)
     {
@@ -51,5 +52,17 @@ class DText extends TText
         if ($length > 0) {
             $this->tag->maxlength = $length;
         }
+    }
+
+    public function disable($disable = true)
+    {
+        $this->field_disabled = $disable;
+
+        parent::setEditable(!$disable);
+    }
+
+    public function isDisabled()
+    {
+        return $this->field_disabled;
     }
 }

@@ -19,6 +19,8 @@ class DDate extends TDate
 {
     use SearchableField;
 
+    private $field_disabled;
+
     public function __construct($name, string $placeholder = null, bool $required = false, bool $tip = true)
     {
         parent::__construct($name);
@@ -40,5 +42,17 @@ class DDate extends TDate
         //Todo check location user
         $this->setMask('dd/mm/yyyy');
         $this->setDatabaseMask('yyyy-mm-dd');
+    }
+
+    public function disable($disable = true)
+    {
+        $this->field_disabled = $disable;
+
+        parent::setEditable(!$disable);
+    }
+
+    public function isDisabled()
+    {
+        return $this->field_disabled;
     }
 }

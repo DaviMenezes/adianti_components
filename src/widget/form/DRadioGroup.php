@@ -20,6 +20,8 @@ class DRadioGroup extends TRadioGroup
 {
     use SearchableField;
 
+    private $field_disabled;
+
     public function __construct(string $name, $placeholder, $required = false)
     {
         try {
@@ -46,5 +48,17 @@ class DRadioGroup extends TRadioGroup
     public function items(array $items)
     {
         parent::addItems($items);
+    }
+
+    public function disable($disable = true)
+    {
+        $this->field_disabled = $disable;
+
+        parent::setEditable(!$disable);
+    }
+
+    public function isDisabled()
+    {
+        return $this->field_disabled;
     }
 }
