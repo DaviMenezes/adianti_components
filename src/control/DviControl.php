@@ -6,7 +6,9 @@ use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Core\TApplication;
 use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Model\DviModel;
+use Dvi\Adianti\Model\IDviRecord;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
@@ -31,12 +33,20 @@ class DviControl extends TPage
 
     use DControl;
 
-    public function createPanelForm($param)
+    public function __construct($param)
     {
+        parent::__construct();
+
         $called_class = Route::getClassName(get_called_class());
 
         $this->panel = new DviPanelGroup($called_class, $this->pageTitle);
+        $id = new THidden('id');
+        $id->setValue($param['id']?? null);
+        $this->panel->addHiddenFields([$id]);
+    }
 
+    public function createPanelForm($param)
+    {
         if ($this->isEditing($param)) {
             $this->panel->useLabelFields(true);
         }
@@ -74,7 +84,7 @@ class DviControl extends TPage
 
     protected function isEditing($param)
     {
-        if (!empty($param['id']) and $param['id'] != 0) {
+        if ((!empty($param['id']) and $param['id'] != 0) or (!empty($this->currentObj))) {
             return true;
         }
         return false;
