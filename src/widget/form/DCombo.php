@@ -23,6 +23,8 @@ class DCombo extends TCombo
 {
     use SearchableField;
 
+    private $field_disabled;
+
     public function __construct(string $name, string $placeholder = null, $required = false, array $obj_array_value = null, bool $tip = true, bool $enable_search = true)
     {
         parent::__construct($name);
@@ -89,5 +91,17 @@ class DCombo extends TCombo
     {
         parent::addItems($items);
         return $this;
+    }
+
+    public function disable($disable = true)
+    {
+        $this->field_disabled = true;
+
+        $this->setEditable(!$disable);
+    }
+
+    public function isDisabled()
+    {
+        return $this->field_disabled;
     }
 }

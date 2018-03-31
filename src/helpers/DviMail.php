@@ -12,6 +12,7 @@
 namespace Dvi\Adianti\Helpers;
 
 use Adianti\Base\App\Lib\Util\TMail;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
 
 /**
  * Dvi Mail
@@ -25,6 +26,7 @@ class DviMail
     private $body;
     private $toEmails = array();
     private $subject;
+    private $error_msg;
 
     public function __construct($body, $mails = null)
     {
@@ -66,21 +68,43 @@ class DviMail
 
     public function send()
     {
-        $ini = parse_ini_file('app/config/email.ini');
-        
-        $mail = new TMail;
-        $mail->setFrom($ini['from'], $ini['name']);
-        
-        $mail->setSubject($this->getSubject());
-        $mail->setHtmlBody($this->getBody());
-        
-        foreach ($this->toEmails as $value) {
-            $mail->addAddress($value['email'], $value['nome']);
+        try {
+            $ini = parse_ini_file('app/config/email.ini');
+
+            $this->mail->setFrom($ini['from'], $ini['name']);
+
+            $this->mail->setSubject($this->getSubject());
+            $this->mail->setHtmlBody($this->getBody());
+
+            foreach ($this->toEmails as $value) {
+                $this->mail->addAddress($value['email'], $value['nome']);
+            }
+
+            $this->mail->SetUseSmtp();
+            $this->mail->SetSmtpHost($ini['host'], $ini['port']);
+            $this->mail->SetSmtpUser($ini['user'], $ini['pass']);
+            $this->mail->send();
+
+        } catch (\Exception $e) {
+            $this->error_msg = $e->getMessage();
         }
-        
-        $mail->SetUseSmtp();
-        $mail->SetSmtpHost($ini['host'], $ini['port']);
-        $mail->SetSmtpUser($ini['user'], $ini['pass']);
-        $mail->send();
+    }
+
+    public function addAttach($file)
+    {
+        $this->mail->addAttach($file);
+    }
+
+    public function success()
+    {
+        if ($this->error_msg) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getErrorMsg()
+    {
+        return $this->error_msg;
     }
 }

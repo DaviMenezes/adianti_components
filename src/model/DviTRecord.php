@@ -123,9 +123,9 @@ class DviTRecord extends TRecord
 
     public static function remove($id = null) : bool
     {
-        /**@var DviTRecord $class*/
         $class = get_called_class();
 
+        /**@var DviTRecord $class*/
         $class::where('id', '=', $id)->delete();
         
         return true;

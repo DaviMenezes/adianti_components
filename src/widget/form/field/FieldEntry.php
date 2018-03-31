@@ -19,6 +19,7 @@ use Adianti\Base\Lib\Widget\Form\TEntry;
 abstract class FieldEntry extends TEntry
 {
     private $ucfirstLabel;
+    private $field_disabled;
 
     public function __construct(string $name, string $placeholder = null, int $max_length = null, bool $required = false, bool $tip = true)
     {
@@ -58,5 +59,20 @@ abstract class FieldEntry extends TEntry
     public function setValueTest($string)
     {
         parent::setValue($string);
+    }
+
+    public function disable($disable = true)
+    {
+        $this->field_disabled = $disable;
+
+        if ($disable) {
+            $this->class = 'tfield_disabled';
+            $this->readonly = '1';
+        }
+    }
+
+    public function isDisabled()
+    {
+        return $this->field_disabled;
     }
 }

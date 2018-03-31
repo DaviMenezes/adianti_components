@@ -51,7 +51,7 @@ abstract class DviSearchList extends DviControl
         try {
             DTransaction::open();
 
-            parent::__construct();
+            parent::__construct($param);
 
             $this->createCurrentObject($param);
 
