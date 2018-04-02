@@ -61,10 +61,11 @@ trait DviTPageSearch
                     if (!$field) {
                         continue;
                     }
+                    $field->setValue($value);
+
                     $traits = class_uses($field);
 
                     if (in_array(SearchableField::class, $traits)) {
-                        $field->setValue($value);
                         $searchOperator = $field->getSearchOperator();
                         $filters[] = new TFilter($attribute, $searchOperator, $field->getSearchableValue());
                     }
