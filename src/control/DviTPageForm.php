@@ -31,10 +31,6 @@ trait DviTPageForm
 
     public function mountModelFields($param)
     {
-        $id = new THidden('id');
-
-        $this->panel->addHiddenFields([$id]);
-
         /**@var DviModel $obj*/
         $obj = new $this->objectClass();
         $rows_form = $obj->getFormRowFields();
@@ -201,9 +197,11 @@ trait DviTPageForm
         foreach ($attributes as $attribute_name => $value) {
             if (in_array($attribute_name, array_keys($obj_attributes))) {
                 $class_name = parent::getClassName($current_obj);
-                $attribute_class_name = $class_name.'_'.$attribute_name;
-                $formField = $this->panel->getForm()->getField($attribute_class_name);
-                if ($formField->isDisabled()) {
+                $formField = $this->panel->getForm()->getField($class_name.'_'.$attribute_name);
+
+                $method_exist = $this->getFieldClassMethods($formField);
+
+                if ($method_exist and $formField->isDisabled()) {
                     continue;
                 }
                 $this->setAttributeValue($current_obj, $attribute_name, $value);
@@ -263,6 +261,17 @@ trait DviTPageForm
                 }
             }
         }
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    protected function getFieldClassMethods($formField): bool
+    {
+        $rf = new \ReflectionClass(get_class($formField));
+        $methods = $rf->getMethods();
+        $method_exist = in_array('isDisabled', $methods);
+        return $method_exist;
     }
 
     private function reloadIfClassExtendFormAndListing($param)
