@@ -567,12 +567,15 @@ class DviPanelGroup implements IDviWidget
         $whiteList = [
             THidden::class,
             TEntry::class,
+            DEntry::class,
             TButton::class,
             DButton::class,
             TCheckGroup::class,
             TColor::class,
             TCombo::class,
+            DCombo::class,
             TDate::class,
+            DDate::class,
             TDateTime::class,
             THidden::class,
             THtmlEditor::class,
@@ -581,6 +584,7 @@ class DviPanelGroup implements IDviWidget
             TMultiFile::class,
             TPassword::class,
             TRadioGroup::class,
+            DRadioGroup::class,
             TSeekButton::class,
             TDBSeekButton::class,
             TDBCombo::class,
@@ -589,11 +593,8 @@ class DviPanelGroup implements IDviWidget
             TSpinner::class,
             TNumeric::class,
             TText::class,
-            DCKEditor::class,
             DText::class,
-            DEntry::class,
-            DDate::class,
-            DCombo::class
+            DCKEditor::class
         ];
         return $whiteList;
     }
