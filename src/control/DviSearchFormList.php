@@ -61,6 +61,7 @@ class DviSearchFormList extends DviControl
             $this->createActions($param);
 
             $this->datagrid = $this->createDataGrid();
+
             $this->createPageNavigation($param);
 
             $vbox = new DVBox();
