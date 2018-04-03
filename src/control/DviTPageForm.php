@@ -46,12 +46,12 @@ trait DviTPageForm
             if (!parent::validateToken($param)) {
                 throw new \Exception('Ação não permitida');
             }
-            $this->onSave($param);
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
             die();
         }
     }
+
     public function onSave($param)
     {
         $this->beforeSave($param);
@@ -196,10 +196,6 @@ trait DviTPageForm
                 $array_models[$model][$atribute] = $value;
             }
         };
-
-        $obj_master_class_name = strtolower((new \ReflectionClass($this->objectClass))->getShortName());
-
-//        $array_models[$obj_master_class_name]['id'] = $result['id'] ?? null;
 
         return $array_models;
     }
