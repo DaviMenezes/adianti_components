@@ -40,8 +40,22 @@ trait DviTPageForm
         }
     }
 
+    protected function beforeSave($param)
+    {
+        try {
+            if (!parent::validateToken($param)) {
+                throw new \Exception('Ação não permitida');
+            }
+            $this->onSave($param);
+        } catch (Exception $e) {
+            new TMessage('error', $e->getMessage());
+            die();
+        }
+    }
     public function onSave($param)
     {
+        $this->beforeSave($param);
+
         try {
             DTransaction::open($this->database);
 
