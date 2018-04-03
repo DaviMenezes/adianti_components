@@ -120,7 +120,7 @@ trait DviTPageList
                 $this->onReload($args);
             }
         }
-        parent::show();
+        parent::show($args);
     }
 
     public static function gridOnDelete($param)
