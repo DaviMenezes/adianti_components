@@ -6,6 +6,7 @@ use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Core\TApplication;
 use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\IDviRecord;
@@ -42,7 +43,11 @@ class DviControl extends TPage
         $this->panel = new DviPanelGroup($called_class, $this->pageTitle);
         $id = new THidden('id');
         $id->setValue($param['id']?? null);
-        $this->panel->addHiddenFields([$id]);
+
+        TSession::setValue('form_token', md5(time()));
+        $token = new THidden('form_token');
+        $token->setValue(TSession::getValue('form_token'));
+        $this->panel->addHiddenFields([$id, $token]);
     }
 
     public function createPanelForm($param)
@@ -99,5 +104,59 @@ class DviControl extends TPage
         if (!$this->currentObj) {
             TApplication::loadPage(get_called_class());
         }
+    }
+
+    public function show()
+    {
+        try {
+            $args = func_get_arg(0);
+
+            if (!$this->hasMethod($args)) {
+                parent::show();
+                return;
+            }
+
+            if (!$this->validateMethod($args)) {
+                throw new \Exception('Método '.$args['method'].' inválido');
+            }
+
+            parent::show();
+        } catch (\Exception $e) {
+            new TMessage('error', 'Segurança: '.$e->getMessage());
+        }
+    }
+
+    protected function hasMethod($args)
+    {
+        if (isset($args['method']) and $args['method']) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function validateMethod($args): bool
+    {
+        $rf = new \ReflectionClass(get_called_class());
+        $array_methods = $rf->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $methods = array();
+        foreach ($array_methods as $method) {
+            $methods[$method->name] = $method->name;
+        }
+        ksort($methods);
+        if (in_array($args['method'], array_keys($methods))) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * check if form has token and if is valid(session value)
+    */
+    protected function validateToken($args)
+    {
+        if (empty($args['form_token']) or ($args['form_token'] !== TSession::getValue('form_token'))) {
+            return false;
+        }
+        return true;
     }
 }
