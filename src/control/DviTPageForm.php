@@ -270,7 +270,7 @@ trait DviTPageForm
                 $model = array_pop($model_array);
                 if ($array_attribute[0] === $model) {
                     unset($array_attribute[0]);
-                    $attribute_name = implode($array_attribute);
+                    $attribute_name = implode('_', $array_attribute);
                 } else {
                     $attribute_name = $attribute;
                 }
