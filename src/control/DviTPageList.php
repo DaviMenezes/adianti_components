@@ -116,7 +116,7 @@ trait DviTPageList
 
         $recheck = $args['recheck'] ?? true;
         if ($recheck) {
-            if (!$this->grid_loaded and (!isset($_GET['method']) or ($_GET['method'] !== 'onReload'))) {
+            if (!$this->grid_loaded and (!isset($_GET['method']) or ($_GET['method'] !== 'onReload' and $_GET['method'] !== 'onSearch'))) {
                 $this->onReload($args);
             }
         }

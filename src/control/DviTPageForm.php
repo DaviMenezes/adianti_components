@@ -61,11 +61,10 @@ trait DviTPageForm
 
             $this->panel->getForm()->validate();
 
-            $data = $this->panel->getFormData();
-            $result = array_merge($param, (array)$data);
+
 
             /**@var DviModel $objMaster*/
-            $objMaster = new $this->objectClass($data->id ?? null);
+            $objMaster = new $this->objectClass($param['id'] ?? null);
             $objMaster->buildFieldTypes();
             $objMaster->addAttribute('id');
 
@@ -74,7 +73,7 @@ trait DviTPageForm
             $models_to_save = $objMaster->getForeignKeys();
             $models_to_save[$obj_master_class_name] = $this->objectClass;
 
-            $array_models = $this->createArrayModels($result, $models_to_save);
+            $array_models = $this->createArrayModels($param, $models_to_save);
 
             foreach ($array_models as $model => $attributes) {
                 if ($obj_master_class_name !== $model) {
@@ -178,11 +177,14 @@ trait DviTPageForm
         }
     }
 
-    protected function createArrayModels($result, $models_to_save): array
+    protected function createArrayModels($param, $models_to_save): array
     {
+        $data = $this->panel->getFormData();
+        $result = array_merge($param, (array)$data);
+
         $array_models = array();
         foreach ($result as $atribute => $value) {
-            if (!$this->isObjectAttribute($atribute)) {
+            if (!$this->isObjectAttribute($atribute, $models_to_save)) {
                 continue;
             }
 
@@ -245,13 +247,42 @@ trait DviTPageForm
         $objMaster->store();
     }
 
-    protected function isObjectAttribute($atribute)
+    protected function isObjectAttribute($attribute, $models_to_save)
     {
-        $array_attribute = explode('_', $atribute);
-        if (count($array_attribute) == 1) {
-            return false;
+        $attributes = array();
+        foreach ($models_to_save as $item) {
+            /**@var TRecord $rf*/
+            $rf = new $item;
+            $model_attributes = $rf->getAttributes();
+            $model_attributes[] = 'id';
+
+            $array_attribute = explode('_', $attribute);
+            if (count($array_attribute) == 1 and !in_array($attribute, array_values($model_attributes))) {
+                continue;
+            }
+            if (in_array($attribute, array_values($model_attributes))) {
+                return true;
+            }
+
+
+            if (count($array_attribute) > 1) {
+                $model_array = explode('\\', $item);
+                $model = array_pop($model_array);
+                if ($array_attribute[0] === $model) {
+                    unset($array_attribute[0]);
+                    $attribute_name = implode($array_attribute);
+                } else {
+                    $attribute_name = $attribute;
+                }
+            } else {
+                $attribute_name = $attribute;
+            }
+
+            if (in_array($attribute_name, array_values($model_attributes))) {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     protected function populateFormDataWithAssociatedObjects(&$form_data)

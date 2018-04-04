@@ -33,8 +33,6 @@ trait DviTPageSearch
         try {
             DTransaction::open();
 
-            $data = (array)$this->panel->getFormData();
-
             $obj_master_class_name = strtolower((new \ReflectionClass($this->objectClass))->getShortName());
 
             /**@var DviModel $objMaster*/
@@ -44,7 +42,7 @@ trait DviTPageSearch
             $models_to_save = $objMaster->getForeignKeys();
             $models_to_save[$obj_master_class_name] = $this->objectClass;
 
-            $array_models = $this->createArrayModels($data, $models_to_save);
+            $array_models = $this->createArrayModels($param, $models_to_save);
 
             $filters = array();
 
@@ -73,7 +71,7 @@ trait DviTPageSearch
             }
 
             $called_class = DControl::getClassName(get_called_class());
-            TSession::setValue($called_class.'_form_data', $data);
+            TSession::setValue($called_class.'_form_data', $this->panel->getFormData());
             TSession::setValue($called_class.'_filters', $filters);
 
             DTransaction::close();
