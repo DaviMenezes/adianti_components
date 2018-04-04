@@ -43,12 +43,13 @@ class DviControl extends TPage
         $this->panel = new DviPanelGroup($called_class, $this->pageTitle);
         $id = new THidden('id');
         $id->setValue($param['id']?? null);
+        $this->panel->addHiddenFields([$id]);
 
         if (empty($param['form_token'])) {
             TSession::setValue('form_token', md5(time()));
             $token = new THidden('form_token');
             $token->setValue(TSession::getValue('form_token'));
-            $this->panel->addHiddenFields([$id, $token]);
+            $this->panel->addHiddenFields([$token]);
         }
     }
 
