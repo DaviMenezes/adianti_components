@@ -438,7 +438,7 @@ class DviPanelGroup implements IDviWidget
         return $this;
     }
 
-    public function addActionBackLink($action = null):DActionLink
+    public function addActionBackLink(array $action = null):DActionLink
     {
         $btn = new DActionLink($action, _t('Back'), 'fa:arrow-left fa-2x');
         $btn->class = 'btn btn-default';

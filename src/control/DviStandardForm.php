@@ -56,7 +56,7 @@ class DviStandardForm extends DviControl
         }
     }
 
-    public function createActions($param = null)
+    protected function createActions($param)
     {
         $this->createActionSave($param);
 

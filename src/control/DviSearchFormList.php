@@ -32,16 +32,13 @@ class DviSearchFormList extends DviControl
     /**@var TPageNavigation $pageNavigation*/
     protected $pageNavigation;
 
-
     /**@var TDataGridColumn $column_id*/
     protected $column_id;
 
     /**@var TAction $action_delete*/
     protected $action_delete;
 
-    //    private $useCheckButton;
     protected $panel_grid;
-    //    private $use_grid_panel;
 
     use DviTPageSearch;
     use DviTPageList;
