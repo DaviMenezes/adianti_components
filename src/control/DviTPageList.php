@@ -231,7 +231,9 @@ trait DviTPageList
         $filters = TSession::getValue($called_class . '_filters');
 
         if (!$filters and isset($param['filters']) and $param['filters']) {
-            $filters = $param['filters'];
+            foreach ($param['filters'] as $filter) {
+                $filters[] = $filter;
+            }
         }
 
         if ($filters) {
