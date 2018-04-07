@@ -23,7 +23,7 @@ class DataGrid extends TDataGrid
 
     protected $custom_actions = array();
 
-    public function __construct($class_name, $function_prefix = 'grid', $use_column_id = true, $use_delete_action = null, $params_delete = null)
+    public function __construct($class_name, $function_prefix = 'grid', $use_column_id = true, $use_edit_action = false, $use_delete_action = false, $params_delete = null)
     {
         parent::__construct();
 
@@ -34,7 +34,7 @@ class DataGrid extends TDataGrid
             $this->addCol('id', 'Id', 'left', '7%');
         }
 
-        if (!is_subclass_of($class_name, DviSearchFormList::class)) {
+        if ($use_edit_action) {
             $this->useEditAction($class_name);
         }
 
