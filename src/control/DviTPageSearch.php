@@ -33,6 +33,8 @@ trait DviTPageSearch
         try {
             DTransaction::open();
 
+            $this->panel->keepFormLoaded();
+
             $obj_master_class_name = strtolower((new \ReflectionClass($this->objectClass))->getShortName());
 
             /**@var DviModel $objMaster*/
