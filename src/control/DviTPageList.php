@@ -116,6 +116,7 @@ trait DviTPageList
 
         $recheck = $args['recheck'] ?? true;
         if ($recheck) {
+            //Todo toda ação do painel não deveria chamar o reload(repopular grids), as mesmas devem ser repopuladas no início ou manualmente
             if (!$this->grid_loaded and (!isset($_GET['method']) or ($_GET['method'] !== 'onReload' and $_GET['method'] !== 'onSearch'))) {
                 $this->onReload($args);
             }

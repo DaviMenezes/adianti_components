@@ -70,10 +70,13 @@ trait DviTPageForm
 
             $obj_master_class_name = strtolower((new \ReflectionClass($this->objectClass))->getShortName());
 
+            $data = $this->panel->getFormData();
+            $result = array_merge($param, (array)$data);
+
             $models_to_save = $objMaster->getForeignKeys();
             $models_to_save[$obj_master_class_name] = $this->objectClass;
 
-            $array_models = $this->createArrayModels($param, $models_to_save);
+            $array_models = $this->createArrayModels($result, $models_to_save);
 
             foreach ($array_models as $model => $attributes) {
                 if ($obj_master_class_name !== $model) {
@@ -177,11 +180,8 @@ trait DviTPageForm
         }
     }
 
-    protected function createArrayModels($param, $models_to_save): array
+    protected function createArrayModels($result, $models_to_save): array
     {
-        $data = $this->panel->getFormData();
-        $result = array_merge($param, (array)$data);
-
         $array_models = array();
         foreach ($result as $atribute => $value) {
             if (empty($value) or !$this->isObjectAttribute($atribute, $models_to_save)) {

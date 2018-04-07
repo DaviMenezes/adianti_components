@@ -41,10 +41,12 @@ trait DviTPageSearch
             $objMaster = new $this->objectClass();
             $objMaster->addAttribute('id');
 
+            $data = (array)$this->panel->getFormData();
+
             $models_to_save = $objMaster->getForeignKeys();
             $models_to_save[$obj_master_class_name] = $this->objectClass;
 
-            $array_models = $this->createArrayModels($param, $models_to_save);
+            $array_models = $this->createArrayModels($data, $models_to_save);
 
             $filters = array();
 
