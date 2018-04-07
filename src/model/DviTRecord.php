@@ -40,7 +40,6 @@ class DviTRecord extends TRecord
     private $objects = array();
     private $field_types = array();
     private $isDirty;
-    private $loading;
 
     public function __construct($id = null, $callObjectLoad = true)
     {
