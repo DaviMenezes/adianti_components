@@ -64,7 +64,7 @@ class DviControl extends TPage
     {
         $new_params = array();
 
-        $url_params = explode('&', $_SERVER['HTTP_REFERER']);
+        $url_params = explode('&', $_SERVER['QUERY_STRING']);
         unset($url_params[0]);
         foreach ($url_params as $url_param) {
             $value = explode('=', $url_param);
