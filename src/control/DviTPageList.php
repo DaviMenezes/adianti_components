@@ -5,6 +5,7 @@ namespace Dvi\Adianti\Control;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TExpression;
 use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
@@ -66,7 +67,6 @@ trait DviTPageList
             $this->populateGrids($param);
 
             DTransaction::close();
-
         } catch (Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
@@ -235,7 +235,7 @@ trait DviTPageList
 
         if ($filters) {
             foreach ($filters as $filter) {
-                $criteria->add($filter);
+                $criteria->add($filter, TExpression::OR_OPERATOR);
             }
         }
 
