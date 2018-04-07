@@ -38,6 +38,13 @@ trait DviQueryBuilder
         return $this;
     }
 
+    public function setParams($params)
+    {
+        foreach ($params as $key => $value) {
+            $this->params[$key] = $value;
+        }
+    }
+
     public function order(string $order)
     {
         $this->params['order'] = $order;
