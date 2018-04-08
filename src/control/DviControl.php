@@ -70,6 +70,7 @@ class DviControl extends TPage
             $value = explode('=', $url_param);
             $new_params[$value[0]] = $value[1];
         }
+        
         return $new_params;
     }
 
@@ -79,7 +80,7 @@ class DviControl extends TPage
         TSession::setValue(self::getClassName(get_called_class()) . '_filters', null);
 
         $params = DviControl::getNewParams();
-        unset($params['id'], $params['key']);
+        unset($params['id'], $params['key'], $params['method'], $params['static']);
 
         AdiantiCoreApplication::loadPage(get_called_class(), null, $params);
     }
