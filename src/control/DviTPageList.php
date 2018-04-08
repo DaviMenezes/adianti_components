@@ -54,8 +54,8 @@ trait DviTPageList
 
     private static function getUrlParams(): array
     {
-        $url_params = explode('?', $_SERVER['HTTP_REFERER']);
-        $url_params = explode('&', $url_params[1]);
+        $url_params = explode('&', $_SERVER['QUERY_STRING']);
+
         return $url_params;
     }
 
@@ -131,7 +131,7 @@ trait DviTPageList
         $action_no = new TAction([$class, 'backToList']);
 
         $param['url_params'] = self::getUrlPaginationParameters($param);
-        $param['back_method'] = $param['url_params']['method'] ?? null;
+//        $param['back_method'] = $param['url_params']['method'] ?? null;
 
         $action_yes->setParameters($param);
         $action_no->setParameters($param);
@@ -193,11 +193,16 @@ trait DviTPageList
 
     private function onBack($param)
     {
-        $back_method = $param['back_method']?? null;
+//        $back_method = $param['back_method']?? null;
 
-        unset($param['url_params']['method']);
-
-        AdiantiCoreApplication::loadPage(get_called_class(), $back_method, $param['url_params'] ?? null);
+        unset(
+            $param['url_params']['class'],
+            $param['url_params']['method'],
+            $param['url_params']['id'],
+            $param['url_params']['key'],
+            $param['url_params']['static']
+        );
+        AdiantiCoreApplication::loadPage(get_called_class(), null, $param['url_params'] ?? null);
     }
 
     public function useCheckButton()
