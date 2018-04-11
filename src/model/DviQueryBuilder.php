@@ -30,6 +30,11 @@ trait DviQueryBuilder
     private $already_prepared_sql;
     private $already_pdo_prepared;
     private $already_bind_params;
+    private $already_set_group_by;
+    private $already_set_order_by;
+    private $already_set_limit;
+    private $already_set_offset;
+    private $already_set_having;
 
     public function where($field, $operator, $value = null, $value2 = null, $query_operator = 'AND')
     {
@@ -79,6 +84,7 @@ trait DviQueryBuilder
         $this->bindParam();
 
         $this->pdo->execute();
+
         $objects = $this->pdo->fetchAll(PDO::FETCH_OBJ);
 
         $results = false;
@@ -102,7 +108,11 @@ trait DviQueryBuilder
     {
         $this->prepareSql();
 
+        $this->already_prepared_sql = false;
+
         $this->pdoPrepare();
+
+        $this->already_pdo_prepared = false;
 
         $this->bindParam();
 
@@ -170,10 +180,11 @@ trait DviQueryBuilder
     private function prepareSqlParams()
     {
         if ($this->params) {
-            $this->sql .= isset($this->params['group by']) ? (' group by ' . $this->params['group by']) : '';
-            $this->sql .= isset($this->params['order']) ? (' order by ' . $this->params['order'] . ' ' . $this->params['direction']) : '';
-            $this->sql .= isset($this->params['limit']) ? (' limit ' . $this->params['limit']) : '';
-            $this->sql .= isset($this->params['having']) ? (' having '. $this->params['having']) : '';
+            $this->setGroupBy();
+            $this->setOrder();
+            $this->setLimit();
+            $this->setOffset();
+            $this->setHaving();
         }
         return $this;
     }
@@ -186,7 +197,7 @@ trait DviQueryBuilder
 
         try {
             $conn = TTransaction::get();
-            if ($conn == null){
+            if ($conn == null) {
                 throw new Exception('Abra uma conexão antes de executar uma consulta ao banco');
             }
             $this->pdo = $conn->prepare($this->sql);
@@ -203,23 +214,79 @@ trait DviQueryBuilder
         if ($this->already_bind_params) {
             return true;
         }
-        foreach ($this->filters as $key => $filter) :
-
+        foreach ($this->filters as $key => $filter) {
             if (isset($filter->filter) and isset($filter->value)) {
                 $operator = strtolower($filter->operator);
                 $value = strtolower($filter->value);
                 if ($operator == 'between') {
                     $this->pdo->bindParam($filter->filter, $filter->value);
-                    $this->pdo->bindParam($filter->filter.'2', $filter->value2);//Todo check if exists filter2 in construction filters
+                    if (!empty($filter->value2)) {
+                        $this->pdo->bindParam($filter->filter . '2', $filter->value2);
+                    }
                 } elseif ($operator == 'is not' or $operator == 'is') {
                     $this->pdo->bindValue($filter->filter, $value == 'null' ? null : $filter->value);
                 } else {
                     $this->pdo->bindParam($filter->filter, $filter->value);
                 }
             }
-        endforeach;
+        }
 
         $this->already_bind_params = true;
+    }
+
+    protected function setGroupBy()
+    {
+        if ($this->already_set_group_by) {
+            return;
+        }
+        if (isset($this->params['group by'])) {
+            $this->sql .=   (' group by ' . $this->params['group by']);
+            $this->already_set_group_by = true;
+        }
+    }
+
+    protected function setOrder()
+    {
+        if ($this->already_set_order_by) {
+            return;
+        }
+        if (isset($this->params['order'])) {
+            $this->sql .=  (' order by ' . $this->params['order'] . ' ' . $this->params['direction']);
+            $this->already_set_order_by = true;
+        }
+    }
+
+    protected function setLimit()
+    {
+        if ($this->already_set_limit) {
+            return;
+        }
+        if (isset($this->params['limit'])) {
+            $this->sql .=  (' limit ' . $this->params['limit']);
+            $this->already_set_limit = true;
+        }
+    }
+
+    private function setHaving()
+    {
+        if ($this->already_set_having) {
+            return;
+        }
+        if (isset($this->params['having'])) {
+            $this->sql .=  (' having ' . $this->params['having']);
+            $this->already_set_having = true;
+        }
+    }
+
+    protected function setOffset()
+    {
+        if ($this->already_set_offset) {
+            return;
+        }
+        if (isset($this->params['offset'])) {
+            $this->sql .=  (' offset ' . $this->params['offset']);
+            $this->already_set_offset = true;
+        }
     }
     #endregion
 }
