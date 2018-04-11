@@ -40,6 +40,9 @@ trait DviQueryBuilder
     {
         $dvifilter = new DviTFilter($field, $operator, null, $value, $value2, $query_operator);
         $this->filters[] = $dvifilter;
+
+        $this->preparedFilters = false;
+
         return $this;
     }
 
@@ -115,6 +118,8 @@ trait DviQueryBuilder
         $this->already_pdo_prepared = false;
 
         $this->bindParam();
+
+        $this->already_bind_params = false;
 
         $this->pdo->execute();
         $count = $this->pdo->rowCount();
