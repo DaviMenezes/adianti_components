@@ -361,7 +361,7 @@ class DviPanelGroup implements IDviWidget
         $str_label = !empty($label) ? _t($label) : null;
         $this->addCustomAction(
             [$this->className, $clearMethod],
-            'fa:refresh fa-2x',
+            'fa:eraser fa-2x',
             $str_label,
             $parameters,
             $tip,
