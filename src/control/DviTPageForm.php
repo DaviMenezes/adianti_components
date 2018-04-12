@@ -182,7 +182,7 @@ trait DviTPageForm
     {
         $array_models = array();
         foreach ($result as $atribute => $value) {
-            if (empty($value) or !$this->isObjectAttribute($atribute, $models_to_save)) {
+            if (!$this->isObjectAttribute($atribute, $models_to_save)) {
                 continue;
             }
 
