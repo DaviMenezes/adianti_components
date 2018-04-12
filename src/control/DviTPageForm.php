@@ -61,8 +61,6 @@ trait DviTPageForm
 
             $this->panel->getForm()->validate();
 
-
-
             /**@var DviModel $objMaster*/
             $objMaster = new $this->objectClass($param['id'] ?? null);
             $objMaster->buildFieldTypes();
