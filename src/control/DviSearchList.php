@@ -61,7 +61,7 @@ abstract class DviSearchList extends DviControl
 
             $this->createActions($param);
 
-            $this->createDataGrid();
+            $this->createDataGrid($param);
 
             $this->createPageNavigation($param);
 

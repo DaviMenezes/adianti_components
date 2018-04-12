@@ -73,14 +73,14 @@ trait DviTPageList
         }
     }
 
-    protected function createDataGrid($createModel = true, $showId = false): DataGrid
+    protected function createDataGrid($param, $createModel = true, $showId = false): DataGrid
     {
         $class = get_called_class();
         $this->datagrid = new DataGrid($class, 'grid', $showId);
 
         $this->datagrid->useEditAction($this->formController ?? get_called_class());
 
-        $this->createDatagridColumns($showId);
+        $this->createDatagridColumns($param, $showId);
 
         if ($createModel) {
             $this->createDatagridModel();
@@ -89,7 +89,7 @@ trait DviTPageList
         return $this->datagrid;
     }
 
-    protected function createDatagridColumns($showId = false)
+    protected function createDatagridColumns($param, $showId = false)
     {
         $this->datagrid->col('name', 'Nome', 'left', !$showId ? '100%' : '93%');
     }
