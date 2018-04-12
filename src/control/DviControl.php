@@ -76,8 +76,8 @@ class DviControl extends TPage
 
     public static function onClear($param)
     {
-        TSession::setValue(self::getClassName(get_called_class()) . '_form_data', null);
-        TSession::setValue(self::getClassName(get_called_class()) . '_filters', null);
+        TSession::setValue(get_called_class() . '_form_data', null);
+        TSession::setValue(get_called_class() . '_filters', null);
 
         $params = DviControl::getNewParams();
         unset($params['id'], $params['key'], $params['method'], $params['static']);
