@@ -229,7 +229,8 @@ trait DviQueryBuilder
                         $this->pdo->bindParam($filter->filter . '2', $filter->value2);
                     }
                 } elseif ($operator == 'is not' or $operator == 'is') {
-                    $this->pdo->bindValue($filter->filter, $value == 'null' ? null : $filter->value);
+                    $value = $value == 'null' ? null : $filter->value;
+                    $this->pdo->bindParam($filter->filter, $value);
                 } else {
                     $this->pdo->bindParam($filter->filter, $filter->value);
                 }
