@@ -5,6 +5,7 @@ use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Database\DTransaction;
@@ -28,6 +29,7 @@ trait DviTPageForm
 
     /**@var DviPanelGroup $panel*/
     protected $panel;
+    protected $content_after_panel;
 
     public function mountModelFields($param)
     {
@@ -164,6 +166,16 @@ trait DviTPageForm
         $this->panel->addActionClear();
         $this->button_clear = $this->panel->getButton();
         return $this->button_clear;
+    }
+
+    protected function createContentAfterPanel($obj = null, $param = null)
+    {
+        $this->content_after_panel = $obj;
+    }
+
+    protected function getContentAfterPanel()
+    {
+        return $this->content_after_panel;
     }
 
     protected function populateFormDataWithObjectMaster(&$form_data)
