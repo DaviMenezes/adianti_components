@@ -51,6 +51,7 @@ trait DviTPageList
     private $useCheckButton;
 
     protected $formController;
+    protected $occurrence_query_limit;
 
     private static function getUrlParams(): array
     {
@@ -219,17 +220,38 @@ trait DviTPageList
 
     protected function populateGrids($param)
     {
+        $criteria = $this->prepareQueryCriteria($param);
+
         $repository = new TRepository($this->objectClass);
 
+        $items = $repository->load($criteria, false);
+
+        $this->datagrid->clear();
+        if ($items) {
+            $this->datagrid->addItems($items);
+        }
+        $this->grid_loaded = true;
+
+        $criteria->resetProperties();
+        $count = $repository->count($criteria);
+
+        $this->pageNavigation->setCount($count);
+        $this->pageNavigation->setProperties($param);
+        $this->pageNavigation->setLimit($this->occurrence_query_limit);
+    }
+
+    protected function prepareQueryCriteria($param)
+    {
         if (empty($param['order'])) {
             $param['order'] = 'id';
             $param['direction'] = 'asc';
         }
 
-        $limit = 10;
+        $this->occurrence_query_limit = 10;
+
         $criteria = new TCriteria();
         $criteria->setProperties($param);
-        $criteria->setProperty('limit', $limit);
+        $criteria->setProperty('limit', $this->occurrence_query_limit);
 
         //get the filters genereted by the child classes
         $called_class = DControl::getClassName(get_called_class());
@@ -246,20 +268,6 @@ trait DviTPageList
                 $criteria->add($filter, TExpression::OR_OPERATOR);
             }
         }
-
-        $items = $repository->load($criteria, false);
-
-        $this->datagrid->clear();
-        if ($items) {
-            $this->datagrid->addItems($items);
-        }
-        $this->grid_loaded = true;
-
-        $criteria->resetProperties();
-        $count = $repository->count($criteria);
-
-        $this->pageNavigation->setCount($count);
-        $this->pageNavigation->setProperties($param);
-        $this->pageNavigation->setLimit($limit);
+        return $criteria;
     }
 }

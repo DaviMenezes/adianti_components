@@ -70,6 +70,7 @@ class DviPanelGroup implements IDviWidget
     protected $btn;
 
     protected $useLabelFields = false;
+    private $footer_items = array();
 
     public function __construct(string $className, string $title = null, string $formName = null)
     {
@@ -348,6 +349,13 @@ class DviPanelGroup implements IDviWidget
             $tip,
             'btnSave'
         );
+
+        return $this;
+    }
+
+    public function addFooterItem($obj)
+    {
+        $this->footer_items[] = $obj;
 
         return $this;
     }
