@@ -73,7 +73,7 @@ abstract class DviSearchList extends DviControl
 
             $vbox->add($this->getContentAfterPanel());
 
-            $vbox->add($this->getDatagrid());
+            $vbox->add($this->getDatagrid($param));
 
             $vbox->add($this->pageNavigation);
 
@@ -97,7 +97,7 @@ abstract class DviSearchList extends DviControl
         $this->createActionNew($param);
     }
 
-    protected function getDatagrid()
+    protected function getDatagrid($param)
     {
         return $this->datagrid;
     }
