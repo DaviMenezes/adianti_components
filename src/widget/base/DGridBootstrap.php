@@ -15,16 +15,16 @@ use Adianti\Base\Lib\Widget\Base\TElement;
  */
 class DGridBootstrap
 {
-    private $tnotebookPage;
-    private $grid;
-    private $defaultColClass;
-    private $defaultColStyle;
-    private $rows = array();
+    protected $grid;
+    protected $defaultColClass;
+    protected $defaultColStyle;
+    protected $rows = array();
 
     public function __construct($defaultColClass = null, $colStyle = null)
     {
         $this->grid = new TElement('div');
-        //        $this->grid->style = 'margin-left: 15px; margin-right: 15px;';
+
+        //$this->grid->style = 'margin-left: 15px; margin-right: 15px;';
         //$this->setContainerDefault();
         $this->defaultColClass = $defaultColClass;
         $this->defaultColStyle = $colStyle;
