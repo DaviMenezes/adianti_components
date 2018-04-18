@@ -69,14 +69,14 @@ class DviMail
         return $this->subject;
     }
 
-    public function send($ini = null)
+    public function send($email_config = null)
     {
         try {
-            if (!$ini) {
-                $ini = parse_ini_file('app/config/email.ini');
+            if (!$email_config) {
+                $email_config = parse_ini_file('app/config/email.ini');
             }
 
-            $this->mail->setFrom($ini['from'], $ini['name']);
+            $this->mail->setFrom($email_config['mail_from'], $email_config['name']);
 
             $this->mail->setSubject($this->getSubject());
             $this->mail->setHtmlBody($this->getBody());
@@ -85,10 +85,12 @@ class DviMail
                 $this->mail->addAddress($value['email'], $value['nome']);
             }
 
-            $this->mail->SetUseSmtp();
-            $this->mail->SetSmtpHost($ini['host'], $ini['port']);
-            $this->mail->SetSmtpUser($ini['user'], $ini['pass']);
-            $this->mail->setReplyTo($ini['support'], $ini['name']);
+            if ($email_config['smtp_auth']) {
+                $this->mail->SetUseSmtp();
+                $this->mail->SetSmtpHost($email_config['smtp_host'], $email_config['smtp_port']);
+                $this->mail->SetSmtpUser($email_config['smtp_user'], $email_config['smtp_pass']);
+            }
+            $this->mail->setReplyTo($email_config['mail_support'], $email_config['name']);
             $this->mail->send();
         } catch (\Exception $e) {
             $this->error_msg = $e->getMessage();
