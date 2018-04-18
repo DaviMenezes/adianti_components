@@ -27,13 +27,17 @@ class DviMail
     private $subject;
     private $error_msg;
 
-    public function __construct($body, $mails = null)
+    public function __construct($body, $mails = null, $debug = null)
     {
         $this->mail = new TMail();
         
         $this->setBody($body);
 
         $this->toEmails = $mails;
+
+        if ($debug) {
+            $this->mail->setDebug($debug);
+        }
         
         //habilite para testar
         //$this->toEmails[] = ['email'=>'inclua um email de teste para acompanhamento', 'nome'=>'Acompanhamento'];
