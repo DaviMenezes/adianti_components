@@ -77,20 +77,22 @@ class DviMail
             }
 
             $this->mail->setFrom($email_config['mail_from'], $email_config['name']);
-
-            $this->mail->setSubject($this->getSubject());
-            $this->mail->setHtmlBody($this->getBody());
-
             foreach ($this->toEmails as $value) {
                 $this->mail->addAddress($value['email'], $value['nome']);
             }
+
+            $this->mail->setSubject($this->getSubject());
 
             if ($email_config['smtp_auth']) {
                 $this->mail->SetUseSmtp();
                 $this->mail->SetSmtpHost($email_config['smtp_host'], $email_config['smtp_port']);
                 $this->mail->SetSmtpUser($email_config['smtp_user'], $email_config['smtp_pass']);
             }
-            $this->mail->setReplyTo($email_config['mail_support'], $email_config['name']);
+            $this->mail->setHtmlBody($this->getBody());
+
+            if (!empty($email_config['mail_support'])) {
+                $this->mail->setReplyTo($email_config['mail_support'], $email_config['name']);
+            }
             $this->mail->send();
         } catch (\Exception $e) {
             $this->error_msg = $e->getMessage();
