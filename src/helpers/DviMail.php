@@ -12,7 +12,6 @@
 namespace Dvi\Adianti\Helpers;
 
 use Adianti\Base\App\Lib\Util\TMail;
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
 
 /**
  * Dvi Mail
@@ -34,7 +33,7 @@ class DviMail
         
         $this->setBody($body);
 
-        $this->toEmails[] = $mails;
+        $this->toEmails = $mails;
         
         //habilite para testar
         //$this->toEmails[] = ['email'=>'inclua um email de teste para acompanhamento', 'nome'=>'Acompanhamento'];
@@ -66,10 +65,12 @@ class DviMail
         return $this->subject;
     }
 
-    public function send()
+    public function send($ini = null)
     {
         try {
-            $ini = parse_ini_file('app/config/email.ini');
+            if (!$ini) {
+                $ini = parse_ini_file('app/config/email.ini');
+            }
 
             $this->mail->setFrom($ini['from'], $ini['name']);
 
@@ -83,8 +84,8 @@ class DviMail
             $this->mail->SetUseSmtp();
             $this->mail->SetSmtpHost($ini['host'], $ini['port']);
             $this->mail->SetSmtpUser($ini['user'], $ini['pass']);
+            $this->mail->setReplyTo($ini['support'], $ini['name']);
             $this->mail->send();
-
         } catch (\Exception $e) {
             $this->error_msg = $e->getMessage();
         }
