@@ -9,7 +9,6 @@ use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Model\IDviRecord;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
@@ -41,15 +40,17 @@ class DviControl extends TPage
         $called_class = Route::getClassName(get_called_class());
 
         $this->panel = new DviPanelGroup($called_class, $this->pageTitle);
-        $id = new THidden('id');
-        $id->setValue($param['id']?? null);
-        $this->panel->addHiddenFields([$id]);
+        $field_id = new THidden('field_id');
+        $field_id->setValue($param['field_id']?? null);
+        $field_token = new THidden($called_class.'_form_token');
 
-        if (empty($param['form_token'])) {
-            TSession::setValue('form_token', md5(time()));
-            $token = new THidden('form_token');
-            $token->setValue(TSession::getValue('form_token'));
-            $this->panel->addHiddenFields([$token]);
+        $this->panel->addHiddenFields([$field_id, $field_token]);
+
+        if (empty($param[$called_class.'_form_token'])) {
+            $token_session = md5(microtime());
+            TSession::setValue($called_class.'_form_token', $token_session);
+
+            $field_token->setValue($token_session);
         }
     }
 
@@ -158,7 +159,8 @@ class DviControl extends TPage
     */
     protected function validateToken($args)
     {
-        if (empty($args['form_token']) or ($args['form_token'] !== TSession::getValue('form_token'))) {
+        $called_class = Route::getClassName(get_called_class());
+        if (empty($args[$called_class.'_form_token']) or ($args[$called_class.'_form_token'] !== TSession::getValue($called_class.'_form_token'))) {
             return false;
         }
         return true;
