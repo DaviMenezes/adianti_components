@@ -45,6 +45,13 @@ class DGridRow extends TElement
         return $this;
     }
 
+    public function col($element, array $class = null, string $style = null)
+    {
+        $col = new DGridColumn($element, $class, $style);
+        $this->addCol($col);
+        return $this;
+    }
+
     public function addCols()
     {
         $array_columns = (count(func_get_args()) == 1) ? func_get_arg(0) : func_get_args();
