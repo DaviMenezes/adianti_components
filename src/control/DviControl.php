@@ -75,7 +75,7 @@ class DviControl extends TPage
         return $new_params;
     }
 
-    public static function onClear($param)
+    public static function onClear($param, $reload = true)
     {
         TSession::setValue(self::getClassName(get_called_class()) . '_form_data', null);
         TSession::setValue(self::getClassName(get_called_class()) . '_filters', null);
@@ -83,7 +83,9 @@ class DviControl extends TPage
         $params = DviControl::getNewParams();
         unset($params['id'], $params['key'], $params['method'], $params['static']);
 
-        AdiantiCoreApplication::loadPage(self::getClassName(get_called_class()), null, $params);
+        if ($reload) {
+            AdiantiCoreApplication::loadPage(self::getClassName(get_called_class()), null, $params);
+        }
     }
 
     public function load($param = null)
