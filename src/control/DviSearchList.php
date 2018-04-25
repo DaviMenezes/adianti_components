@@ -96,9 +96,4 @@ abstract class DviSearchList extends DviControl
 
         $this->createActionNew($param);
     }
-
-    protected function getDatagrid($param)
-    {
-        return $this->datagrid;
-    }
 }
