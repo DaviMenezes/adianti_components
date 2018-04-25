@@ -40,8 +40,8 @@ class DviControl extends TPage
         $called_class = Route::getClassName(get_called_class());
 
         $this->panel = new DviPanelGroup($called_class, $this->pageTitle);
-        $field_id = new THidden('field_id');
-        $field_id->setValue($param['field_id']?? null);
+        $field_id = new THidden('id');
+        $field_id->setValue($param['id']?? null);
         $field_token = new THidden($called_class.'_form_token');
 
         $this->panel->addHiddenFields([$field_id, $field_token]);
