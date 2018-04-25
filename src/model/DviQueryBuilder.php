@@ -53,9 +53,10 @@ trait DviQueryBuilder
         }
     }
 
-    public function order(string $order)
+    public function order(string $order, $direction = 'asc')
     {
         $this->params['order'] = $order;
+        $this->params['direction'] = $direction;
         return $this;
     }
 
