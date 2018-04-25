@@ -14,6 +14,7 @@ use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Dialog\TQuestion;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Widget\Base\DataGrid;
+use Dvi\Adianti\Widget\Datagrid\DPageNavigation;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Exception;
 
@@ -36,7 +37,7 @@ trait DviTPageList
 
     /**@var DataGrid $datagrid*/
     protected $datagrid;
-    /**@var TPageNavigation $pageNavigation*/
+    /**@var DPageNavigation $pageNavigation*/
     protected $pageNavigation;
 
     /**@var TDataGridColumn $column_id*/
@@ -102,7 +103,7 @@ trait DviTPageList
 
     protected function createPageNavigation($param)
     {
-        $this->pageNavigation = new TPageNavigation();
+        $this->pageNavigation = new DPageNavigation();
 
         $new_params = DviTPageList::getUrlPaginationParameters($param);
 
