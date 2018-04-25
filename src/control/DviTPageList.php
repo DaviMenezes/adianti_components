@@ -75,6 +75,11 @@ trait DviTPageList
         }
     }
 
+    protected function getDatagrid($param)
+    {
+        return $this->datagrid;
+    }
+
     protected function createDataGrid($param, $createModel = true, $showId = false): DataGrid
     {
         $class = get_called_class();
