@@ -64,7 +64,7 @@ class DviSearchFormList extends DviControl
             $vbox = new DVBox();
             $vbox->add($this->panel);
 
-            $vbox->add($this->datagrid);
+            $vbox->add($this->getDatagrid($param));
 
             $vbox->add($this->pageNavigation);
 
