@@ -91,6 +91,11 @@ trait DviTPageList
         return $this->datagrid;
     }
 
+    protected function getDatagrid()
+    {
+        return $this->datagrid;
+    }
+
     protected function createDatagridColumns($showId = false)
     {
         $this->datagrid->col('name', 'Nome', 'left', !$showId ? '100%' : '93%');
