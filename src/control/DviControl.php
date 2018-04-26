@@ -71,8 +71,10 @@ class DviControl extends TPage
         $url_params = explode('&', $_SERVER['QUERY_STRING']);
         unset($url_params[0]);
         foreach ($url_params as $url_param) {
-            $value = explode('=', $url_param);
-            $new_params[$value[0]] = $value[1];
+            if (!empty($url_param)) {
+                $value = explode('=', $url_param);
+                $new_params[$value[0]] = $value[1];
+            }
         }
         
         return $new_params;
@@ -165,9 +167,10 @@ class DviControl extends TPage
     protected function validateToken()
     {
         $called_class = Route::getClassName(get_called_class());
-        if (empty($this->params[$called_class.'_form_token']) or ($this->params[$called_class.'_form_token'] !== TSession::getValue($called_class.'_form_token'))) {
-            return false;
+        if (!empty($this->params[$called_class.'_form_token']) and (
+            $this->params[$called_class.'_form_token'] === TSession::getValue($called_class.'_form_token'))) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

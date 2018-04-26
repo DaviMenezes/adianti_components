@@ -70,7 +70,9 @@ class DviSearchFormList extends DviControl
 
             parent::add($vbox);
 
-            $data = TSession::getValue(self::getClassName(get_called_class()) . '_form_data');
+            $className = self::getClassName(get_called_class());
+            $data = TSession::getValue($className . '_form_data');
+            unset($data->{$className.'_form_token'});
             $this->panel->setFormData((object)$data);
 
             DTransaction::close();
