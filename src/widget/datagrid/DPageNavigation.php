@@ -55,11 +55,11 @@ class DPageNavigation extends TPageNavigation
             $pages = 1;
         }
 
-        if ($page_size>0) {
+        if ($page_size > 0) {
             $resto = $registros % $page_size;
         }
 
-        $pages += $resto>0 ? 1 : 0;
+        $pages += $resto > 0 ? 1 : 0;
         $last_page = min($pages, $max);
 
         $nav = new TElement('div');
@@ -132,7 +132,7 @@ class DPageNavigation extends TPageNavigation
             $item->{'class'} = 'col-xs-1 btn btn-default pagination_item disabled';
             $link = new TElement('a');
             $a_div = new TElement('div');
-//            $item->{'class'} = 'off';
+            //            $item->{'class'} = 'off';
             $ul->add($item);
             $item->add($link);
             $link->add($a_div);

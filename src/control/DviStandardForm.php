@@ -37,13 +37,13 @@ class DviStandardForm extends DviControl
 
             parent::__construct($param);
 
-            $this->createCurrentObject($param);
+            $this->createCurrentObject();
 
-            $this->createPanelForm($param);
+            $this->createPanelForm();
 
-            $this->mountModelFields($param);
+            $this->mountModelFields();
 
-            $this->createActions($param);
+            $this->createActions();
 
             parent::add($this->panel);
 
@@ -56,11 +56,11 @@ class DviStandardForm extends DviControl
         }
     }
 
-    protected function createActions($param)
+    protected function createActions()
     {
-        $this->createActionSave($param);
+        $this->createActionSave();
 
-        $this->createActionClear($param);
+        $this->createActionClear();
     }
 
     protected function getButtonSave()

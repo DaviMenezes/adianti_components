@@ -61,12 +61,12 @@ trait DviTPageList
         return $url_params;
     }
 
-    public function onReload($param)
+    public function onReload()
     {
         try {
             DTransaction::open($this->database);
 
-            $this->populateGrids($param);
+            $this->populateGrids();
 
             DTransaction::close();
         } catch (Exception $e) {
@@ -75,19 +75,14 @@ trait DviTPageList
         }
     }
 
-    protected function getDatagrid($param)
-    {
-        return $this->datagrid;
-    }
-
-    protected function createDataGrid($param, $createModel = true, $showId = false): DataGrid
+    protected function createDataGrid($createModel = true, $showId = false): DataGrid
     {
         $class = get_called_class();
         $this->datagrid = new DataGrid($class, 'grid', $showId);
 
         $this->datagrid->useEditAction($this->formController ?? get_called_class());
 
-        $this->createDatagridColumns($param, $showId);
+        $this->createDatagridColumns($showId);
 
         if ($createModel) {
             $this->createDatagridModel();
@@ -96,7 +91,7 @@ trait DviTPageList
         return $this->datagrid;
     }
 
-    protected function createDatagridColumns($param, $showId = false)
+    protected function createDatagridColumns($showId = false)
     {
         $this->datagrid->col('name', 'Nome', 'left', !$showId ? '100%' : '93%');
     }
@@ -106,11 +101,11 @@ trait DviTPageList
         $this->datagrid->createModel($create_header, $show_default_actions);
     }
 
-    protected function createPageNavigation($param)
+    protected function createPageNavigation()
     {
         $this->pageNavigation = new DPageNavigation();
 
-        $new_params = DviTPageList::getUrlPaginationParameters($param);
+        $new_params = DviTPageList::getUrlPaginationParameters($this->params);
 
         unset($new_params['back_method']);
         $this->pageNavigation->setAction(new TAction([$this, 'onReload'], $new_params));
@@ -119,16 +114,16 @@ trait DviTPageList
 
     public function show()
     {
-        $args = func_get_arg(0);
+        $this->params = func_get_arg(0);
 
-        $recheck = $args['recheck'] ?? true;
+        $recheck = $this->params['recheck'] ?? true;
         if ($recheck) {
             //Todo toda ação do painel não deveria chamar o reload(repopular grids), as mesmas devem ser repopuladas no início ou manualmente
             if (!$this->grid_loaded and (!isset($_GET['method']) or ($_GET['method'] !== 'onReload' and $_GET['method'] !== 'onSearch'))) {
-                $this->onReload($args);
+                $this->onReload();
             }
         }
-        parent::show($args);
+        parent::show($this->params);
     }
 
     public static function gridOnDelete($param)
@@ -146,23 +141,23 @@ trait DviTPageList
         new TQuestion(_t('Do you really want to delete ?'), $action_yes);
     }
 
-    public function backToList($param)
+    public function backToList()
     {
-        $param['url_params']['back_method'] = null;
+        $this->params['url_params']['back_method'] = null;
 
-        $this->onBack($param);
+        $this->onBack();
     }
 
-    public function delete($param)
+    public function delete()
     {
         try {
             DTransaction::open($this->database);
 
-            $this->objectClass::remove($param['id']);
+            $this->objectClass::remove($this->params['id']);
 
             DTransaction::close();
 
-            $this->onBack($param);
+            $this->onBack();
         } catch (Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
@@ -198,18 +193,18 @@ trait DviTPageList
         return self::$form;
     }
 
-    private function onBack($param)
+    private function onBack()
     {
 //        $back_method = $param['back_method']?? null;
 
         unset(
-            $param['url_params']['class'],
-            $param['url_params']['method'],
-            $param['url_params']['id'],
-            $param['url_params']['key'],
-            $param['url_params']['static']
+            $this->params['url_params']['class'],
+            $this->params['url_params']['method'],
+            $this->params['url_params']['id'],
+            $this->params['url_params']['key'],
+            $this->params['url_params']['static']
         );
-        AdiantiCoreApplication::loadPage(get_called_class(), null, $param['url_params'] ?? null);
+        AdiantiCoreApplication::loadPage(get_called_class(), null, $this->params['url_params'] ?? null);
     }
 
     public function useCheckButton()
@@ -217,16 +212,16 @@ trait DviTPageList
         $this->useCheckButton = true;
     }
 
-    protected function createActionNew($param)
+    protected function createActionNew()
     {
         if (!empty($this->formController)) {
-            $this->panel->addCustomActionLink([$this->formController], 'fa:plus fa-2x', _t('New'), $param['params']?? null);
+            $this->panel->addCustomActionLink([$this->formController], 'fa:plus fa-2x', _t('New'), $this->params['params']?? null);
         }
     }
 
-    protected function populateGrids($param)
+    protected function populateGrids()
     {
-        $criteria = $this->prepareQueryCriteria($param);
+        $criteria = $this->prepareQueryCriteria();
 
         $repository = new TRepository($this->objectClass);
 
@@ -242,29 +237,29 @@ trait DviTPageList
         $count = $repository->count($criteria);
 
         $this->pageNavigation->setCount($count);
-        $this->pageNavigation->setProperties($param);
+        $this->pageNavigation->setProperties($this->params);
         $this->pageNavigation->setLimit($this->occurrence_query_limit);
     }
 
-    protected function prepareQueryCriteria($param)
+    protected function prepareQueryCriteria()
     {
-        if (empty($param['order'])) {
-            $param['order'] = 'id';
-            $param['direction'] = 'asc';
+        if (empty($this->params['order'])) {
+            $this->params['order'] = 'id';
+            $this->params['direction'] = 'asc';
         }
 
         $this->occurrence_query_limit = 10;
 
         $criteria = new TCriteria();
-        $criteria->setProperties($param);
+        $criteria->setProperties($this->params);
         $criteria->setProperty('limit', $this->occurrence_query_limit);
 
         //get the filters genereted by the child classes
         $called_class = DControl::getClassName(get_called_class());
         $filters = TSession::getValue($called_class . '_filters');
 
-        if (!$filters and isset($param['filters']) and $param['filters']) {
-            foreach ($param['filters'] as $filter) {
+        if (!$filters and isset($this->params['filters']) and $this->params['filters']) {
+            foreach ($this->params['filters'] as $filter) {
                 $filters[] = $filter;
             }
         }

@@ -53,19 +53,19 @@ abstract class DviSearchList extends DviControl
 
             parent::__construct($param);
 
-            $this->createCurrentObject($param);
+            $this->createCurrentObject();
 
-            $this->createPanelForm($param);
+            $this->createPanelForm();
 
-            $this->mountModelFields($param);
+            $this->mountModelFields();
 
-            $this->createActions($param);
+            $this->createActions();
 
-            $this->createContentAfterPanel(null, $param);
+            $this->createContentAfterPanel();
 
-            $this->createDataGrid($param);
+            $this->createDataGrid();
 
-            $this->createPageNavigation($param);
+            $this->createPageNavigation();
 
             $vbox = new TVBox();
             $vbox->style = 'width:100%;';
@@ -73,7 +73,7 @@ abstract class DviSearchList extends DviControl
 
             $vbox->add($this->getContentAfterPanel());
 
-            $vbox->add($this->getDatagrid($param));
+            $vbox->add($this->getDatagrid());
 
             $vbox->add($this->pageNavigation);
 
@@ -86,14 +86,15 @@ abstract class DviSearchList extends DviControl
         }
     }
 
-    abstract protected function mountModelFields($param);
+    abstract protected function mountModelFields();
 
-    protected function createActions($param)
+    protected function createActions()
     {
-        $this->createActionSearch($param);
+        $this->createActionSearch();
 
-        $this->createActionClear($param);
+        $this->createActionClear();
 
-        $this->createActionNew($param);
+        $this->createActionNew();
     }
+    {
 }

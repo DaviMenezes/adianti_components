@@ -51,15 +51,15 @@ class DviSearchFormList extends DviControl
 
             parent::__construct($param);
 
-            $this->createCurrentObject($param);
+            $this->createCurrentObject();
 
-            $this->createPanelForm($param);
+            $this->createPanelForm();
 
-            $this->createActions($param);
+            $this->createActions();
 
-            $this->datagrid = $this->createDataGrid($param);
+            $this->datagrid = $this->createDataGrid();
 
-            $this->createPageNavigation($param);
+            $this->createPageNavigation();
 
             $vbox = new DVBox();
             $vbox->add($this->panel);
@@ -80,17 +80,19 @@ class DviSearchFormList extends DviControl
         }
     }
 
-    public function createPanelForm($param)
+    public function createPanelForm()
     {
-        parent::createPanelForm($param);
+        parent::createPanelForm();
 
-        $this->mountModelFields($param);
+        $this->mountModelFields();
     }
 
-    protected function createActions($param)
+    protected function createActions()
     {
-        $this->createActionSave($param);
-        $this->createActionSearch($param);
-        $this->createActionClear($param);
+        $this->createActionSave();
+        if (!$this->isEditing()) {
+            $this->createActionSearch();
+        }
+        $this->createActionClear();
     }
 }

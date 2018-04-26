@@ -31,7 +31,7 @@ trait DviTPageForm
     protected $panel;
     protected $content_after_panel;
 
-    public function mountModelFields($param)
+    public function mountModelFields()
     {
         /**@var DviModel $obj*/
         $obj = new $this->objectClass();
@@ -42,10 +42,10 @@ trait DviTPageForm
         }
     }
 
-    protected function beforeSave($param)
+    protected function beforeSave()
     {
         try {
-            if (!parent::validateToken($param)) {
+            if (!parent::validateToken()) {
                 throw new \Exception('Ação não permitida');
             }
         } catch (Exception $e) {
@@ -54,90 +54,47 @@ trait DviTPageForm
         }
     }
 
-    public function onSave($param)
+    public function onSave()
     {
-        $this->beforeSave($param);
+        $this->beforeSave();
 
-        try {
-            DTransaction::open($this->database);
+        $objMaster = $this->save();
 
-            $this->panel->getForm()->validate();
-
-            /**@var DviModel $objMaster*/
-            $objMaster = new $this->objectClass($param['id'] ?? null);
-            $objMaster->buildFieldTypes();
-            $objMaster->addAttribute('id');
-
-            $obj_master_class_name = strtolower((new \ReflectionClass($this->objectClass))->getShortName());
-
-            $data = $this->panel->getFormData();
-            $result = array_merge($param, (array)$data);
-
-            $models_to_save = $objMaster->getForeignKeys();
-            $models_to_save[$obj_master_class_name] = $this->objectClass;
-
-            $array_models = $this->createArrayModels($result, $models_to_save);
-
-            foreach ($array_models as $model => $attributes) {
-                if ($obj_master_class_name !== $model) {
-                    /**@var TRecord $current_obj*/
-                    $current_obj = new $models_to_save[$model]();
-
-                    $this->fillModelsWithAttributeValues($attributes, $current_obj);
-
-                    $foreign_key_attribute = strtolower($model) . '_id';
-                    $current_obj->id = $objMaster->$foreign_key_attribute;
-                    $current_obj->store();
-
-                    $objMaster->$foreign_key_attribute = $current_obj->id;
-                } else {
-                    $this->fillModelsWithAttributeValues($attributes, $objMaster);
-                    $objMaster->store();
-                }
-            }
-
-            DTransaction::close();
-
-            $new_params = DviControl::getNewParams();
-            $new_params['id'] = $objMaster->id;
-
-            $this->afterSave($new_params);
-        } catch (Exception $e) {
-            DTransaction::rollback();
-            new TMessage('error', $e->getMessage());
-        }
+        $new_params = DviControl::getNewParams();
+        $new_params['id'] = $objMaster->id;
+        $this->afterSave($new_params);
     }
 
-    protected function afterSave($param)
+    protected function afterSave($params)
     {
         $class = (new \ReflectionClass(get_called_class()))->getShortName();
-        AdiantiCoreApplication::loadPage($class, 'onEdit', $param);
+        AdiantiCoreApplication::loadPage($class, 'onEdit', $params);
     }
 
-    protected function setFormWithParams($params)
+    protected function setFormWithParams()
     {
         $object = new \stdClass();
-        foreach ($params as $key => $value) {
+        foreach ($this->params as $key => $value) {
             $object->$key = $value;
         }
         $this->panel->setFormData($object);
     }
 
-    public function onEdit($param)
+    public function onEdit()
     {
         try {
-            if (isset($param['tab']) and $param['tab']) {
-                $this->panel->setCurrentNotebookPage($param['tab']);
+            if (isset($this->params['tab']) and $this->params['tab']) {
+                $this->panel->setCurrentNotebookPage($this->params['tab']);
             }
 
-            if (isset($param['id'])) {
+            if (isset($this->params['id'])) {
                 TTransaction::open($this->database);
 
-                unset($param['class']);
-                unset($param['method']);
+                unset($this->params['class']);
+                unset($this->params['method']);
 
                 $form_data = new \stdClass();
-                $form_data->id = $param['id'];
+                $form_data->id = $this->params['id'];
                 $this->populateFormDataWithObjectMaster($form_data);
 
                 $this->populateFormDataWithAssociatedObjects($form_data);
@@ -154,21 +111,21 @@ trait DviTPageForm
         }
     }
 
-    protected function createActionSave($param)
+    protected function createActionSave()
     {
         $this->panel->addActionSave();
         $this->button_save = $this->panel->getButton();
         return $this->button_save;
     }
 
-    protected function createActionClear($param)
+    protected function createActionClear()
     {
         $this->panel->addActionClear();
         $this->button_clear = $this->panel->getButton();
         return $this->button_clear;
     }
 
-    protected function createContentAfterPanel($obj = null, $param = null)
+    protected function createContentAfterPanel($obj = null)
     {
         $this->content_after_panel = $obj;
     }
@@ -259,7 +216,6 @@ trait DviTPageForm
 
     protected function isObjectAttribute($attribute, $models_to_save)
     {
-        $attributes = array();
         foreach ($models_to_save as $item) {
             /**@var TRecord $rf*/
             $rf = new $item;
@@ -325,11 +281,59 @@ trait DviTPageForm
         return $method_exist;
     }
 
-    private function reloadIfClassExtendFormAndListing($param)
+    protected function save(): DviModel
+    {
+        try {
+            DTransaction::open($this->database);
+
+            $this->panel->getForm()->validate();
+
+            /**@var DviModel $objMaster */
+            $objMaster = new $this->objectClass($this->params['id'] ?? null);
+            $objMaster->buildFieldTypes();
+            $objMaster->addAttribute('id');
+
+            $obj_master_class_name = strtolower((new \ReflectionClass($this->objectClass))->getShortName());
+
+            $data = $this->panel->getFormData();
+            $result = array_merge($this->params, (array)$data);
+
+            $models_to_save = $objMaster->getForeignKeys();
+            $models_to_save[$obj_master_class_name] = $this->objectClass;
+
+            $array_models = $this->createArrayModels($result, $models_to_save);
+
+            foreach ($array_models as $model => $attributes) {
+                if ($obj_master_class_name !== $model) {
+                    /**@var TRecord $current_obj */
+                    $current_obj = new $models_to_save[$model]();
+
+                    $this->fillModelsWithAttributeValues($attributes, $current_obj);
+
+                    $foreign_key_attribute = strtolower($model) . '_id';
+                    $current_obj->id = $objMaster->$foreign_key_attribute;
+                    $current_obj->store();
+
+                    $objMaster->$foreign_key_attribute = $current_obj->id;
+                } else {
+                    $this->fillModelsWithAttributeValues($attributes, $objMaster);
+                    $objMaster->store();
+                }
+            }
+
+            DTransaction::close();
+        } catch (Exception $e) {
+            DTransaction::rollback();
+            new TMessage('error', $e->getMessage());
+        }
+        return $objMaster;
+    }
+
+    private function reloadIfClassExtendFormAndListing()
     {
         $parent_class = get_parent_class(get_called_class());
         if ($parent_class == DviSearchList::class) {
-            $this->onReload($param);
+            $this->onReload();
         }
     }
 

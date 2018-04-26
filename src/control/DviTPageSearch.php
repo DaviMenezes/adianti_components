@@ -28,9 +28,12 @@ trait DviTPageSearch
     /**@var DviPanelGroup $panel*/
     protected $panel;
 
-    public function onSearch($param)
+    public function onSearch()
     {
         try {
+            if (!$this->validateToken()) {
+                throw new \Exception('Ação não permitida');
+            }
             DTransaction::open();
 
             $this->panel->keepFormLoaded();
@@ -51,13 +54,13 @@ trait DviTPageSearch
             $filters = array();
 
             foreach ($array_models as $model => $array_model) {
-                /**@var FormField $field*/
                 foreach ($array_model as $attribute => $value) {
                     if (empty($value)) {
                         continue;
                     }
 
                     $modelShortName = DControl::getClassName($models_to_save[$model]);
+                    /**@var FormField $field*/
                     $field = $this->panel->getForm()->getField($modelShortName.'_'.$attribute);
 
                     if (!$field) {
@@ -80,14 +83,14 @@ trait DviTPageSearch
 
             DTransaction::close();
 
-            $this->onReload($param);
+            $this->onReload();
         } catch (\Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
         }
     }
 
-    protected function createActionSearch($param)
+    protected function createActionSearch()
     {
         $this->panel->addActionSearch();
         $this->panel->getButton()

@@ -30,23 +30,26 @@ class DviControl extends TPage
     /**@var DviPanelGroup $panel*/
     protected $panel;
     protected $database = 'default';
+    protected $params;
 
     use DControl;
 
     public function __construct($param)
     {
+        $this->params = $param;
+
         parent::__construct();
 
         $called_class = Route::getClassName(get_called_class());
 
         $this->panel = new DviPanelGroup($called_class, $this->pageTitle);
         $field_id = new THidden('id');
-        $field_id->setValue($param['id']?? null);
+        $field_id->setValue($this->params['id'] ?? null);
         $field_token = new THidden($called_class.'_form_token');
 
         $this->panel->addHiddenFields([$field_id, $field_token]);
 
-        if (empty($param[$called_class.'_form_token'])) {
+        if (empty($this->params[$called_class.'_form_token'])) {
             $token_session = md5(microtime());
             TSession::setValue($called_class.'_form_token', $token_session);
 
@@ -54,9 +57,9 @@ class DviControl extends TPage
         }
     }
 
-    public function createPanelForm($param)
+    public function createPanelForm()
     {
-        if ($this->isEditing($param)) {
+        if ($this->isEditing()) {
             $this->panel->useLabelFields(true);
         }
     }
@@ -88,26 +91,26 @@ class DviControl extends TPage
         }
     }
 
-    public function load($param = null)
+    public function load()
     {
-        $param = self::getNewParams($param);
+        $param = self::getNewParams();
         AdiantiCoreApplication::loadPage(get_called_class(), null, $param);
     }
 
-    protected function isEditing($param)
+    protected function isEditing()
     {
-        if ((!empty($param['id']) and $param['id'] != 0) or (!empty($this->currentObj))) {
+        if ((!empty($this->params['id']) and $this->params['id'] != 0) or (!empty($this->currentObj))) {
             return true;
         }
         return false;
     }
 
-    protected function createCurrentObject($param)
+    protected function createCurrentObject()
     {
-        if (!$this->isEditing($param)) {
+        if (!$this->isEditing()) {
             return;
         }
-        $this->currentObj = $this->objectClass::find($param['id'] ?? null);
+        $this->currentObj = $this->objectClass::find($this->params['id'] ?? null);
         if (!$this->currentObj) {
             TApplication::loadPage(get_called_class());
         }
@@ -159,10 +162,10 @@ class DviControl extends TPage
     /**
      * check if form has token and if is valid(session value)
     */
-    protected function validateToken($args)
+    protected function validateToken()
     {
         $called_class = Route::getClassName(get_called_class());
-        if (empty($args[$called_class.'_form_token']) or ($args[$called_class.'_form_token'] !== TSession::getValue($called_class.'_form_token'))) {
+        if (empty($this->params[$called_class.'_form_token']) or ($this->params[$called_class.'_form_token'] !== TSession::getValue($called_class.'_form_token'))) {
             return false;
         }
         return true;

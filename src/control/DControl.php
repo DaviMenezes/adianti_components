@@ -23,10 +23,10 @@ trait DControl
         return $value;
     }
 
-    public static function getClassName($class)
+    public static function getClassName($class = null)
     {
         try {
-            return (new ReflectionClass($class))->getShortName();
+            return (new ReflectionClass($class ?? get_called_class()))->getShortName();
         } catch (\ReflectionException $e) {
             throw new \Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
         }
