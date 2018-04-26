@@ -96,5 +96,4 @@ abstract class DviSearchList extends DviControl
 
         $this->createActionNew();
     }
-    {
 }
