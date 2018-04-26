@@ -58,11 +58,7 @@ trait DviTPageForm
     {
         $this->beforeSave();
 
-        $objMaster = $this->save();
-
-        $new_params = DviControl::getNewParams();
-        $new_params['id'] = $objMaster->id;
-        $this->afterSave($new_params);
+        $this->save();
     }
 
     protected function afterSave($params)
@@ -281,7 +277,7 @@ trait DviTPageForm
         return $method_exist;
     }
 
-    protected function save(): DviModel
+    protected function save()
     {
         try {
             DTransaction::open($this->database);
@@ -322,11 +318,14 @@ trait DviTPageForm
             }
 
             DTransaction::close();
+
+            $new_params = DviControl::getNewParams();
+            $new_params['id'] = $objMaster->id;
+            $this->afterSave($new_params);
         } catch (Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
         }
-        return $objMaster;
     }
 
     private function reloadIfClassExtendFormAndListing()
