@@ -275,7 +275,7 @@ trait DviTPageList
 
         if ($filters) {
             foreach ($filters as $filter) {
-                $criteria->add($filter, TExpression::OR_OPERATOR);
+                $criteria->add($filter);
             }
         }
         return $criteria;
