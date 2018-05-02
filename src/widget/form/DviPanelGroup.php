@@ -86,7 +86,6 @@ class DviPanelGroup implements IDviWidget
         $this->hboxButtonsFooter = new DHBox;
 
         $this->tpanel->add($this->form);
-        $this->tpanel->addFooter($this->hboxButtonsFooter);
     }
 
     public static function create($class, string $title = null, string $formName = null)
@@ -116,9 +115,7 @@ class DviPanelGroup implements IDviWidget
         }
         return $columns;
     }
-    /* PROPERTIES***************************************/
 
-    /* PROPERTIES***************************************/
     public function addArrayFields(array $fields)
     {
         if (count($fields) > 0) {
@@ -279,6 +276,10 @@ class DviPanelGroup implements IDviWidget
 
     public function show()
     {
+        $childs = $this->hboxButtonsFooter->getChilds();
+        if (count($childs) > 0) {
+            $this->tpanel->addFooter($this->hboxButtonsFooter);
+        }
         $this->tpanel->show();
     }
 
