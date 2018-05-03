@@ -114,7 +114,7 @@ class DviControl extends TPage
         }
         $this->currentObj = $this->objectClass::find($this->params['id'] ?? null);
         if (!$this->currentObj) {
-            TApplication::loadPage(get_called_class());
+            throw new \Exception('Registro não encontrado');
         }
     }
 
