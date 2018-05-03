@@ -8,6 +8,7 @@
 
 namespace Dvi\Adianti\Component\Model\Form\Fields;
 
+use Adianti\Base\Lib\Validator\TCPFValidator;
 use Adianti\Base\Lib\Validator\TEmailValidator;
 use Dvi\Adianti\Model\DBFormField;
 use Dvi\Adianti\Widget\Form\DEntry;
@@ -54,5 +55,10 @@ class FieldVarchar extends DBFormField
     public function validateEmail()
     {
         $this->field->addValidation($this->field->getLabel(), new TEmailValidator());
+    }
+
+    public function validateCpf()
+    {
+        $this->field->addValidation($this->field->getLabel(), new TCPFValidator());
     }
 }
