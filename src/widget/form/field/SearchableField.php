@@ -23,7 +23,7 @@ trait SearchableField
 
     public function getSearchOperator()
     {
-        return $this->search_operator;
+        return $this->search_operator = $this->search_operator ?? '=';
     }
 
     public function getSearchableValue()
