@@ -185,12 +185,12 @@ abstract class DviModel extends DviTRecord
     #endregion
 
     #region[BUILDING FIELDS]
-    protected function setStructureForm(array $form_column_structure)
+    public function setStructureForm(array $form_column_structure)
     {
         $this->form_row_fields = $form_column_structure;
     }
 
-    protected function getStructureFields()
+    public function getStructureFields()
     {
         return $this->form_row_fields;
     }
