@@ -42,6 +42,8 @@ class DDate extends TDate
         //Todo check location user
         $this->setMask('dd/mm/yyyy');
         $this->setDatabaseMask('yyyy-mm-dd');
+
+        $this->operator('=');
     }
 
     public function disable($disable = true)
