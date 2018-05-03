@@ -5,6 +5,8 @@ namespace Dvi\Adianti\Control;
 use Adianti\Base\Lib\Database\TFilter;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TDate;
+use Adianti\Base\Lib\Widget\Form\TDateTime;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
@@ -72,7 +74,11 @@ trait DviTPageSearch
 
                     if (in_array(SearchableField::class, $traits)) {
                         $searchOperator = $field->getSearchOperator();
-                        $filters[] = new TFilter($attribute, $searchOperator, $field->getSearchableValue());
+
+                        if (!is_a($field, TDate::class) and !is_a($field, TDateTime::class)) {
+                            $value =  $field->getSearchableValue();
+                        }
+                        $filters[] = new TFilter($attribute, $searchOperator, $value);
                     }
                 }
             }
