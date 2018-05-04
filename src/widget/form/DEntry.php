@@ -2,6 +2,8 @@
 namespace Dvi\Adianti\Widget\Form;
 
 use Adianti\Base\Lib\Validator\TEmailValidator;
+use Adianti\Base\Lib\Widget\Form\TEntry;
+use Dvi\Adianti\Widget\Form\Field\DField;
 use Dvi\Adianti\Widget\Form\Field\FieldEntry;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
@@ -15,9 +17,11 @@ use Dvi\Adianti\Widget\Form\Field\SearchableField;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DEntry extends FieldEntry
+class DEntry extends TEntry
 {
     use SearchableField;
+
+    use DField;
 
     public function __construct(
         string $name,
@@ -26,21 +30,11 @@ class DEntry extends FieldEntry
         bool $required = false,
         bool $tip = true
     ) {
-        parent::__construct($name, $placeholder, $max_length, $required, $tip);
+        parent::__construct($name);
+
+        $this->prepare($placeholder, $required, $tip, $max_length);
 
         $this->operator('like');
-    }
-
-    public static function create(
-        string $name,
-        string $placeholder = null,
-        int $max_length = null,
-        bool $required = false,
-        bool $tip = true
-    ):DEntry {
-        $obj = new DEntry($name, $placeholder, $max_length, $required, $tip);
-
-        return $obj;
     }
 
     public function validate()
