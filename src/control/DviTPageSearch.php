@@ -10,7 +10,6 @@ use Adianti\Base\Lib\Widget\Form\TDateTime;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
-use Dvi\Adianti\Widget\Form\Field\FormField;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
@@ -62,12 +61,13 @@ trait DviTPageSearch
                     }
 
                     $modelShortName = DControl::getClassName($models_to_save[$model]);
-                    /**@var FormField $field*/
+
                     $field = $this->panel->getForm()->getField($modelShortName.'_'.$attribute);
 
                     if (!$field) {
                         continue;
                     }
+
                     $field->setValue($value);
 
                     $traits = class_uses($field);
