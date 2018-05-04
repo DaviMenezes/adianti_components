@@ -2,6 +2,8 @@
 
 namespace Dvi\Adianti\Widget\Form;
 
+use Adianti\Base\Lib\Database\TRecord;
+use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TCombo;
@@ -63,7 +65,7 @@ class DCombo extends TCombo
             $items = array();
             if ($result) {
                 foreach ($result as $item) {
-                    if ($obj_array_value[1]) {
+                    if (!empty($obj_array_value[1])) {
                         $str_value = '';
                         foreach ($obj_array_value[1] as $key => $value) {
                             $str_value .= $item->$value. (count($obj_array_value[1]) > $key + 1 ? ' - ' : '');
@@ -79,6 +81,31 @@ class DCombo extends TCombo
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
         }
+    }
+
+    public function model(string $model, string $value = 'name', $criteria = null)
+    {
+        /**@var TRecord $model*/
+        $repository = new TRepository($model);
+        $objs = $repository->load($criteria);
+
+        $items = array();
+
+        foreach ($objs as $obj) {
+            $relationship_obj = explode('->', $value);
+            if (count($relationship_obj) > 0) {
+                $prop_value = null;
+                foreach ($relationship_obj as $key => $item_value) {
+                    $prop_name = $relationship_obj[$key];
+                    $prop_value = $prop_value ? $prop_value->$prop_name : $obj->$prop_name;
+                }
+            }
+            $items[$obj->id] = $prop_value;
+        }
+
+        $this->addItems($items);
+
+        return $this;
     }
 
     public static function create($name, string $placeholder = null, $required = false, array $obj_array_value = null, bool $tip = true, bool $enable_search = true)
