@@ -2,6 +2,7 @@
 
 namespace Dvi\Adianti\Widget\Form;
 
+use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TRadioGroup;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
@@ -38,7 +39,7 @@ class DRadioGroup extends TRadioGroup
             $this->operator('=');
 
             if ($required) {
-                $this->addValidation($label);
+                $this->addValidation($label, new TRequiredValidator());
             }
 
         } catch (\Exception $e) {
