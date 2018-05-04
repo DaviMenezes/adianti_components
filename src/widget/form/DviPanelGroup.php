@@ -592,6 +592,7 @@ class DviPanelGroup implements IDviWidget
             TFile::class,
             TMultiFile::class,
             TPassword::class,
+            DPassword::class,
             TRadioGroup::class,
             DRadioGroup::class,
             TSeekButton::class,
