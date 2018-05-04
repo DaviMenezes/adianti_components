@@ -257,6 +257,10 @@ abstract class DviModel extends DviTRecord
 
     public function getAttributes()
     {
+        if (count($this->attributes)) {
+            return $this->attributes;
+        }
+
         $this->buildFieldTypes();
         $attributes = parent::getAttributes();
 
