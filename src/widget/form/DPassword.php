@@ -22,6 +22,6 @@ class DPassword extends TPassword
     {
         parent::__construct($name);
 
-        $this->create($placeholder, $required, $tip);
+        $this->prepare($placeholder, $required, $tip);
     }
 }
