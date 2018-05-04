@@ -47,12 +47,13 @@ class DGridBootstrap
         return $row;
     }
 
+    public function setStyle($style)
+    {
+        $this->grid->style = $style;
+    }
+
     public function show()
     {
-        //        foreach ($this->rows as $row) {
-        //            /**@var DGridRow $row */
-        //            $row->prepareColumns();
-        //        }
         $this->grid->show();
     }
 }
