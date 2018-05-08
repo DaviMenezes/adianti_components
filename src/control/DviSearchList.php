@@ -75,7 +75,7 @@ abstract class DviSearchList extends DviControl
 
             $vbox->add($this->getDatagrid());
 
-            $vbox->add($this->pageNavigation);
+            $vbox->add($this->getPageNavigation());
 
             parent::add($vbox);
 
