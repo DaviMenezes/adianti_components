@@ -57,6 +57,11 @@ class DviControl extends TPage
         }
     }
 
+    protected function getPanel()
+    {
+        return $this->panel;
+    }
+
     public function createPanelForm()
     {
         if ($this->isEditing()) {

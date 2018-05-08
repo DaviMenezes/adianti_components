@@ -45,7 +45,7 @@ class DviStandardForm extends DviControl
 
             $this->createActions();
 
-            parent::add($this->panel);
+            parent::add($this->getPanel());
 
             $this->cancelEnterSubmit();
 
