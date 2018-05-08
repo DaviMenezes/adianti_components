@@ -53,6 +53,7 @@ class DviStandardForm extends DviControl
         } catch (\Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
+            die();
         }
     }
 
