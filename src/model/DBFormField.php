@@ -18,7 +18,7 @@ abstract class DBFormField extends DBField
 {
     /**@var TElement $field*/
     protected $field;
-    protected $form_field_class;
+    protected $type;
     private $label;
 
     public function __construct(string $name, string $type, bool $required = false, string $label = null)
@@ -31,13 +31,6 @@ abstract class DBFormField extends DBField
     public function getLabel()
     {
         return str_replace('_', ' ', $this->label);
-    }
-
-    public function type(string $class)
-    {
-        $this->form_field_class  = $class;
-
-        return $this;
     }
 
     abstract public function getField();
