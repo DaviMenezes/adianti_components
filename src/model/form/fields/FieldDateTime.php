@@ -5,6 +5,8 @@ namespace Dvi\Adianti\Component\Model\Form\Fields;
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Form\TDateTime;
 use Dvi\Adianti\Model\DBFormField;
+use Dvi\Adianti\Widget\Form\DDate;
+use Dvi\Adianti\Widget\Form\DDateTime;
 
 /**
  * Model DBDateTime
@@ -27,7 +29,7 @@ class FieldDateTime extends DBFormField
 
         parent::__construct($name, 'datetime', $required, $label);
 
-        $this->field = new TDateTime($name);
+        $this->field = new DDateTime($name);
         $this->field->placeholder = $label;
         if ($required) {
             $this->field->addValidation($label, new TRequiredValidator());
@@ -54,5 +56,10 @@ class FieldDateTime extends DBFormField
     {
         $this->field->setMask($mask);
         return $this;
+    }
+
+    public function setType($type)
+    {
+        $this->field->setType($type);
     }
 }

@@ -5,6 +5,7 @@ namespace Dvi\Adianti\Widget\Form;
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TRadioGroup;
+use Dvi\Adianti\Widget\Form\Field\DField;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
@@ -20,6 +21,7 @@ use Dvi\Adianti\Widget\Form\Field\SearchableField;
 class DRadioGroup extends TRadioGroup
 {
     use SearchableField;
+    use DField;
 
     private $field_disabled;
 

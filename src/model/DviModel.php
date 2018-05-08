@@ -37,22 +37,25 @@ abstract class DviModel extends DviTRecord
     {
         parent::addAttribute($name);
 
-        $field = 'field_'.$name;
+        $field_name = 'field_'.$name;
         $table_field_name = $this->getTableFieldName($name);
-        $this->$field = FieldVarchar::create($table_field_name, 'text', $size, $required, $label);
+        $field_varchar = FieldVarchar::create($table_field_name, 'text', $size, $required, $label);
+        $field_varchar->setType('string');
+        $this->$field_name = $field_varchar;
 
-        return $this->$field;
+        return $this->$field_name;
     }
 
     protected function addRadioGroup(string $name, bool $required = false, $label = null):FieldRadio
     {
         parent::addAttribute($name);
 
-        $field = 'field_'.$name;
+        $field_name = 'field_'.$name;
         $table_field_name = $this->getTableFieldName($name);
-        $this->$field = new FieldRadio($table_field_name, 'text', $required, $label);
-
-        return $this->$field;
+        $field = new FieldRadio($table_field_name, 'string', $required, $label);
+        $field->setType('string');
+        $this->$field_name = $field;
+        return $this->$field_name;
     }
 
     protected function addCurrency(
@@ -65,10 +68,10 @@ abstract class DviModel extends DviTRecord
     ):FieldCurrency {
         parent::addAttribute($name);
 
-        $field = 'field_'.$name;
+        $field_name = 'field_'.$name;
         $table_field_name = $this->getTableFieldName($name);
 
-        $this->$field = new FieldCurrency(
+        $field = new FieldCurrency(
             $table_field_name,
             $decimals,
             $decimalsSeparator,
@@ -78,7 +81,11 @@ abstract class DviModel extends DviTRecord
             $label
         );
 
-        return $this->$field;
+        $field->setType('string');
+
+        $this->$field_name = $field;
+
+        return $this->$field_name;
     }
 
     protected function addText(
@@ -90,13 +97,17 @@ abstract class DviModel extends DviTRecord
     ):FieldText {
         parent::addAttribute($name);
 
-        $field = 'field_'.$name;
+        $field_name = 'field_'.$name;
 
         $table_field_name = $this->getTableFieldName($name);
 
-        $this->$field = FieldText::create($table_field_name, $maxlength, $height, $required, $label);
+        $field = new FieldText($table_field_name, $maxlength, $height, $required, $label);
 
-        return $this->$field;
+        $field->setType('string');
+
+        $this->$field_name = $field;
+
+        return $this->$field_name;
     }
 
     protected function addHtml(
@@ -108,38 +119,50 @@ abstract class DviModel extends DviTRecord
     ):FieldHtml {
         parent::addAttribute($name);
 
-        $field = 'field_'.$name;
+        $field_name = 'field_'.$name;
 
         $table_field_name = $this->getTableFieldName($name);
 
-        $this->$field = new FieldHtml($table_field_name, $maxlength, $height, $required, $label);
+        $field = new FieldHtml($table_field_name, $maxlength, $height, $required, $label);
 
-        return $this->$field;
+        $field->setType('string');
+
+        $this->$field_name = $field;
+
+        return $this->$field_name;
     }
 
     protected function addDate(string $name, $label = null, bool $required = false):FieldDate
     {
         parent::addAttribute($name);
 
-        $field = 'field_'.$name;
+        $field_name = 'field_'.$name;
 
         $table_field_name = $this->getTableFieldName($name);
 
-        $this->$field = FieldDate::create($table_field_name, $required, $label);
+        $field = new FieldDate($table_field_name, $required, $label);
 
-        return $this->$field;
+        $field->setType('string');
+
+        $this->$field_name = $field;
+
+        return $this->$field_name;
     }
 
     protected function addDateTime(string $name, $label = null, bool $required = false):FieldDateTime
     {
         parent::addAttribute($name);
 
-        $field = 'field_'.$name;
+        $field_name = 'field_'.$name;
 
         $table_field_name = $this->getTableFieldName($name);
-        $this->$field = FieldDateTime::create($table_field_name, $required, $label);
+        $field = new FieldDateTime($table_field_name, $required, $label);
 
-        return $this->$field;
+        $field->setType('string');
+
+        $this->$field_name = $field;
+
+        return $this->$field_name;
     }
 
     protected function addCombo(string $name, string $label = null, bool $required = false):FieldCombo
@@ -150,6 +173,8 @@ abstract class DviModel extends DviTRecord
 
         $table_field_name = $this->getTableFieldName($name);
         $field = new FieldCombo($table_field_name, 'combo', $required, $label);
+
+        $field->setType('string');
 
         $this->$field_name = $field;
 
@@ -171,6 +196,8 @@ abstract class DviModel extends DviTRecord
         $table_field_name = $this->getTableFieldName($name);
 
         $field = new FieldInteger($table_field_name, $min, $max, $step, $required, $label);
+
+        $field->setType('string');
 
         $this->$field_name = $field;
 

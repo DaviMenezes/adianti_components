@@ -4,8 +4,8 @@ namespace Dvi\Adianti\Component\Model\Form\Fields;
 
 use Adianti\Base\Lib\Validator\TMaxLengthValidator;
 use Adianti\Base\Lib\Validator\TRequiredValidator;
-use Adianti\Base\Lib\Widget\Form\THtmlEditor;
 use Dvi\Adianti\Model\DBFormField;
+use Dvi\Adianti\Widget\Form\DHtmlEditor;
 
 /**
  * Fields FieldHtml
@@ -28,7 +28,7 @@ class FieldHtml extends DBFormField
 
         parent::__construct($name, 'text', $required, $label);
 
-        $this->field = new THtmlEditor($name);
+        $this->field = new DHtmlEditor($name);
         $this->field->setLabel($label);
         if ($required) {
             $this->field->addValidation(ucfirst($label), new TRequiredValidator());
@@ -44,5 +44,10 @@ class FieldHtml extends DBFormField
     public function getField()
     {
         return $this->field;
+    }
+
+    public function setType($type)
+    {
+        $this->field->setType($type);
     }
 }

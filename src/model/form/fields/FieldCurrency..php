@@ -4,6 +4,7 @@ namespace Dvi\Adianti\Component\Model\Form\Fields;
 
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Form\TNumeric;
+use Dvi\Adianti\Componente\Model\Form\Fields\DNumeric;
 use Dvi\Adianti\Model\DBFormField;
 
 /**
@@ -35,7 +36,7 @@ class FieldCurrency extends DBFormField
         parent::__construct($name, $type, $required, $label);
 
 
-        $this->field = new TNumeric($name, $decimals, $decimalsSeparator, $thousandSeparator);
+        $this->field = new DNumeric($name, $decimals, $decimalsSeparator, $thousandSeparator);
         $this->field->placeholder = $label;
         if ($required) {
             $this->field->addValidation(ucfirst($label), new TRequiredValidator());
@@ -47,5 +48,10 @@ class FieldCurrency extends DBFormField
     public function getField()
     {
         return $this->field;
+    }
+
+    public function setType($type)
+    {
+        $this->field->setType($type);
     }
 }

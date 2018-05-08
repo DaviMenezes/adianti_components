@@ -39,4 +39,9 @@ class FieldDate extends DBFormField
     {
         return $this->field;
     }
+
+    public function setType($type)
+    {
+        $this->field->setType($type);
+    }
 }

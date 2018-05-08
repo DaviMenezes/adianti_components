@@ -4,6 +4,7 @@ namespace Dvi\Adianti\Component\Model\Form\Fields;
 
 use Dvi\Adianti\Model\DBFormField;
 use Dvi\Adianti\Widget\Form\DRadioGroup;
+use Dvi\Adianti\Widget\Form\Field\DField;
 
 /**
  * FieldRadio
@@ -17,7 +18,6 @@ use Dvi\Adianti\Widget\Form\DRadioGroup;
  */
 class FieldRadio extends DBFormField
 {
-
     public function __construct(string $name, string $type, bool $required = false, string $label = null)
     {
         $array = explode('_', $name);
@@ -28,6 +28,11 @@ class FieldRadio extends DBFormField
         parent::__construct($name, $type, $required, $label);
 
         $this->field = new DRadioGroup($name, $label, $required);
+    }
+
+    public function setType($type)
+    {
+        $this->field->setType($type);
     }
 
     public function getField()

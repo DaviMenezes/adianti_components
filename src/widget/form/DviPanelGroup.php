@@ -34,6 +34,7 @@ use Adianti\Base\Lib\Widget\Form\TText;
 use Adianti\Base\Lib\Widget\Wrapper\TDBCombo;
 use Adianti\Base\Lib\Widget\Wrapper\TDBSeekButton;
 use Adianti\Base\Lib\Wrapper\BootstrapNotebookWrapper;
+use Dvi\Adianti\Componente\Model\Form\Fields\DNumeric;
 use Dvi\Adianti\Control\DAction;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DGridBootstrap;
@@ -575,6 +576,7 @@ class DviPanelGroup implements IDviWidget
     {
         $whiteList = [
             THidden::class,
+            DHidden::class,
             TEntry::class,
             DEntry::class,
             TButton::class,
@@ -586,8 +588,10 @@ class DviPanelGroup implements IDviWidget
             TDate::class,
             DDate::class,
             TDateTime::class,
+            DDateTime::class,
             THidden::class,
             THtmlEditor::class,
+            DHtmlEditor::class,
             TMultiField::class,
             TFile::class,
             TMultiFile::class,
@@ -601,7 +605,9 @@ class DviPanelGroup implements IDviWidget
             TSelect::class,
             TSlider::class,
             TSpinner::class,
+            DSpinner::class,
             TNumeric::class,
+            DNumeric::class,
             TText::class,
             DText::class,
             DCKEditor::class

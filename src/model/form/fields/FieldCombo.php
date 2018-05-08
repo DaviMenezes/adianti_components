@@ -69,4 +69,9 @@ class FieldCombo extends DBFormField
         $this->field->items($items);
         return $this;
     }
+
+    public function setType($type)
+    {
+        $this->field->setType($type);
+    }
 }

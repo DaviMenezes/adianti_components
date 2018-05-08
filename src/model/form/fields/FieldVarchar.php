@@ -31,6 +31,12 @@ class FieldVarchar extends DBFormField
         $this->field = new DEntry($name, $label, $size, $required);
     }
 
+    public function setType($type)
+    {
+        $this->field->setType($type);
+        return $this;
+    }
+
     public static function create(
         string $name,
         string $type,
@@ -60,5 +66,6 @@ class FieldVarchar extends DBFormField
     public function validateCpf()
     {
         $this->field->addValidation($this->field->getLabel(), new TCPFValidator());
+        return $this;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Adianti\Component\Model\Form\Fields;
 
 use Adianti\Base\Lib\Widget\Form\TSpinner;
 use Dvi\Adianti\Model\DBFormField;
+use Dvi\Adianti\Widget\Form\DSpinner;
 
 /**
  * Fields FieldInteger
@@ -26,7 +27,7 @@ class FieldInteger extends DBFormField
 
         parent::__construct($name, $type, $required, $label);
 
-        $this->field = new TSpinner($name);
+        $this->field = new DSpinner($name);
         $this->field->setRange($min, $max, $step);
         $this->field->setLabel($label);
         $this->field->placeholder = $this->getLabel();
@@ -40,5 +41,10 @@ class FieldInteger extends DBFormField
     public function getLabel()
     {
         return ucfirst(parent::getLabel()?? $this->getName());
+    }
+
+    public function setType($type)
+    {
+        $this->field->setType($type);
     }
 }
