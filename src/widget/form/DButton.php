@@ -48,12 +48,29 @@ class DButton extends TField implements AdiantiWidgetInterface
      * @return DButton
      * @throws Exception
      */
-    public static function create(string $name, array $callback, string $image, string $label = null)
+    public static function create(string $name, array $callback, string $image = null, string $label = null)
     {
         $button = new DButton($name);
-        $button->setAction(new DAction($callback), $label);
-        $button->setImage($image);
-        $button->setProperty('class', 'btn btn-default btn-sm dvi_btn');
+
+        if ($label) {
+            $element_label = new TElement('div');
+            $element_label->add($label);
+            if ($image) {
+                $element_label->class = 'dvi_btn_label';
+            }
+            $button->setAction(new DAction($callback), $element_label);
+        } else {
+            $button->setAction(new DAction($callback), $label);
+        }
+
+        if ($image) {
+            $button->setImage($image);
+        }
+        $button->setProperty('class', 'btn btn-default dvi_panel_action');
+        $button->style = 'font-size: 14px;';
+        if (!$image) {
+            $button->style = 'font-size: 15px;';
+        }
         return $button;
     }
 
