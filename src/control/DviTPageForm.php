@@ -119,6 +119,7 @@ trait DviTPageForm
 
             DTransaction::close();
 
+            return $objMaster;
         } catch (Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
