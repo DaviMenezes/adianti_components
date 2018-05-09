@@ -68,10 +68,11 @@ class DviPanelGroup implements IDviWidget
     protected $form;
     protected $hboxButtonsFooter;
     protected $form_data;
-    protected $btn;
+    protected $currentButton;
 
     protected $useLabelFields = false;
-    private $footer_items = array();
+    protected $footer_items = array();
+    protected $footer_item;
 
     public function __construct(string $className, string $title = null, string $formName = null)
     {
@@ -277,9 +278,9 @@ class DviPanelGroup implements IDviWidget
 
     public function show()
     {
-        $childs = $this->hboxButtonsFooter->getChilds();
-        if (count($childs) > 0) {
-            $this->tpanel->addFooter($this->hboxButtonsFooter);
+        $item = $this->getFooterItem();
+        if ($item) {
+            $this->tpanel->addFooter($item);
         }
         $this->tpanel->show();
     }
@@ -342,7 +343,7 @@ class DviPanelGroup implements IDviWidget
         array $parameters = null,
         $tip = null
     ) {
-        $str_label = !empty($label) ? _t($label) : null;
+        $str_label = !empty($label) ? $label : null;
         $this->addCustomAction(
             [$this->className, $saveMethod],
             'fa:floppy-o fa-2x',
@@ -417,10 +418,10 @@ class DviPanelGroup implements IDviWidget
             'tip' => $tip,
             'label' => $label];
 
-        $this->btn = $this->createButton($data);
-        $this->hboxButtonsFooter->addButton($this->btn);
+        $this->currentButton = $this->createButton($data);
+        $this->hboxButtonsFooter->addButton($this->currentButton);
 
-        $this->form->addField($this->btn);
+        $this->form->addField($this->currentButton);
 
         return $this;
     }
@@ -442,22 +443,21 @@ class DviPanelGroup implements IDviWidget
             'tip' => $tip,
             'label' => $label
         ];
-        $btn = $this->createButton($data);
-        $this->hboxButtonsFooter->addButton($btn);
+        $this->currentButton = $this->createButton($data);
+        $this->hboxButtonsFooter->addButton($this->currentButton);
 
         return $this;
     }
 
     public function addActionBackLink($action = null):DActionLink
     {
-        $btn = new DActionLink($action, _t('Back'), 'fa:arrow-left fa-2x');
-        $btn->class = 'btn btn-default';
+        $this->currentButton = new DActionLink($action, _t('Back'), 'fa:arrow-left fa-2x');
+        $this->currentButton->class = 'btn btn-default';
 
-        $this->hboxButtonsFooter->addButton($btn);
+        $this->hboxButtonsFooter->addButton($this->currentButton);
 
-        return $btn;
+        return $this;
     }
-    #endregion
 
     private function createButton($value)
     {
@@ -489,10 +489,11 @@ class DviPanelGroup implements IDviWidget
         return $btn;
     }
 
-    public function getButton():DButton
+    public function getCurrentButton():DButton
     {
-        return $this->btn;
+        return $this->currentButton;
     }
+    #endregion
 
     private function addFormFields($columns)
     {
@@ -692,5 +693,21 @@ class DviPanelGroup implements IDviWidget
     public function useLabelFields(bool $bool)
     {
         $this->useLabelFields = $bool;
+    }
+
+    public function setFooterItem($item)
+    {
+        $this->footer_item = $item;
+    }
+    protected function getFooterItem()
+    {
+        if ($this->footer_item) {
+            return $this->footer_item;
+        }
+
+        $childs = $this->hboxButtonsFooter->getChilds();
+        if (count($childs) > 0) {
+            return $this->hboxButtonsFooter;
+        }
     }
 }
