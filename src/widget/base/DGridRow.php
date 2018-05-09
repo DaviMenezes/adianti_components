@@ -52,11 +52,10 @@ class DGridRow extends TElement
         return $this;
     }
 
-    public function addCols()
+    public function addCols(array $columns)
     {
-        $array_columns = (count(func_get_args()) == 1) ? func_get_arg(0) : func_get_args();
-
-        foreach ($array_columns as $position => $column) {
+        foreach ($columns as $position => $column) {
+            $this->columns[] = $column;
             parent::add($column);
         }
     }

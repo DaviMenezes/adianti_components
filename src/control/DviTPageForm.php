@@ -177,14 +177,14 @@ trait DviTPageForm
     protected function createActionSave()
     {
         $this->panel->addActionSave();
-        $this->button_save = $this->panel->getButton();
+        $this->button_save = $this->panel->getCurrentButton();
         return $this->button_save;
     }
 
     protected function createActionClear()
     {
         $this->panel->addActionClear();
-        $this->button_clear = $this->panel->getButton();
+        $this->button_clear = $this->panel->getCurrentButton();
         return $this->button_clear;
     }
 

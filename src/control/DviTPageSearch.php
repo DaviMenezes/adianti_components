@@ -99,7 +99,7 @@ trait DviTPageSearch
     protected function createActionSearch()
     {
         $this->panel->addActionSearch();
-        $this->panel->getButton()
+        $this->panel->getCurrentButton()
             ->getAction()
             ->setParameters(self::getNewParams());
     }
