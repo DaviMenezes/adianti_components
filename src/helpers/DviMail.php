@@ -25,7 +25,7 @@ class DviMail
     private $body;
     private $toEmails = array();
     private $subject;
-    private $error_msg;
+    private $obj_error;
 
     public function __construct($body, $mails = null, $debug = null)
     {
@@ -95,7 +95,7 @@ class DviMail
             }
             $this->mail->send();
         } catch (\Exception $e) {
-            $this->error_msg = $e->getMessage();
+            $this->obj_error = $e;
         }
     }
 
@@ -106,14 +106,14 @@ class DviMail
 
     public function success()
     {
-        if ($this->error_msg) {
+        if ($this->obj_error) {
             return false;
         }
         return true;
     }
 
-    public function getErrorMsg()
+    public function getError()
     {
-        return $this->error_msg;
+        return $this->obj_error;
     }
 }
