@@ -3,6 +3,7 @@
 namespace Dvi\Adianti\Widget\Form;
 
 use Adianti\Base\Lib\Widget\Form\THidden;
+use Dvi\Adianti\Widget\Form\Field\DField;
 
 /**
  * Form DHidden
@@ -16,6 +17,8 @@ use Adianti\Base\Lib\Widget\Form\THidden;
  */
 class DHidden extends THidden
 {
+    use DField;
+
     public function __construct(string $name, $default_value = null)
     {
         parent::__construct($name);
