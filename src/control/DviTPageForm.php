@@ -13,6 +13,7 @@ use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Widget\Base\DGridBootstrap;
 use Dvi\Adianti\Widget\Base\DGridColumn;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
+use Dvi\Adianti\Widget\Form\Field\DField;
 use Exception;
 
 /**
@@ -46,22 +47,26 @@ trait DviTPageForm
 
     protected function beforeSave()
     {
+        $this->panel->keepFormLoaded();
+
         if (!parent::validateToken()) {
             throw new \Exception('Ação não permitida');
         }
-
-        //GET FIELD TYPE FOR SANITIZE VALUES
+        $data = $this->panel->getFormData();
         $fields = $this->panel->getForm()->getFields();
+        $error_message = null;
         foreach ($fields as $field) {
-            if (method_exists($field, 'sanitize')) {
-                $field->sanitize();
-            }
-            if (method_exists($field, 'filterValidate')) {
-                $field->filterValidate();
+            /**@var DField $field*/
+            if (method_exists($field, 'validating') and !$field->validating()) {
+                $error_message .= $field->getErrorValidation()."<br>";
             }
         }
 
         $this->panel->getForm()->validate();
+
+        if ($error_message) {
+            throw new Exception($error_message);
+        }
     }
 
     public function onSave()
@@ -118,10 +123,6 @@ trait DviTPageForm
             }
 
             DTransaction::close();
-
-            $this->afterSave();
-
-            return $objMaster;
         } catch (Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
