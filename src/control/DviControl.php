@@ -10,6 +10,7 @@ use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Route;
+use Dvi\Adianti\Widget\Form\DHidden;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 
 /**
@@ -43,9 +44,9 @@ class DviControl extends TPage
         $called_class = Route::getClassName(get_called_class());
 
         $this->panel = new DviPanelGroup($called_class, $this->pageTitle);
-        $field_id = new THidden('id');
+        $field_id = new DHidden('id');
         $field_id->setValue($this->params['id'] ?? null);
-        $field_token = new THidden($called_class.'_form_token');
+        $field_token = new DHidden($called_class.'_form_token');
 
         $this->panel->addHiddenFields([$field_id, $field_token]);
 
