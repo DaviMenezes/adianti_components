@@ -56,7 +56,6 @@ class DAction extends TAction
             $url['class'] = is_object($class) ? Route::getClassName(get_class($class)) : Route::getClassName($this->action[0]);
             // get the method name
             $url['method'] = $this->action[1] ?? null;
-
         } elseif (is_string($this->action)) {
             // otherwise the callback is a function
 

@@ -43,7 +43,6 @@ class DRadioGroup extends TRadioGroup
             if ($required) {
                 $this->addValidation($label, new TRequiredValidator());
             }
-
         } catch (\Exception $e) {
             new TMessage('info', $e->getMessage());
         }

@@ -169,9 +169,4 @@ trait DField
         }
         return true;
     }
-
-    protected function filterVar()
-    {
-
-    }
 }

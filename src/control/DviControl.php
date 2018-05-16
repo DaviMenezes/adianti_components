@@ -4,10 +4,8 @@ namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
-use Adianti\Base\Lib\Core\TApplication;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Form\DHidden;

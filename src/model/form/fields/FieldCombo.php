@@ -1,6 +1,7 @@
 <?php
 
 namespace Dvi\Adianti\Component\Model\Form\Fields;
+
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TRepository;
 use Dvi\Adianti\Model\DBFormField;
@@ -18,10 +19,6 @@ use Dvi\Adianti\Widget\Form\DCombo;
  */
 class FieldCombo extends DBFormField
 {
-    private $value;
-    private $criteria;
-    private $model;
-
     public function __construct(string $name, string $type, bool $required = false, string $label = null)
     {
         $array = explode('_', $name);

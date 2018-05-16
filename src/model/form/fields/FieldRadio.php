@@ -4,7 +4,6 @@ namespace Dvi\Adianti\Component\Model\Form\Fields;
 
 use Dvi\Adianti\Model\DBFormField;
 use Dvi\Adianti\Widget\Form\DRadioGroup;
-use Dvi\Adianti\Widget\Form\Field\DField;
 
 /**
  * FieldRadio

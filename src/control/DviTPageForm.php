@@ -5,13 +5,9 @@ use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
-use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Widget\Base\DGridBootstrap;
-use Dvi\Adianti\Widget\Base\DGridColumn;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Dvi\Adianti\Widget\Form\Field\DField;
 use Exception;
@@ -79,7 +75,6 @@ trait DviTPageForm
             $this->afterSave();
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
-
         }
     }
 

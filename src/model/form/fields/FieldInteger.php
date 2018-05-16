@@ -2,7 +2,6 @@
 
 namespace App\Adianti\Component\Model\Form\Fields;
 
-use Adianti\Base\Lib\Widget\Form\TSpinner;
 use Dvi\Adianti\Model\DBFormField;
 use Dvi\Adianti\Widget\Form\DSpinner;
 

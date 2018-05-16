@@ -3,7 +3,6 @@
 namespace Dvi\Adianti\Component\Model\Form\Fields;
 
 use Adianti\Base\Lib\Validator\TRequiredValidator;
-use Adianti\Base\Lib\Widget\Form\TNumeric;
 use Dvi\Adianti\Componente\Model\Form\Fields\DNumeric;
 use Dvi\Adianti\Model\DBFormField;
 

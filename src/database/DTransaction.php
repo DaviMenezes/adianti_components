@@ -17,9 +17,6 @@ use Closure;
  */
 class DTransaction
 {
-    private $conn;
-    private static $already_connection;
-
     public static function open($database = 'default', array $dbinfo = null)
     {
         $conn = TTransaction::get();

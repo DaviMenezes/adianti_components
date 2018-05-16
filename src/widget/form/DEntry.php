@@ -4,7 +4,6 @@ namespace Dvi\Adianti\Widget\Form;
 use Adianti\Base\Lib\Validator\TEmailValidator;
 use Adianti\Base\Lib\Widget\Form\TEntry;
 use Dvi\Adianti\Widget\Form\Field\DField;
-use Dvi\Adianti\Widget\Form\Field\FieldEntry;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
