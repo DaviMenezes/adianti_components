@@ -31,7 +31,7 @@ class DPageNavigation extends TPageNavigation
 
     public function show()
     {
-        if ($this->hidden) {
+        if ($this->hidden or $this->count <= $this->limit) {
             return;
         }
 

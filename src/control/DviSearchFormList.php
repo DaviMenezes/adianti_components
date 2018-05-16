@@ -66,8 +66,6 @@ class DviSearchFormList extends DviControl
 
             $vbox->add($this->getDatagrid());
 
-            $vbox->add($this->getPageNavigation());
-
             parent::add($vbox);
 
             $className = self::getClassName(get_called_class());
