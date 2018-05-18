@@ -151,7 +151,7 @@ trait DviQueryBuilder
             foreach ($this->filters as $key => $filter) {
                 $qtd_filters = count($this->filters);
 
-                $filter->filter = ':'. str_replace('.', '_', $filter->field) . $key;
+                $filter->filter = ':'. 'filter_'.$key;
 
                 if ($filter->operator == 'not in') {
                     $this->sql .= $filter->field . ' '.$filter->operator. ' ('.$filter->filter.')';
