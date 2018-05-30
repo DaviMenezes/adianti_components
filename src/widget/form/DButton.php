@@ -33,9 +33,9 @@ class DButton extends TField implements AdiantiWidgetInterface
     protected $label;
     protected $formName;
 
-    public function __construct(string $name)
+    public function __construct(string $name = null)
     {
-        parent::__construct($name);
+        parent::__construct($name ?? 'btn_'.uniqid());
 
         $this->setClass();
     }
@@ -66,7 +66,7 @@ class DButton extends TField implements AdiantiWidgetInterface
         if ($image) {
             $button->setImage($image);
         }
-        $button->setProperty('class', 'btn btn-default dvi_panel_action');
+
         $button->style = 'font-size: 14px;';
         if (!$image) {
             $button->style = 'font-size: 15px;';
@@ -76,7 +76,7 @@ class DButton extends TField implements AdiantiWidgetInterface
 
     private function setClass()
     {
-        self::$class = '';
+        self::$class = 'dvi_btn';
     }
 
     // TButton methods
@@ -224,8 +224,17 @@ class DButton extends TField implements AdiantiWidgetInterface
             } elseif (file_exists('lib/adianti/images/'.$this->image)) {
                 $image = new TImage('lib/adianti/images/'.$this->image);
             }
-            $image->{'style'} .= '; float:left';
-            $span->add($image);
+            $rpos = strrpos($this->image, 'fa-');
+            $has_size = null;
+            $span_style = null;
+            if ($rpos) {
+                $has_size = strrpos(substr($this->image, $rpos), 'x');
+                if ($has_size !== false) {
+                    $span_style = 'style="vertical-align: -webkit-baseline-middle;"';
+                }
+            }
+
+            $span->add('<span '.$span_style.'>'.$image.'</span>');
         }
 
         if ($this->label) {
