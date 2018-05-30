@@ -19,7 +19,12 @@ use Adianti\Base\Lib\Widget\Util\TTextDisplay;
 class DActionLink extends TTextDisplay
 {
     private $label;
+    /**@var TElement $a_content*/
     private $a_content;
+    protected $image_icon;
+    protected $image;
+    /**@var TAction $action*/
+    private $action;
 
     public function __construct(
         TAction $action = null,
@@ -30,26 +35,54 @@ class DActionLink extends TTextDisplay
         string $decoration = null
     ) {
         $this->label = $label;
+        $this->action = $action;
+
+        $this->a_content = new TElement('span');
 
         if ($icon) {
-            $this->image($icon);
+            $this->icon($icon);
         }
 
         parent::__construct($this->a_content, $color, $size, $decoration);
         parent::setName('a');
-
-        $this->action($action);
     }
 
-    public function image($icon)
+    public function getAction()
     {
-        $this->a_content = new TElement('span');
-        $image =  new TImage($icon);
-        $image->style ='float:left;';
-        $this->a_content->add($image);
-        if ($this->label) {
-            $this->a_content->add('<div class="dvi_btn_label">'.$this->label.'</div>');
+        return $this->action;
+    }
+
+    public function setParameters($params)
+    {
+        $this->action->setParameters($params);
+    }
+
+    public function icon($icon, $style = null)
+    {
+        $this->image_icon['icon'] = $icon;
+        $this->image_icon['style'] = $style;
+
+        $this->image =  new TImage($icon);
+        $this->image->{'style'} = $style ?? '';
+
+        $rrpos = strrpos($icon, 'fa-');
+        $class = null;
+        if ($rrpos !== false) {
+            $has_size = strrpos(substr($icon, $rrpos), 'x');
+            if ($has_size) {
+                $class = 'class = \'align_btn_content\'';
+            }
         }
+        $this->a_content->class = 'align_btn_content';
+        $this->a_content->add('<span '.$class.'>'.$this->image.'</span>');
+
+        return $this;
+    }
+
+    public function label($label)
+    {
+        $this->label = $label;
+
         return $this;
     }
 
@@ -68,5 +101,16 @@ class DActionLink extends TTextDisplay
         }
 
         return $this;
+    }
+
+    public function show()
+    {
+        if (!empty($this->label)) {
+            $this->a_content->add('<span>'.$this->label.'</span>');
+        }
+
+        $this->action($this->action);
+
+        parent::show();
     }
 }
