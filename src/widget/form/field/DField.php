@@ -21,6 +21,8 @@ trait DField
     private $type;
     protected $error_msg = array();
     protected $required;
+    protected $label_class;
+    protected $base_class_name;
 
     public function prepare(string $placeholder = null, bool $required = false, bool $tip = true, int $max_length = null)
     {
@@ -28,7 +30,7 @@ trait DField
 
         $this->required = $required;
 
-        $this->setLabel($label);
+        $this->setFieldLabel($label);
 
         if ($placeholder) {
             $this->placeholder = $label;
@@ -89,6 +91,9 @@ trait DField
 
     public function sanitize()
     {
+        if (empty($this->getValue())) {
+            return;
+        }
         $value = filter_var($this->getValue(), FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($this->type === 'url') {
@@ -144,6 +149,9 @@ trait DField
             $this->filterValidate();
         }
 
+        if (count($this->error_msg)) {
+            $this->label_class = 'danger';
+        }
         return count($this->error_msg) ? false : true;
     }
 
@@ -164,9 +172,36 @@ trait DField
     protected function validateRequired(): bool
     {
         if ($this->required and empty($this->getValue())) {
-            $this->error_msg[] = 'O campo ' . $this->getLabel() . ' é obrigatório';
+            $this->error_msg[] = 'O campo ' . $this->ucfirstLabel . ' é obrigatório';
             return false;
         }
         return true;
+    }
+
+    public function setFieldLabel($label, string $class = null)
+    {
+        parent::setLabel($label);
+
+        $this->label_class = $class;
+    }
+
+    public function getLabel()
+    {
+        $label = parent::getLabel();
+        $fc = mb_strtoupper(mb_substr($label, 0, 1));
+        $label = $fc.mb_substr($label, 1);
+
+        if (!empty($this->label_class)) {
+            $class = ' class="dvi_str_' . $this->label_class.'"';
+            $label = '<b>'.$label.'</b>';
+            return '<div'.$class.'>'.$label.'</div>';
+        }
+
+        return  $label;
+    }
+
+    public function setBaseClass($name)
+    {
+        $this->base_class_name = $name;
     }
 }
