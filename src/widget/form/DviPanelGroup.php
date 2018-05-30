@@ -182,7 +182,6 @@ class DviPanelGroup implements IDviWidget
                 $column->useLabelField($this->useLabelFields);
                 $row->addCol($column);
             }
-            //            $row->addCols($columns);
         }
         return $this;
     }
@@ -207,13 +206,8 @@ class DviPanelGroup implements IDviWidget
     public function addCols()
     {
         $args = func_get_args();
-        $params = (count() == 1) ? func_get_arg(0) : func_get_args();
-        //todo possibilidades [
-        //  array de DGridColumn
-        //]
-        // verificar forma de obrigar a inserir as params corretos
-        // ex: addCols([new Col($tfield, $class, $style)]))
-        //addHidden([$field]
+        $params = (count($args) == 1) ? func_get_arg(0) : func_get_args();
+
         if (count($params) == 1) {
             $rows_columns[0] = $params;
         } else {
@@ -329,7 +323,6 @@ class DviPanelGroup implements IDviWidget
 
     private static function getClassName($field)
     {
-        //        $instanceClass = (string) \get_class($field);
         $array = explode('\\', $field);
         $classType = array_pop($array);
 
@@ -343,7 +336,7 @@ class DviPanelGroup implements IDviWidget
         array $parameters = null,
         $tip = null
     ) {
-        $str_label = !empty($label) ? $label : null;
+        $str_label = !empty($label) ? _t($label) : null;
         $this->addCustomAction(
             [$this->className, $saveMethod],
             'fa:floppy-o fa-2x',
@@ -466,9 +459,8 @@ class DviPanelGroup implements IDviWidget
             $btn->setAction(new TAction($value['callback'], $value['parameters']));
 
             if (isset($value['label']) and $value['label']) {
-                $element_label = new TElement('div');
+                $element_label = new TElement('span');
                 $element_label->add($value['label']);
-                $element_label->class = 'dvi_btn_label';
                 $btn->setLabel($element_label);
             } else {
                 $btn->setLabel($value['label']);
@@ -483,7 +475,7 @@ class DviPanelGroup implements IDviWidget
             $label = $value['label'];
             $icon = $value['image'];
             $btn = new DActionLink($action, $label, $icon);
-            $btn->class = $value['class'];
+            $btn->class = 'dvi_panel_action '.$value['class'];
         }
 
         return $btn;
@@ -632,7 +624,6 @@ class DviPanelGroup implements IDviWidget
         $qtd_anothers = $qtd_columns - $qtd_labels;
         foreach ($columns as $column) {
             if (!$column->getClass()) {
-
                 /**@var GroupField $child*/
                 $child = $column->getChilds(0);
 
@@ -690,7 +681,7 @@ class DviPanelGroup implements IDviWidget
         return $fields;
     }
 
-    public function useLabelFields(bool $bool)
+    public function useLabelFields(bool $bool = false)
     {
         $this->useLabelFields = $bool;
     }
@@ -699,6 +690,7 @@ class DviPanelGroup implements IDviWidget
     {
         $this->footer_item = $item;
     }
+
     protected function getFooterItem()
     {
         if ($this->footer_item) {
