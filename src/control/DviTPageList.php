@@ -79,7 +79,7 @@ trait DviTPageList
         $this->datagrid = new DataGrid($class, 'grid', $showId);
 
         $this->datagrid->useEditAction($this->formController ?? get_called_class());
-
+        $this->datagrid->useDeleteAction($class);
         $this->createDatagridColumns($showId);
 
         if ($createModel) {
