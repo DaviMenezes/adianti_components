@@ -91,7 +91,9 @@ trait DviTPageForm
 
             /**@var DviModel $objMaster */
             $objMaster = new $this->objectClass($this->params['id'] ?? null);
-            $objMaster->buildFieldTypes();
+            if (method_exists($objMaster, 'buildFieldTypes')) {
+                $objMaster->buildFieldTypes();
+            }
             $objMaster->addAttribute('id');
 
             $obj_master_class_name = strtolower((new \ReflectionClass($this->objectClass))->getShortName());
