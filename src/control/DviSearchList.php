@@ -51,6 +51,9 @@ abstract class DviSearchList extends DviControl
         try {
             DTransaction::open();
 
+            if (empty($this->formController)) {
+                $this->formController = self::getClassName($this->objectClass).'Form';
+            }
             parent::__construct($param);
 
             $this->createCurrentObject();
