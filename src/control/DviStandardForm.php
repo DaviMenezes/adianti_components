@@ -18,7 +18,7 @@ use Dvi\Adianti\Widget\Form\DviPanelGroup;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DviStandardForm extends DviControl
+abstract class DviStandardForm extends DviControl
 {
     protected $objectClass;
     /**@var DviPanelGroup $panel*/

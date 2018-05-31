@@ -21,7 +21,7 @@ use Dvi\Adianti\Widget\Form\DviPanelGroup;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DviControl extends TPage
+abstract class DviControl extends TPage
 {
     /**@var DviModel $currentObj*/
     protected $currentObj;

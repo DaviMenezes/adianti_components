@@ -22,7 +22,7 @@ use Dvi\Adianti\Widget\Form\DviPanelGroup;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DviSearchFormList extends DviControl
+abstract class DviSearchFormList extends DviControl
 {
     protected $objectClass;
     /**@var DviPanelGroup $panel*/
