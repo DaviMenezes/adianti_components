@@ -40,7 +40,6 @@ class DPageNavigation extends TPageNavigation
         }
 
         $first_page  = isset($this->first_page) ? $this->first_page : 1;
-        $direction   = 'asc';
         $page_size = isset($this->limit) ? $this->limit : 10;
         $max = 10;
         $registros = $this->count;
@@ -75,12 +74,10 @@ class DPageNavigation extends TPageNavigation
         $item->{'class'} = 'col-xs-1  btn btn-default';
         $link = new TElement('a');
 
-        $a_div = new TElement('div');
         $link->{'href'} = '#';
         $link->{'aria-label'} = 'Previous';
         $ul->add($item);
         $item->add($link);
-        $link->add($a_div);
 
         if ($first_page > 1) {
             $this->action->setParameter('offset', ($first_page - $max -1) * $page_size);
@@ -93,9 +90,9 @@ class DPageNavigation extends TPageNavigation
 
             $link->href      = $this->action->serialize();
             $link->generator = 'adianti';
-            $a_div->add('<span><i class="fa fa-angle-left fa-3x" aria-hidden="true"></i></span>');
+            $link->add('<span class="align_action_middle"><i class="fa fa-angle-left fa-3x" aria-hidden="true"></i></span>');
         } else {
-            $a_div->add('<span>&nbsp;</span>');
+            $link->add('<span class="align_action_middle">&nbsp;</span>');
         }
         $item->{'class'} .= ' pagination_item item_left';
 
@@ -104,8 +101,6 @@ class DPageNavigation extends TPageNavigation
             $item = new TElement('div');
             $item->{'class'} = 'col-xs-1 btn btn-default pagination_item';
             $link = new TElement('a');
-
-            $a_div = new TElement('div');
 
             $this->action->setParameter('offset', $offset);
             $this->action->setParameter('limit', $page_size);
@@ -119,8 +114,7 @@ class DPageNavigation extends TPageNavigation
 
             $ul->add($item);
             $item->add($link);
-            $link->add($a_div);
-            $a_div->add('<span>'.$n.'</span>');
+            $link->add('<span class="align_action_middle">'.$n.'</span>');
 
             if ($this->page == $n) {
                 $item->{'class'} = 'col-xs-1 btn btn-primary pagination_item';
@@ -131,23 +125,18 @@ class DPageNavigation extends TPageNavigation
             $item = new TElement('div');
             $item->{'class'} = 'col-xs-1 btn btn-default pagination_item disabled';
             $link = new TElement('a');
-            $a_div = new TElement('div');
-            //            $item->{'class'} = 'off';
             $ul->add($item);
             $item->add($link);
-            $link->add($a_div);
-            $a_div->add('<span>'.$z.'</span>');
+            $link->add('<span class="align_action_middle">'.$z.'</span>');
         }
 
         $item = new TElement('div');
         $item->{'class'} = 'col-xs-1 btn btn-default pagination_item';
         $link = new TElement('a');
 
-        $a_div = new TElement('div');
         $item->{'aria-label'} = "Next";
         $ul->add($item);
         $item->add($link);
-        $link->add($a_div);
 
         if ($pages > $max) {
             $offset = ($n -1) * $page_size;
@@ -162,9 +151,9 @@ class DPageNavigation extends TPageNavigation
             $link->href      = $this->action->serialize();
             $link->generator = 'adianti';
 
-            $a_div->add('<span><i class="fa fa-angle-right" aria-hidden="true"></i></span>');
+            $link->add('<span class="align_action_middle"><i class="fa fa-angle-right" aria-hidden="true"></i></span>');
         } else {
-            $a_div->add('<span>&nbsp;</span>');
+            $link->add('<span class="align_action_middle">&nbsp;</span>');
         }
         $item->{'class'} .= ' item_right';
         $nav->show();

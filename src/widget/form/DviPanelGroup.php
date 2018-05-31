@@ -35,7 +35,7 @@ use Adianti\Base\Lib\Widget\Wrapper\TDBCombo;
 use Adianti\Base\Lib\Widget\Wrapper\TDBSeekButton;
 use Adianti\Base\Lib\Wrapper\BootstrapNotebookWrapper;
 use Dvi\Adianti\Componente\Model\Form\Fields\DNumeric;
-use Dvi\Adianti\Control\DAction;
+use Dvi\Adianti\Widget\Util\DAction;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DGridBootstrap;
 use Dvi\Adianti\Widget\Base\DGridColumn;

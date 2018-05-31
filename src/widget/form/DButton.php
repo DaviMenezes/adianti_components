@@ -9,7 +9,7 @@ use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Util\TImage;
-use Dvi\Adianti\Control\DAction;
+use Dvi\Adianti\Widget\Util\DAction;
 use Exception;
 
 /**
@@ -226,15 +226,15 @@ class DButton extends TField implements AdiantiWidgetInterface
             }
             $rpos = strrpos($this->image, 'fa-');
             $has_size = null;
-            $span_style = null;
+            $span_class = null;
             if ($rpos) {
                 $has_size = strrpos(substr($this->image, $rpos), 'x');
                 if ($has_size !== false) {
-                    $span_style = 'style="vertical-align: -webkit-baseline-middle;"';
+                    $span_class = 'class="align_action_middle"';
                 }
             }
 
-            $span->add('<span '.$span_style.'>'.$image.'</span>');
+            $span->add('<span '.$span_class.'>'.$image.'</span>');
         }
 
         if ($this->label) {

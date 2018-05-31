@@ -21,7 +21,7 @@ class DActionLink extends TTextDisplay
     private $label;
     /**@var TElement $a_content*/
     private $a_content;
-    protected $image_icon;
+    public $image_icon;
     protected $image;
     /**@var TAction $action*/
     private $action;
@@ -65,17 +65,6 @@ class DActionLink extends TTextDisplay
         $this->image =  new TImage($icon);
         $this->image->{'style'} = $style ?? '';
 
-        $rrpos = strrpos($icon, 'fa-');
-        $class = null;
-        if ($rrpos !== false) {
-            $has_size = strrpos(substr($icon, $rrpos), 'x');
-            if ($has_size) {
-                $class = 'class = \'align_btn_content\'';
-            }
-        }
-        $this->a_content->class = 'align_btn_content';
-        $this->a_content->add('<span '.$class.'>'.$this->image.'</span>');
-
         return $this;
     }
 
@@ -105,6 +94,22 @@ class DActionLink extends TTextDisplay
 
     public function show()
     {
+        if ($this->image) {
+            $rrpos = strrpos($this->image_icon['icon'], 'fa-');
+            $class = null;
+            $style = null;
+            if ($rrpos !== false) {
+                $has_size = strrpos(substr($this->image_icon['icon'], $rrpos), 'x');
+                if ($has_size) {
+                    $class = 'class = "align_action_middle"';
+                }
+            } else {
+                $style = 'style = "vertical-align:text-bottom"';
+            }
+            $this->a_content->class = 'align_action_middle';
+            $this->a_content->add('<span '.$class.' '.$style.'>'.$this->image.'</span>');
+        }
+
         if (!empty($this->label)) {
             $this->a_content->add('<span>'.$this->label.'</span>');
         }

@@ -5,7 +5,7 @@ namespace Dvi\Adianti\WidgetBootstrap\Component;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Dvi\Adianti\Control\DAction;
+use Dvi\Adianti\Widget\Util\DAction;
 use Dvi\Adianti\Widget\Form\DButton;
 use Dvi\Adianti\Widget\Util\DActionLink;
 
@@ -24,8 +24,6 @@ class GroupActions
     protected $items = array();
     protected $currentAction;
     private $icon_size;
-
-    private $label;
 
     public function __construct()
     {
@@ -50,11 +48,6 @@ class GroupActions
         }
     }
 
-//    public function label($label)
-//    {
-//        $this->label = $label;
-//        return $this;
-//    }
     public function setIconSizeDefault($size)
     {
         $this->icon_size = $size;

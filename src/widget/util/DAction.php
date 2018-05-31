@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvi\Adianti\Control;
+namespace Dvi\Adianti\Widget\Util;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;

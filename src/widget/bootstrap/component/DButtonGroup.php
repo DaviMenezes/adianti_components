@@ -20,6 +20,7 @@ class DButtonGroup extends GroupActions implements IDviWidget
     protected $style;
     protected $form_default;
     public $current_group;
+    protected $class;
 
     private $group;
 
@@ -27,6 +28,12 @@ class DButtonGroup extends GroupActions implements IDviWidget
     {
         $this->form_default = $default_form;
         parent::__construct();
+        $this->class = 'btn-group';
+    }
+
+    public function setClass($class)
+    {
+        $this->class .= ';'.$class;
     }
 
     public function addGroup($action_header = null, $title_group_action = null): DActionGroup
@@ -39,7 +46,7 @@ class DButtonGroup extends GroupActions implements IDviWidget
     public function show()
     {
         $group = new TElement('div');
-        $group->class= ' btn-group';
+        $group->class= $this->class;
         $group->role ="group";
         $group->{'aria-label'}="...";
         $group->style = $this->style;

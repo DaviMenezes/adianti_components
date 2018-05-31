@@ -28,7 +28,7 @@ class DCombo extends TCombo
 
     private $field_disabled;
 
-    public function __construct(string $name, string $placeholder = null, $required = false, array $obj_array_value = null, bool $tip = true, bool $enable_search = true)
+    public function __construct(string $name, string $placeholder = null, $required = false, array $obj_array_value = null, bool $tip = false, bool $enable_search = true)
     {
         parent::__construct($name);
 

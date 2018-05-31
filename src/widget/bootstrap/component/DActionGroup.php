@@ -3,7 +3,6 @@
 namespace Dvi\Adianti\Widget\Bootstrap\Component;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Dvi\Adianti\Control\DAction;
 use Dvi\Adianti\Widget\Util\DActionLink;
 use Dvi\Adianti\WidgetBootstrap\Component\GroupActions;
 
@@ -42,12 +41,6 @@ class DActionGroup extends GroupActions
 
     public function addLink(array $callback, $icon = null, $label = null, array $parameters = null, $style = null):DActionLink
     {
-//        $link = new DActionLink(new DAction($callback, $parameters, $icon, $label));
-//        $link->class = 'dvi_btn';
-//
-//        $this->currentAction = $link;
-//        $this->items[] = $link;
-
         $link = parent::addLink($callback, $icon, $label, $parameters, $style);
         $link->class = 'dvi_btn dvi_group_action_popup_label';
 
