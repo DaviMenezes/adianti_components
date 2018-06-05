@@ -113,6 +113,7 @@ trait DviTPageList
         unset($new_params['back_method']);
         $this->pageNavigation->setAction(new TAction([$this, 'onReload'], $new_params));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
+
     }
 
     public function show()
@@ -239,8 +240,6 @@ trait DviTPageList
         $this->pageNavigation->setCount($count);
         $this->pageNavigation->setProperties($this->params);
         $this->pageNavigation->setLimit($this->occurrence_query_limit);
-
-        parent::add($this->pageNavigation);
     }
 
     protected function prepareQueryCriteria()
