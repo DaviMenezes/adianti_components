@@ -85,7 +85,9 @@ trait DviTPageSearch
 
             $called_class = DControl::getClassName(get_called_class());
             TSession::setValue($called_class.'_form_data', $this->panel->getFormData());
-            TSession::setValue($called_class.'_filters', $filters);
+            if (count($filters)) {
+                TSession::setValue($called_class.'_filters', $filters);
+            }
 
             DTransaction::close();
 

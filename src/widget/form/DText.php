@@ -25,7 +25,7 @@ class DText extends TText
     {
         parent::__construct($name);
 
-        $this->prepare($this->placeholder, $required, $tip, $max_length);
+        $this->prepare($placeholder, $required, $tip, $max_length);
 
         $this->setSize(0, $height);
     }

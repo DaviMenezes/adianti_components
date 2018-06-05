@@ -4,7 +4,6 @@ namespace Dvi\Adianti\Widget\Form;
 
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TRepository;
-use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TCombo;
 use Dvi\Adianti\Database\DTransaction;
@@ -33,21 +32,9 @@ class DCombo extends TCombo
     {
         parent::__construct($name);
 
-        $this->setLabel($placeholder);
+        $this->prepare($placeholder, $required, $tip);
 
         $this->operator('=');
-
-        if ($placeholder) {
-            $this->placeholder = $placeholder;
-        }
-
-        if ($required) {
-            $this->addValidation(ucfirst($this->placeholder), new TRequiredValidator());
-        }
-
-        if ($tip) {
-            //            $this->setTip(ucfirst($this->placeholder));
-        }
 
         if ($obj_array_value) {
             $this->addItems($this->getObjItems($obj_array_value));

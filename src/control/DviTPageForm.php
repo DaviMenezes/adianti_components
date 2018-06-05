@@ -8,6 +8,7 @@ use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Model\DviModel;
+use Dvi\Adianti\Widget\Base\DGridColumn;
 use Dvi\Adianti\Widget\Form\DviPanelGroup;
 use Dvi\Adianti\Widget\Form\Field\DField;
 use Exception;
@@ -36,8 +37,13 @@ trait DviTPageForm
         $obj = new $this->objectClass();
         $rows_form = $obj->getFormRowFields();
 
-        foreach ($rows_form as $rows) {
-            $this->panel->addRow($rows);
+        foreach ($rows_form as $columns) {
+            foreach ($columns as $column) {
+                /**@var DGridColumn $column*/
+                $child = $column->getChilds(0);
+                $child->setBaseClass(get_called_class());
+            }
+            $this->panel->addRow($columns);
         }
     }
 

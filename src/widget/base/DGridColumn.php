@@ -100,7 +100,7 @@ class DGridColumn extends TElement
         if ($this->useLabelField) {
             if (!is_a($this->childs[0], DButton::class)) {
                 $box = new DVBox();
-                $box->add($this->getFormLabel());
+                $box->add($this->getElementLabel());
                 $box->add($this->childs[0]);
 
                 parent::add($box);
@@ -201,13 +201,12 @@ class DGridColumn extends TElement
         $this->useLabelField = $bool;
     }
 
-    protected function getFormLabel()
+    protected function getElementLabel()
     {
-        if (is_subclass_of($this->childs[0], TField::class)) {
-            $fc = mb_strtoupper(mb_substr($this->childs[0]->getLabel(), 0, 1));
-            $label = $fc.mb_substr($this->childs[0]->getLabel(), 1);
-
-            return $label;
+        $element = $this->childs[0];
+        if (is_subclass_of($element, TField::class)) {
+            /**@var TField $element*/
+            return $element->getLabel();
         }
     }
 }
