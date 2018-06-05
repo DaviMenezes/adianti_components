@@ -48,7 +48,6 @@ trait DviTPageForm
         if (!parent::validateToken()) {
             throw new \Exception('Ação não permitida');
         }
-        $data = $this->panel->getFormData();
         $fields = $this->panel->getForm()->getFields();
         $error_message = null;
         foreach ($fields as $field) {
