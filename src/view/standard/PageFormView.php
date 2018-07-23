@@ -45,8 +45,12 @@ trait PageFormView
             foreach ($rows_form as $key => $group) {
                 $build_fields = array();
                 $row = 0;
-                foreach ($group->getFields() as $fields) {
+                $group_fields = $group->getFields();
+                foreach ($group_fields as $fields) {
                     foreach ($fields as $component_name) {
+                        if (!$component_name) {
+                            throw new \Exception('Campo inválido. Verifique o nome dos campos.');
+                        }
                         $class = is_array($component_name) ? ($component_name[1] ?? null) : null;
                         $style = is_array($component_name) ? ($component_name[2] ?? null) : null;
                         $field = is_array($component_name) ? $component_name[0] : $component_name;
