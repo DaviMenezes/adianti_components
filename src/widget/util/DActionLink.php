@@ -3,6 +3,7 @@ namespace Dvi\Adianti\Widget\Util;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Base\Lib\Widget\Util\TImage;
 use Adianti\Base\Lib\Widget\Util\TTextDisplay;
 use Dvi\Adianti\Widget\Dialog\DMessage;
@@ -29,7 +30,7 @@ class DActionLink extends TTextDisplay
     private $icon_size;
 
     public function __construct(
-        TAction $action = null,
+        DAction $action = null,
         string $label = null,
         string $icon = null,
         string $color = null,
@@ -96,10 +97,10 @@ class DActionLink extends TTextDisplay
 
     public function action($action, array $params = null)
     {
-        if (is_array($action) or is_a($action, TAction::class)) {
+        if (is_array($action) or is_a($action, DAction::class)) {
             if (is_array($action)) {
                 if (count($action)) {
-                    $action = new TAction($action, $params);
+                    $action = new DAction($action, $params);
                 }
             }
 
