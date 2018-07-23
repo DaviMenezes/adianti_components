@@ -3,8 +3,10 @@
 namespace Dvi\Adianti\Component\Model\Form\Fields;
 
 use Adianti\Base\Lib\Validator\TRequiredValidator;
+use Adianti\Base\Lib\Widget\Form\TField;
 use Dvi\Adianti\Componente\Model\Form\Fields\DNumeric;
-use Dvi\Adianti\Model\DBFormField;
+use Dvi\Adianti\Model\Fields\DBFormField;
+use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
  * Fields FieldCurrency
@@ -16,23 +18,22 @@ use Dvi\Adianti\Model\DBFormField;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class FieldCurrency extends DBFormField
+class DBCurrency extends DBFormField
 {
     public function __construct(
         string $name,
         int $decimals,
         string $decimalsSeparator,
         string $thousandSeparator,
-        string $type,
         bool $required = false,
         string $label = null
     ) {
-        $array = explode('_', $name);
+        $array = explode('-', $name);
         $field_name = array_pop($array);
 
         $label = $label ?? $field_name;
 
-        parent::__construct($name, $type, $required, $label);
+        parent::__construct($required, $label);
 
 
         $this->field = new DNumeric($name, $decimals, $decimalsSeparator, $thousandSeparator);
@@ -42,6 +43,8 @@ class FieldCurrency extends DBFormField
         }
         $this->field->setTip($label);
         $this->field->setLabel($label);
+
+        $this->setType(new FieldTypeString());
     }
 
     public function getField()

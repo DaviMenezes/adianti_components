@@ -3,7 +3,9 @@
 namespace Dvi\Adianti\Widget\Form;
 
 use Adianti\Base\Lib\Widget\Form\THidden;
-use Dvi\Adianti\Widget\Form\Field\DField;
+use Dvi\Adianti\Widget\Form\Field\FormField;
+use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
+use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
  * Form DHidden
@@ -17,7 +19,7 @@ use Dvi\Adianti\Widget\Form\Field\DField;
  */
 class DHidden extends THidden
 {
-    use DField;
+    use FormField;
 
     public function __construct(string $name, $default_value = null)
     {
@@ -26,5 +28,7 @@ class DHidden extends THidden
         if ($default_value) {
             $this->setValue($default_value);
         }
+
+        $this->setType(new FieldTypeString());
     }
 }

@@ -33,6 +33,7 @@ class InputGroup extends GroupField implements IDviWidget
 
     public function addButton(DButton $button)
     {
+        $button->addStyleClass('dvi_form_comp');
         $this->buttons[] = $button;
         $this->addChilds($button);
     }

@@ -1,9 +1,13 @@
 <?php
 namespace Dvi\Adianti\Widget\Base;
 
+use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
+use Dvi\Adianti\Route;
+use Dvi\Adianti\Widget\Dialog\DMessage;
+use ReflectionClass;
 
 /**
  * Widget Base DataGrid
@@ -21,24 +25,30 @@ class DataGrid extends TDataGrid
     private $grid_action_edit;
 
     protected $custom_actions = array();
+    private $called_class;
+    private $my_columns;
+    private $order_default_parameters;
+    private $datagrid_load_method;
 
-    public function __construct($class_name, $function_prefix = 'grid', $use_column_id = true, $use_edit_action = false, $use_delete_action = false, $params_delete = null)
+    public function __construct($called_class, $function_prefix = 'grid', $use_column_id = true, $use_edit_action = false, $use_delete_action = false, $params_delete = null)
     {
         parent::__construct();
+
+        $this->called_class = $called_class;
 
         $this->style ='width: 100%';
         $this->disableDefaultClick();
 
         if ($use_column_id) {
-            $this->addCol('id', 'Id', 'left', '7%');
+            $this->addCol('id', 'Id', '7%');
         }
 
         if ($use_edit_action) {
-            $this->useEditAction($class_name);
+            $this->useEditAction($called_class);
         }
 
         if ($use_delete_action) {
-            $this->useDeleteAction($class_name, $function_prefix, $params_delete);
+            $this->useDeleteAction($called_class, $function_prefix, $params_delete);
         }
     }
 
@@ -53,6 +63,26 @@ class DataGrid extends TDataGrid
 
         foreach ($this->custom_actions as $action) {
             $this->addAction($action);
+        }
+
+        if (!$this->datagrid_load_method) {
+            $class = Route::getPath($this->called_class);
+            $called_class_methods = (new ReflectionClass($class))->hasMethod('onReload');
+            if (!$called_class_methods) {
+                DMessage::create('die', null, 'Use o método $datagrid->setDatagridLoadMethod(...) para informar qual método será usado para popular a datagrid.');
+            }
+            $this->setDatagridLoadMethod('onReload');
+        }
+
+        if ($this->my_columns) {
+            foreach ($this->my_columns as $column) {
+                /**@var DataGridColumn $column */
+                $column->orderParams($this->order_default_parameters);
+                $column->setDatagridLoadMethod($this->datagrid_load_method);
+                $column->setOrderAction($this->called_class);
+
+                parent::addColumn($column);
+            }
         }
 
         return parent::createModel($create_header);
@@ -90,15 +120,20 @@ class DataGrid extends TDataGrid
         return $grid;
     }
 
-    public function addCol($name, $label, $align, $width)
+    public function addCol($name, $label, $width = '100%', $align = 'left', array $order_params = null):DataGridColumn
     {
-        parent::addColumn(new TDataGridColumn($name, $label, $align, $width));
+        $column = new DataGridColumn($name, $label, $align, $width);
+        $column->orderParams($order_params);
+
+        $this->my_columns[] = $column;
+
+        return $column;
     }
 
     #region [ALIAS] *************************************************
-    public function col($name, $label, $align, $width)
+    public function col($name, $label, $width = '100%', $align = 'left'):DataGridColumn
     {
-        $this->addCol($name, $label, $align, $width);
+        return $this->addCol($name, $label, $width, $align);
     }
 
     public function useEditAction($class_name): TDataGridAction
@@ -131,4 +166,18 @@ class DataGrid extends TDataGrid
         }
     }
     #endregion
+
+    public function setOrderParams(array $params)
+    {
+        $this->order_default_parameters = $params;
+    }
+
+    public function setDatagridLoadMethod(string $method)
+    {
+        $has_method = (new ReflectionClass(Route::getPath($this->called_class)))->hasMethod($method);
+        if (!$has_method) {
+            DMessage::create('die', null, 'O método '.$method.' informado em '."<br>".' $datagrid->setDatagridLoadMethod("'.$method.'") não existe.', false);
+        }
+        $this->datagrid_load_method = $method;
+    }
 }

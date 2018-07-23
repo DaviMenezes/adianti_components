@@ -40,7 +40,7 @@ class DPageNavigation extends TPageNavigation
         }
 
         $first_page  = isset($this->first_page) ? $this->first_page : 1;
-        $page_size = isset($this->limit) ? $this->limit : 10;
+        $page_size = !empty($this->limit) ? $this->limit : 10;
         $max = 10;
         $registros = $this->count;
 
@@ -90,9 +90,9 @@ class DPageNavigation extends TPageNavigation
 
             $link->href      = $this->action->serialize();
             $link->generator = 'adianti';
-            $link->add('<span class="align_action_middle"><i class="fa fa-angle-left fa-3x" aria-hidden="true"></i></span>');
+            $link->add('<div><span class="align_action_middle"><i class="fa fa-angle-left fa-3x" aria-hidden="true"></i></span></div>');
         } else {
-            $link->add('<span class="align_action_middle">&nbsp;</span>');
+            $link->add('<div><span class="align_action_middle">&nbsp;</span></div>');
         }
         $item->{'class'} .= ' pagination_item item_left';
 
@@ -114,7 +114,7 @@ class DPageNavigation extends TPageNavigation
 
             $ul->add($item);
             $item->add($link);
-            $link->add('<span class="align_action_middle">'.$n.'</span>');
+            $link->add('<div><span class="align_action_middle">'.$n.'</span></div>');
 
             if ($this->page == $n) {
                 $item->{'class'} = 'col-xs-1 btn btn-primary pagination_item';
@@ -127,7 +127,7 @@ class DPageNavigation extends TPageNavigation
             $link = new TElement('a');
             $ul->add($item);
             $item->add($link);
-            $link->add('<span class="align_action_middle">'.$z.'</span>');
+            $link->add('<div><span class="align_action_middle">'.$z.'</span></div>');
         }
 
         $item = new TElement('div');
@@ -151,9 +151,9 @@ class DPageNavigation extends TPageNavigation
             $link->href      = $this->action->serialize();
             $link->generator = 'adianti';
 
-            $link->add('<span class="align_action_middle"><i class="fa fa-angle-right" aria-hidden="true"></i></span>');
+            $link->add('<div><span class="align_action_middle"><i class="fa fa-angle-right" aria-hidden="true"></i></span></div>');
         } else {
-            $link->add('<span class="align_action_middle">&nbsp;</span>');
+            $link->add('<div><span class="align_action_middle">&nbsp;</span></div>');
         }
         $item->{'class'} .= ' item_right';
         $nav->show();

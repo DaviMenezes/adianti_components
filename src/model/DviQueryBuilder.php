@@ -1,10 +1,14 @@
 <?php
 namespace Dvi\Adianti\Model;
 
+use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TTransaction;
+use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Widget\Dialog\DMessage;
 use Exception;
 use PDO;
 use PDOStatement;
+use ReflectionClass;
 
 /**
  * Model DviQueryBuilder
@@ -18,6 +22,10 @@ use PDOStatement;
  */
 trait DviQueryBuilder
 {
+    private $table;
+    private $fields = array();
+    private $joins  =array();
+
     private $filters = array();
     private $params;
 
@@ -35,10 +43,11 @@ trait DviQueryBuilder
     private $already_set_limit;
     private $already_set_offset;
     private $already_set_having;
+    private $result;
 
     public function where($field, $operator, $value = null, $value2 = null, $query_operator = 'AND')
     {
-        $dvifilter = new DviTFilter($field, $operator, null, $value, $value2, $query_operator);
+        $dvifilter = new DviTFilter($field, $operator, $value, $value2, $query_operator);
         $this->filters[] = $dvifilter;
 
         $this->preparedFilters = false;
@@ -46,18 +55,16 @@ trait DviQueryBuilder
         return $this;
     }
 
-    public function setParams($params)
-    {
-        foreach ($params as $key => $value) {
-            $this->params[$key] = $value;
-        }
-    }
-
     public function order(string $order, $direction = 'asc')
     {
         $this->params['order'] = $order;
         $this->params['direction'] = $direction;
         return $this;
+    }
+
+    public function limit($limit)
+    {
+        $this->params['limit'] = $limit;
     }
 
     public function groupby($groupby)
@@ -76,35 +83,114 @@ trait DviQueryBuilder
         $this->functions[] = $function;
     }
 
-    public function get($position = null)
+    public function table(string $model_class, string $alias = null)
     {
-        if ($position != null) {
-            $this->params['limit'] = 1;
+        $alias = $alias ?? (new ReflectionClass($model_class))->getShortName();
+        $this->table = ['table' => $model_class::TABLENAME, 'alias' => $alias, 'default_obj'=> $model_class];
+        return $this;
+    }
+
+    public function fields(array $fields)
+    {
+        $this->fields = $fields;
+        return $this;
+    }
+
+    public function join($model_class, string $forein_key, $table_alias = null, string $type = 'inner', $associated = null)
+    {
+        if (!$associated) {
+            $associated_alias = (new ReflectionClass($this->table['default_obj']))->getShortName();
+        } else {
+            $pos = strpos('\\', $associated);
+            if ($pos) {
+                $associated_alias =  (new ReflectionClass($associated))->getShortName();
+            } else {
+                $associated_alias = $associated;
+            }
         }
+
+        $this->joins[] = [
+            'type'=> $type,
+            'table' => $model_class::TABLENAME,
+            'table_alias'=> $table_alias ?? (new ReflectionClass($model_class))->getShortName(),
+            'associated_alias' => $associated_alias,
+            'foreing_key' => $forein_key
+        ];
+        return $this;
+    }
+
+    public function offset($offset)
+    {
+        $this->params['offset'] = $offset;
+    }
+
+    public function getObject($class = null)
+    {
         $this->prepareSql();
 
         $this->pdoPrepare();
 
-        $this->bindParam();
+        $this->bindParams();
 
         $this->pdo->execute();
 
-        $objects = $this->pdo->fetchAll(PDO::FETCH_OBJ);
+        $result = $this->pdo->fetchObject();
 
-        $results = false;
-        if (!empty($objects[0])) {
-            $results = $objects;
+        return $result;
+    }
+
+    public function get($limit = null, $pdo_fetch = null)
+    {
+        if ($limit) {
+            $this->limit($limit);
         }
-        if (isset($position)) {
-            return $results[$position] ?? null;
-        } else {
-            return $results ?? null;
-        }
+
+        $this->prepareSql();
+
+        $this->pdoPrepare();
+
+        $this->bindParams();
+
+        $this->pdo->execute();
+
+        $result = $this->pdo->fetchAll($pdo_fetch ?? PDO::FETCH_OBJ);
+
+        $this->setResult($result);
+
+        return $this->getResult();
+    }
+
+    private function setResult($result)
+    {
+        $this->result = $result;
+    }
+
+    private function getResult()
+    {
+        $this->pdo = null;
+        return $this->result;
     }
 
     public function count()
     {
         return $this->getRowCount();
+    }
+
+    public function getSql()
+    {
+        return $this->sql;
+    }
+
+    public function filters(array $filters)
+    {
+        /**@var DviTFilter $filter*/
+        foreach ($filters as $filter) {
+            if (!is_a($filter, DviTFilter::class)) {
+                DMessage::create('die', null, 'Os filtros devem ser do tipo DviTFilter');
+            }
+            $this->where($filter->field, $filter->operator, $filter->value, $filter->value2);
+        }
+        return $this;
     }
 
     #region [PDO] ***************************************************
@@ -118,7 +204,7 @@ trait DviQueryBuilder
 
         $this->already_pdo_prepared = false;
 
-        $this->bindParam();
+        $this->bindParams();
 
         $this->already_bind_params = false;
 
@@ -133,11 +219,45 @@ trait DviQueryBuilder
         if ($this->already_prepared_sql) {
             return true;
         }
-
+        if (empty($this->sql)) {
+            $this->sql = 'SELECT ';
+            $this->addFields();
+            $this->addTables();
+            $this->prepareJoins();
+        }
         $this->prepareSqlFilters();
         $this->prepareSqlParams();
 
         $this->already_prepared_sql = true;
+    }
+
+    protected function addFields()
+    {
+        $fields = null;
+        foreach ($this->fields as $key => $field_name) {
+            $space = ($key + 1 < count($this->fields) ? ', ' : '');
+            if (strpos($field_name, '.') === false) {
+                $fields .= $this->table['alias'].'.'.$field_name.$space;
+                continue;
+            }
+            $fields .= $field_name.$space;
+        }
+        $this->sql .= $fields ?? '*';
+    }
+
+    protected function addTables()
+    {
+        if (!empty($this->table)) {
+            $this->sql .= ' FROM '.$this->table['table'].' as '.(new ReflectionClass($this->table['default_obj']))->getShortName();
+        }
+    }
+
+    protected function prepareJoins()
+    {
+        foreach ($this->joins as $join) {
+            $this->sql .= ' '.$join['type'].' join '. $join['table'].' as '.$join['table_alias'];
+            $this->sql .= ' on '.$join['table_alias'].'.id = '.$join['associated_alias'].'.'.$join['foreing_key'];
+        }
     }
 
     private function prepareSqlFilters()
@@ -202,24 +322,32 @@ trait DviQueryBuilder
         }
 
         try {
-            $conn = TTransaction::get();
-            if ($conn == null) {
-                throw new Exception('Abra uma conexão antes de executar uma consulta ao banco');
+            $conn = DTransaction::get();
+            $manual = false;
+            if (!$conn) {
+                DTransaction::open();
+                $conn = DTransaction::get();
+                $manual = true;
             }
             $this->pdo = $conn->prepare($this->sql);
 
             $this->already_pdo_prepared = true;
+
+            if ($manual) {
+                DTransaction::close();
+            }
         } catch (Exception $e) {
             /** @noinspection PhpUnhandledExceptionInspection */
             throw new Exception($e->getMessage());
         }
     }
 
-    private function bindParam()
+    private function bindParams()
     {
         if ($this->already_bind_params) {
             return true;
         }
+
         foreach ($this->filters as $key => $filter) {
             if (isset($filter->filter) and isset($filter->value)) {
                 $operator = strtolower($filter->operator);

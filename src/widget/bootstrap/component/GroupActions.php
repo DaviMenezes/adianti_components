@@ -5,6 +5,8 @@ namespace Dvi\Adianti\WidgetBootstrap\Component;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TField;
+use Adianti\Base\Lib\Widget\Form\TForm;
 use Dvi\Adianti\Widget\Util\DAction;
 use Dvi\Adianti\Widget\Form\DButton;
 use Dvi\Adianti\Widget\Util\DActionLink;
@@ -24,6 +26,8 @@ class GroupActions
     protected $items = array();
     protected $currentAction;
     private $icon_size;
+    /**@var TForm $form_default*/
+    protected $form_default;
 
     public function __construct()
     {
@@ -53,10 +57,10 @@ class GroupActions
         $this->icon_size = $size;
     }
 
-    public function addButton(array $action, $icon = null, $label = null, array $parameters = null, $style = null, $form_name = null)
+    public function addButton(array $action, $icon = null, $label = null, array $parameters = null, $style = null, $form_name = null):DButton
     {
         try {
-            //            if (!$form_name) {
+            //Todo remove?            if (!$form_name) {
             //                throw new \Exception('O nome do formulário é obrigatório para ações em '. array_pop(explode('\\', __METHOD__)));
             //            }
             $btn = new DButton();
@@ -77,18 +81,27 @@ class GroupActions
             }
 
             if ($icon) {
-                $btn->setImage($icon);
+                $class_icon = explode(' ', $icon);
+                $pos = strpos($icon, 'fa');
+                if ($pos === false or count($class_icon) == 1 and $this->icon_size) {
+                    $btn->icon($icon.' '.$this->icon_size);
+                } else {
+                    $btn->icon($icon);
+                }
             }
 
-            //            $btn->setTip($value['tip']);
-            $btn->class = 'btn btn-default dvi_btn';
+            $btn->class = 'btn btn-default dvi_panel_action';
             $btn->style = 'font-size: 14px;';
 
             $this->buttons[] = $btn;
             $this->currentAction = $btn;
             $this->items[] = $btn;
 
-            return $this;
+            if ($this->form_default) {
+                $this->form_default->addField($btn);
+            }
+
+            return $btn;
         } catch (\Exception $e) {
             new TMessage('error', $e->getMessage());
         }
@@ -99,10 +112,10 @@ class GroupActions
         return $this->buttons;
     }
 
-    public function addLink(array $callback, $icon = null, $label = null, array $parameters = null, $style = null):DActionLink
+    public function addLink(array $callback, $icon = null, $label = null, array $parameters = null):DActionLink
     {
         $link = new DActionLink(new DAction($callback, $parameters), $label, $icon);
-        $link->class = 'btn btn-default';
+        $link->class = 'btn btn-default dvi_panel_action';
 
         $this->currentAction = $link;
         $this->items[] = $link;

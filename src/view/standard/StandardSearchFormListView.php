@@ -1,16 +1,18 @@
 <?php
 
-namespace Dvi\Adianti\Control;
+namespace Dvi\Adianti\View\Standard;
 
 use Adianti\Base\Lib\Control\TAction;
-use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\View\Standard\Form\BaseFormView;
+use Dvi\Adianti\View\Standard\Form\FormView;
+use Dvi\Adianti\View\Standard\SearchList\ListView;
 use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Container\DVBox;
-use Dvi\Adianti\Widget\Form\DviPanelGroup;
+use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
 
 /**
  * Control DviSearchFormList
@@ -22,77 +24,82 @@ use Dvi\Adianti\Widget\Form\DviPanelGroup;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-abstract class DviSearchFormList extends DviControl
+abstract class StandardSearchFormListView extends BaseFormView
 {
-    protected $objectClass;
     /**@var DviPanelGroup $panel*/
     protected $panel;
     /**@var DataGrid $datagrid*/
     protected $datagrid;
     /**@var TPageNavigation $pageNavigation*/
     protected $pageNavigation;
-
     /**@var TDataGridColumn $column_id*/
     protected $column_id;
-
     /**@var TAction $action_delete*/
     protected $action_delete;
-
     protected $panel_grid;
 
-    use DviTPageSearch;
-    use DviTPageList;
-    use DviTPageForm;
+    use ListView;
+    use FormView;
+    use PageFormView;
 
     public function __construct($param)
     {
+        parent::__construct($param);
+
+        $this->setModel();
+        $this->setStructureFields();
+    }
+
+    public function build($param)
+    {
         try {
-            DTransaction::open();
-
-            parent::__construct($param);
-
-            $this->createCurrentObject();
-
             $this->createPanelForm();
 
+            $this->createFormToken($param);
+
+            if (!$this->alreadyCreatePanelRows()) {
+                $this->buildFields();
+                $this->createPanelFields();
+            }
             $this->createActions();
 
-            $this->datagrid = $this->createDataGrid();
+            $this->createDataGrid();
 
-            $this->createPageNavigation();
-
-            $vbox = new DVBox();
-            $vbox->add($this->panel);
-
-            $vbox->add($this->getDatagrid());
-
-            parent::add($vbox);
-
-            $className = self::getClassName(get_called_class());
-            $data = TSession::getValue($className . '_form_data');
-            unset($data->{$className.'_form_token'});
-            $this->panel->setFormData((object)$data);
-
-            DTransaction::close();
         } catch (\Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
         }
     }
 
-    public function createPanelForm()
+    public function createPanel($param)
     {
-        parent::createPanelForm();
+        if ($this->panel_created) {
+            return;
+        }
 
-        $this->mountModelFields();
+        $this->createPanelForm();
+
+        $this->createFormToken($param);
+
+        $this->panel_created = true;
     }
 
-    protected function createActions()
+    public function createActions()
     {
         $this->createActionSave();
         if (!$this->isEditing()) {
             $this->createActionSearch();
         }
         $this->createActionClear();
+    }
+
+    public function getContent()
+    {
+        $vbox = new DVBox();
+
+        $vbox->add($this->getPanel());
+        $vbox->add($this->getDatagrid());
+
+        return $vbox;
     }
 }

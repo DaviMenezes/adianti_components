@@ -60,27 +60,6 @@ class DGridRow extends TElement
         }
     }
 
-    private function createColumn($column, $position, $class)
-    {
-        if (is_array($column)) {
-            $gridColumn = new DGridColumn($column[0], $column[1] ?? $class, $column[2] ?? $this->defaultColStyle);
-        } else {
-            /* @var GridElement $column */
-            $column_class = ($this->isInitialLabel($column) && $position == 0) ? 'md-2 control-label' : 'md-'.$class;
-
-            $gridColumn = new DGridColumn($column, $column_class);
-        }
-
-        return $gridColumn;
-    }
-
-    private function isInitialLabel($param)
-    {
-        if (is_string($param) || (is_a($param, 'GridElement') || method_exists($param, 'getElement') && is_a($param->getElement(), 'TLabel'))) {
-            return true;
-        }
-    }
-
     public function getBootstrapColumnClass($columns)
     {
         $qtdColumnsToLabel = 2;

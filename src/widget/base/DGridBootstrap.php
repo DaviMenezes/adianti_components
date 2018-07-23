@@ -29,14 +29,17 @@ class DGridBootstrap
         $this->defaultColClass = $defaultColClass;
         $this->defaultColStyle = $colStyle;
     }
+
     public function setContainerFluid()
     {
         $this->grid->class = 'container-fluid';
     }
+
     public function setContainerDefault()
     {
         $this->grid->class = 'container';
     }
+
     public function addRow(string $rowStyle = null): DGridRow
     {
         $row = new DGridRow($rowStyle, $this->defaultColClass, $this->defaultColStyle);

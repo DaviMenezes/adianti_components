@@ -3,7 +3,9 @@ namespace Dvi\Adianti\Widget\Form;
 
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Form\TDate;
-use Dvi\Adianti\Widget\Form\Field\DField;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
+use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
+use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
@@ -16,10 +18,11 @@ use Dvi\Adianti\Widget\Form\Field\SearchableField;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DDate extends TDate
+class DDate extends TDate implements FormField
 {
+    use FormFieldTrait;
+    use FormFieldValidation;
     use SearchableField;
-    use DField;
 
     private $field_disabled;
 
@@ -41,7 +44,6 @@ class DDate extends TDate
             $this->setTip(ucfirst($this->placeholder));
         }
 
-        //Todo check location user
         $this->setMask('dd/mm/yyyy');
         $this->setDatabaseMask('yyyy-mm-dd');
 

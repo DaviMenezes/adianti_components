@@ -1,9 +1,10 @@
 <?php
 namespace Dvi\Adianti\Widget\Form;
 
-use Adianti\Base\Lib\Validator\TEmailValidator;
 use Adianti\Base\Lib\Widget\Form\TEntry;
-use Dvi\Adianti\Widget\Form\Field\DField;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
+use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
+use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
@@ -16,11 +17,11 @@ use Dvi\Adianti\Widget\Form\Field\SearchableField;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DEntry extends TEntry
+class DEntry extends TEntry implements FormField
 {
+    use FormFieldTrait;
+    use FormFieldValidation;
     use SearchableField;
-
-    use DField;
 
     public function __construct(
         string $name,
@@ -36,19 +37,26 @@ class DEntry extends TEntry
         $this->operator('like');
     }
 
-    public function validate()
-    {
-        if ($this->getValidations()) {
-            foreach ($this->getValidations() as $validation) {
-                $label      = $validation[0];
-                $validator  = $validation[1];
-                $parameters = $validation[2];
+//    public function validate()
+//    {
+//        if ($this->getValidations()) {
+//            foreach ($this->getValidations() as $validation) {
+//                $label      = $validation[0];
+//                $validator  = $validation[1];
+//                $parameters = $validation[2];
+//
+//                if ($validator instanceof RequiredValidator) {
+//                    continue;
+//                }
+//                if ($validator instanceof TEmailValidator and empty($this->value)) {
+//                    continue;
+//                }
+//                /**@var FieldValidator $validator*/
+//                if ($validator->validate($label, $this->getValue(), $parameters)) {
+//                    $this->addErrorMessage($validator->getErrorMsg());
+//                }
+//            }
+//        }
+//    }
 
-                if ($validator instanceof TEmailValidator and empty($this->value)) {
-                    continue;
-                }
-                $validator->validate($label, $this->getValue(), $parameters);
-            }
-        }
-    }
 }

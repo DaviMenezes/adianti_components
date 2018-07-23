@@ -3,7 +3,7 @@
 namespace Dvi\Adianti\Widget\Form;
 
 use Adianti\Base\Lib\Widget\Form\TPassword;
-use Dvi\Adianti\Widget\Form\Field\DField;
+use Dvi\Adianti\Widget\Form\Field\FormField;
 
 /**
  * Form DPassword
@@ -16,7 +16,7 @@ use Dvi\Adianti\Widget\Form\Field\DField;
  */
 class DPassword extends TPassword
 {
-    use DField;
+    use FormField;
 
     public function __construct(string $name, string $placeholder = null, bool $required = false, bool $tip = true)
     {

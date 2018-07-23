@@ -6,6 +6,7 @@ use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Dvi\Adianti\Widget\Container\DVBox;
 use Dvi\Adianti\Widget\Form\DButton;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
 
 /**
  * Column to bootstrap grid
@@ -19,7 +20,7 @@ use Dvi\Adianti\Widget\Form\DButton;
  */
 class DGridColumn extends TElement
 {
-    //region BootstrapGridClasses
+    #region [BootstrapGridClasses]
     const XS1 = 'col-xs-1';
     const XS2 = 'col-xs-2';
     const XS3 = 'col-xs-3';
@@ -68,7 +69,7 @@ class DGridColumn extends TElement
     const LG10 = 'col-lg-10';
     const LG11 = 'col-lg-11';
     const LG12 = 'col-lg-12';
-    //endregion
+    #endregion
 
     private $childs;
     private $custom_class;
@@ -88,8 +89,7 @@ class DGridColumn extends TElement
 
         $this->setClass($class);
 
-        //        $this->style = 'min-height:20px; margin-bottom:5px; padding-left: 10px; ';
-        $this->style .= 'min-height:20px; margin-bottom:5px;'.$colStyle;
+        $this->style .= $colStyle;
         $this->addChild($child);
     }
 
@@ -100,7 +100,14 @@ class DGridColumn extends TElement
         if ($this->useLabelField) {
             if (!is_a($this->childs[0], DButton::class)) {
                 $box = new DVBox();
-                $box->add($this->getElementLabel());
+                $child = $this->getChilds(0);
+                if (in_array(IFormField::class, class_implements($child))) {
+                    $msg_error = ' '.$child->getErrorValidation();
+                    $class = $msg_error ? 'class="dvi_str_danger"' : null;
+                    $msg_error = '<span '.$class.'>'.$msg_error.'</span>';
+                }
+
+                $box->add($this->getElementLabel().($msg_error??null));
                 $box->add($this->childs[0]);
 
                 parent::add($box);
@@ -179,7 +186,7 @@ class DGridColumn extends TElement
         }
 
         $this->custom_class = implode(' ', $classes);
-        return $this->custom_class;
+        return $this->custom_class. ' dvi_grid_col';
     }
 
     public static function pack(array $elements, array $class = null, array $style = null)
@@ -201,7 +208,7 @@ class DGridColumn extends TElement
         $this->useLabelField = $bool;
     }
 
-    protected function getElementLabel()
+    public function getElementLabel()
     {
         $element = $this->childs[0];
         if (is_subclass_of($element, TField::class)) {

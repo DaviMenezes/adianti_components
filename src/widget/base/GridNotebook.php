@@ -7,7 +7,6 @@ class GridNotebook
     private $tabs = array();
     private $rows = array();
 
-
     public function __construct(string $title = null, array $rows = null)
     {
         $this->tabs[] = $title;
@@ -29,11 +28,13 @@ class GridNotebook
     {
         return $this->tabs;
     }
+
     public function addTab(string $title)
     {
         $this->tabs[] = $title;
         return $this;
     }
+
     public function setRows(array $rows)
     {
         $this->rows = $rows;

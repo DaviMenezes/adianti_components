@@ -10,46 +10,41 @@ namespace Dvi\Adianti\Component\Model\Form\Fields;
 
 use Adianti\Base\Lib\Validator\TCPFValidator;
 use Adianti\Base\Lib\Validator\TEmailValidator;
-use Dvi\Adianti\Model\DBFormField;
+use Adianti\Base\Lib\Widget\Form\TField;
+use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\Widget\Form\DEntry;
+use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
-class FieldVarchar extends DBFormField
+class DBVarchar extends DBFormField
 {
-    private $size;
+    protected $size;
 
-    public function __construct(string $name, string $type, int $size, bool $required = false, $label = null)
+    public function __construct(string $name, int $size, bool $required = false, $label = null)
     {
         $this->size = $size;
 
-        $array = explode('_', $name);
+        $array = explode('-', $name);
         $field_name = array_pop($array);
 
         $label = $label ?? $field_name;
 
-        parent::__construct($name, $type, $required, $label);
+        parent::__construct($required, $label);
 
         $this->field = new DEntry($name, $label, $size, $required);
+
+        $this->setType(new FieldTypeString());
     }
 
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    #region [FACADE]
     public function setType($type)
     {
         $this->field->setType($type);
         return $this;
-    }
-
-    public static function create(
-        string $name,
-        string $type,
-        int $size,
-        bool $required = false,
-        $label = null
-    ):FieldVarchar {
-        return new FieldVarchar($name, $type, $size, $required, $label);
-    }
-
-    public function getField(): DEntry
-    {
-        return $this->field;
     }
 
     public function mask(string $mask)
@@ -61,6 +56,7 @@ class FieldVarchar extends DBFormField
     public function validateEmail()
     {
         $this->field->addValidation($this->field->getLabel(), new TEmailValidator());
+        return $this;
     }
 
     public function validateCpf()
@@ -68,4 +64,5 @@ class FieldVarchar extends DBFormField
         $this->field->addValidation($this->field->getLabel(), new TCPFValidator());
         return $this;
     }
+    #endregion
 }

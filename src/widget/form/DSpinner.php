@@ -3,7 +3,10 @@
 namespace Dvi\Adianti\Widget\Form;
 
 use Adianti\Base\Lib\Widget\Form\TSpinner;
-use Dvi\Adianti\Widget\Form\Field\DField;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
+use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
+use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
+use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
  * Form DSpinner
@@ -14,7 +17,9 @@ use Dvi\Adianti\Widget\Form\Field\DField;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DSpinner extends TSpinner
+class DSpinner extends TSpinner implements FormField
 {
-    use DField;
+    use FormFieldTrait;
+    use FormFieldValidation;
+    use SearchableField;
 }

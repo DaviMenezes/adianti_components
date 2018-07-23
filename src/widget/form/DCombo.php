@@ -7,7 +7,9 @@ use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TCombo;
 use Dvi\Adianti\Database\DTransaction;
-use Dvi\Adianti\Widget\Form\Field\DField;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
+use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
+use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 use Exception;
 
@@ -21,10 +23,11 @@ use Exception;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DCombo extends TCombo
+class DCombo extends TCombo implements FormField
 {
+    use FormFieldTrait;
+    use FormFieldValidation;
     use SearchableField;
-    use DField;
 
     private $field_disabled;
 
@@ -37,7 +40,7 @@ class DCombo extends TCombo
         $this->operator('=');
 
         if ($obj_array_value) {
-            $this->addItems($this->getObjItems($obj_array_value));
+            $this->items($this->getObjItems($obj_array_value));
         }
 
         if ($enable_search) {
@@ -105,7 +108,7 @@ class DCombo extends TCombo
 
     public function items(array $items)
     {
-        parent::addItems($items);
+        $this->addItems($items);
         return $this;
     }
 
@@ -121,3 +124,5 @@ class DCombo extends TCombo
         return $this->field_disabled;
     }
 }
+
+

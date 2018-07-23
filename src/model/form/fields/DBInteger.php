@@ -2,8 +2,9 @@
 
 namespace App\Adianti\Component\Model\Form\Fields;
 
-use Dvi\Adianti\Model\DBFormField;
+use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\Widget\Form\DSpinner;
+use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
  * Fields FieldInteger
@@ -15,21 +16,23 @@ use Dvi\Adianti\Widget\Form\DSpinner;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class FieldInteger extends DBFormField
+class DBInteger extends DBFormField
 {
-    public function __construct(string $name, int $min, int $max, int $step, bool $required = false, string $label = null, string $type = 'numeric')
+    public function __construct(string $name, int $min, int $max, int $step, bool $required = false, string $label = null)
     {
-        $array = explode('_', $name);
+        $array = explode('-', $name);
         $field_name = array_pop($array);
 
         $label = $label ?? $field_name;
 
-        parent::__construct($name, $type, $required, $label);
+        parent::__construct($required, $label);
 
         $this->field = new DSpinner($name);
         $this->field->setRange($min, $max, $step);
         $this->field->setLabel($label);
         $this->field->placeholder = $this->getLabel();
+
+        $this->setType(new FieldTypeInt());
     }
 
     public function getField()
@@ -39,7 +42,7 @@ class FieldInteger extends DBFormField
 
     public function getLabel()
     {
-        return ucfirst(parent::getLabel()?? $this->getName());
+        return ucfirst(parent::getLabel()?? $this->getField()->getName());
     }
 
     public function setType($type)

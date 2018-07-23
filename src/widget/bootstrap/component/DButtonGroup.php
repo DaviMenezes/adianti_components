@@ -28,7 +28,7 @@ class DButtonGroup extends GroupActions implements IDviWidget
     {
         $this->form_default = $default_form;
         parent::__construct();
-        $this->class = 'btn-group';
+        $this->class = 'btn-group dvi_btn';
     }
 
     public function setClass($class)
@@ -38,7 +38,7 @@ class DButtonGroup extends GroupActions implements IDviWidget
 
     public function addGroup($action_header = null, $title_group_action = null): DActionGroup
     {
-        $this->group = new DActionGroup($action_header, $title_group_action);
+        $this->group = new DActionGroup($this->form_default, $action_header, $title_group_action);
         $this->items[] = $this->group;
         return $this->group;
     }

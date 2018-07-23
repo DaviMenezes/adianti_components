@@ -5,10 +5,13 @@ namespace Dvi\Adianti\Widget\Form;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Util\TImage;
+use Dvi\Adianti\Helpers\GUID;
+use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Widget\Util\DAction;
 use Exception;
 
@@ -35,7 +38,7 @@ class DButton extends TField implements AdiantiWidgetInterface
 
     public function __construct(string $name = null)
     {
-        parent::__construct($name ?? 'btn_'.uniqid());
+        parent::__construct($name ?? 'btn_'.GUID::getID());
 
         $this->setClass();
     }
@@ -64,7 +67,7 @@ class DButton extends TField implements AdiantiWidgetInterface
         }
 
         if ($image) {
-            $button->setImage($image);
+            $button->icon($image);
         }
 
         $button->style = 'font-size: 14px;';
@@ -96,9 +99,10 @@ class DButton extends TField implements AdiantiWidgetInterface
         return $this->action;
     }
 
-    public function setImage(string $image)
+    public function icon(string $image)
     {
         $this->image = $image;
+        return $this;
     }
 
     /**
@@ -107,6 +111,7 @@ class DButton extends TField implements AdiantiWidgetInterface
     public function setLabel($label)
     {
         $this->label = $label;
+        return $this;
     }
 
     public function getLabel()

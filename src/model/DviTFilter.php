@@ -22,11 +22,10 @@ class DviTFilter
     public $value2;
     public $query_operator;
     
-    public function __construct($field, $operator, $filter = null, $value = null, $value2 = null, $query_operator = 'AND')
+    public function __construct($field, $operator, $value = null, $value2 = null, $query_operator = 'AND')
     {
         $this->field = $field;
         $this->operator = $operator;
-        $this->filter = $filter;
         $this->value = $value;
         $this->value2 = $value2;
         $this->query_operator = $query_operator;

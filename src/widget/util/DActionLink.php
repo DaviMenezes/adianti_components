@@ -5,6 +5,7 @@ use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Util\TImage;
 use Adianti\Base\Lib\Widget\Util\TTextDisplay;
+use Dvi\Adianti\Widget\Dialog\DMessage;
 
 /**
  * Model DActionLink
@@ -21,10 +22,11 @@ class DActionLink extends TTextDisplay
     private $label;
     /**@var TElement $a_content*/
     private $a_content;
-    public $image_icon;
+    private $image_icon;
     protected $image;
     /**@var TAction $action*/
     private $action;
+    private $icon_size;
 
     public function __construct(
         TAction $action = null,
@@ -52,18 +54,35 @@ class DActionLink extends TTextDisplay
         return $this->action;
     }
 
-    public function setParameters($params)
+    public function params($params = null)
     {
+        if (empty($params)) {
+            return $this;
+        }
         $this->action->setParameters($params);
+        return $this;
+    }
+
+    public function setParameters($params = null)
+    {
+        if (empty($params)) {
+            return $this;
+        }
+        $this->action->setParameters($params);
+        return $this;
     }
 
     public function icon($icon, $style = null)
     {
         $this->image_icon['icon'] = $icon;
-        $this->image_icon['style'] = $style;
+        if ($style) {
+            $this->image_icon['style'] = $style;
+        }
 
         $this->image =  new TImage($icon);
-        $this->image->{'style'} = $style ?? '';
+        if ($style) {
+            $this->image->{'style'} = $style ?? '';
+        }
 
         return $this;
     }
@@ -92,8 +111,19 @@ class DActionLink extends TTextDisplay
         return $this;
     }
 
+    public function styleBtn($bootstrap_class)
+    {
+        $this->{'class'} = $bootstrap_class;
+        return $this;
+    }
+
     public function show()
     {
+        if (empty($this->image) and empty($this->label)) {
+            DMessage::create('die', 'O botão precisa de um texto ou uma imagem');
+        }
+        $this->a_content->class = 'align_action_middle';
+
         if ($this->image) {
             $rrpos = strrpos($this->image_icon['icon'], 'fa-');
             $class = null;
@@ -106,12 +136,11 @@ class DActionLink extends TTextDisplay
             } else {
                 $style = 'style = "vertical-align:text-bottom"';
             }
-            $this->a_content->class = 'align_action_middle';
             $this->a_content->add('<span '.$class.' '.$style.'>'.$this->image.'</span>');
         }
 
         if (!empty($this->label)) {
-            $this->a_content->add('<span>'.$this->label.'</span>');
+            $this->a_content->add('<span class="action_label">'.$this->label.'</span>');
         }
 
         $this->action($this->action);

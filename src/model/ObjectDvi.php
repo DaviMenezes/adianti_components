@@ -3,6 +3,7 @@
 namespace Dvi\Adianti\Model;
 
 use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Modules\Admin\Model\SystemUser;
 
 /**
  * Model ObjectDvi
@@ -30,6 +31,7 @@ class ObjectDvi extends DviTRecord
     public function __construct($id = null, $callObjectLoad = true)
     {
         parent::__construct($id, $callObjectLoad);
+
         parent::addAttribute('short_description');
         parent::addAttribute('created_at');
         parent::addAttribute('created_by_id');

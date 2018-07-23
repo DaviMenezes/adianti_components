@@ -1,28 +1,39 @@
 <?php
 
-namespace Dvi\Adianti\Model;
+namespace Dvi\Adianti\Model\Fields;
+
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
 
 /**
- * Model DBField
+ * Model DBFormField
  *
  * @version    Dvi 1.0
  * @package    Model
- * @subpackage Adiant Components
+ * @subpackage Adianti
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-abstract class DBField
+abstract class DBFormField
 {
-    protected $name;
+    /**@var IFormField $field*/
+    protected $field;
+    protected $label;
     protected $required;
     protected $hide_in_edit;
 
-    public function __construct(string $name, bool $required = false)
+    public function __construct(bool $required = false, string $label = null)
     {
-        $this->name = $name;
+        $this->label= $label;
         $this->required = $required;
     }
+
+    public function getLabel()
+    {
+        return str_replace('_', ' ', $this->label);
+    }
+
+    abstract public function getField();
 
     public function getRequired()
     {

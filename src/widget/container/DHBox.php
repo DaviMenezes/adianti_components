@@ -60,7 +60,6 @@ class DHBox extends THBox implements IGroupField
     /* Static method for pack content
      * @param $cells Each argument is a cell
      */
-
     public static function buttonPack()
     {
         $box = new self;

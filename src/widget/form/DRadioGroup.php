@@ -5,7 +5,9 @@ namespace Dvi\Adianti\Widget\Form;
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TRadioGroup;
-use Dvi\Adianti\Widget\Form\Field\DField;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
+use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
+use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
@@ -18,10 +20,11 @@ use Dvi\Adianti\Widget\Form\Field\SearchableField;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DRadioGroup extends TRadioGroup
+class DRadioGroup extends TRadioGroup implements FormField
 {
+    use FormFieldTrait;
+    use FormFieldValidation;
     use SearchableField;
-    use DField;
 
     private $field_disabled;
 
@@ -47,16 +50,17 @@ class DRadioGroup extends TRadioGroup
             new TMessage('info', $e->getMessage());
         }
     }
+
     public function items(array $items)
     {
-        parent::addItems($items);
+        $this->addItems($items);
     }
 
     public function disable($disable = true)
     {
         $this->field_disabled = $disable;
 
-        parent::setEditable(!$disable);
+        $this->setEditable(!$disable);
     }
 
     public function isDisabled()

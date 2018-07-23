@@ -3,7 +3,10 @@
 namespace Dvi\Adianti\Componente\Model\Form\Fields;
 
 use Adianti\Base\Lib\Widget\Form\TNumeric;
-use Dvi\Adianti\Widget\Form\Field\DField;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
+use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
+use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
+use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
  * Fields DNumeric
@@ -14,7 +17,9 @@ use Dvi\Adianti\Widget\Form\Field\DField;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DNumeric extends TNumeric
+class DNumeric extends TNumeric implements FormField
 {
-    use DField;
+    use FormFieldTrait;
+    use FormFieldValidation;
+    use SearchableField;
 }

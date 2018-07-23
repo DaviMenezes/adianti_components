@@ -3,11 +3,13 @@
 namespace Dvi\Adianti\Component\Model\Form\Fields;
 
 use Adianti\Base\Lib\Validator\TRequiredValidator;
-use Dvi\Adianti\Model\DBFormField;
+use Adianti\Base\Lib\Widget\Form\TField;
+use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\Widget\Form\DDateTime;
+use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
- * Model DBDateTime
+ * Model DateTime
  *
  * @version    Dvi 1.0
  * @package    Model
@@ -16,16 +18,16 @@ use Dvi\Adianti\Widget\Form\DDateTime;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class FieldDateTime extends DBFormField
+class DBDateTime extends DBFormField
 {
-    public function __construct(string $name, bool $required = false, string $label = null)
+    public function __construct(string $name, string $label = null, bool $required = false)
     {
-        $array = explode('_', $name);
+        $array = explode('-', $name);
         $field_name = array_pop($array);
 
         $label = $label ?? $field_name;
 
-        parent::__construct($name, 'datetime', $required, $label);
+        parent::__construct($required, $label);
 
         $this->field = new DDateTime($name);
         $this->field->placeholder = $label;
@@ -37,12 +39,8 @@ class FieldDateTime extends DBFormField
 
         $this->field->setMask('dd/mm/yyyy hh:ii:ss');
         $this->field->setDatabaseMask('yyyy-mm-dd hh:ii:ss');
-    }
 
-    public static function create(string $name, bool $required = false, string $label = null): FieldDateTime
-    {
-        $field = new FieldDateTime($name, $required, $label);
-        return $field;
+        $this->setType(new FieldTypeString());
     }
 
     public function getField()

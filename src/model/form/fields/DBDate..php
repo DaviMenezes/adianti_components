@@ -2,11 +2,13 @@
 
 namespace Dvi\Adianti\Component\Model\Form\Fields;
 
-use Dvi\Adianti\Model\DBFormField;
+use Adianti\Base\Lib\Widget\Form\TField;
+use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\Widget\Form\DDate;
+use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
- * Model DBDate
+ * Model Date
  *
  * @version    Dvi 1.0
  * @package    Model
@@ -15,27 +17,23 @@ use Dvi\Adianti\Widget\Form\DDate;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class FieldDate extends DBFormField
+class DBDate extends DBFormField
 {
-    public function __construct(string $name, bool $required = false, string $label = null)
+    public function __construct(string $name, string $label = null, bool $required = false)
     {
-        $array = explode('_', $name);
+        $array = explode('-', $name);
         $field_name = array_pop($array);
 
         $label = $label ?? $field_name;
 
-        parent::__construct($name, 'datetime', $required, $label);
+        parent::__construct($required, $label);
 
         $this->field = new DDate($name, $label, $required);
+
+        $this->setType(new FieldTypeString());
     }
 
-    public static function create(string $name, bool $required = false, string $label = null): FieldDate
-    {
-        $field = new FieldDate($name, $required, $label);
-        return $field;
-    }
-
-    public function getField():DDate
+    public function getField()
     {
         return $this->field;
     }

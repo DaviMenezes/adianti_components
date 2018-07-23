@@ -12,6 +12,7 @@
 namespace Dvi\Adianti\Helpers;
 
 use Adianti\Base\App\Lib\Util\TMail;
+use PHPMailer\PHPMailer\Exception;
 
 /**
  * Dvi Mail
@@ -112,7 +113,7 @@ class DviMail
         return true;
     }
 
-    public function getError()
+    public function getError():Exception
     {
         return $this->obj_error;
     }

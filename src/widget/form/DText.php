@@ -3,7 +3,10 @@
 namespace Dvi\Adianti\Widget\Form;
 
 use Adianti\Base\Lib\Widget\Form\TText;
-use Dvi\Adianti\Widget\Form\Field\DField;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
+use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
+use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
+use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
  * Model DText
@@ -15,11 +18,13 @@ use Dvi\Adianti\Widget\Form\Field\DField;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DText extends TText
+class DText extends TText implements FormField
 {
-    private $field_disabled;
+    use FormFieldTrait;
+    use FormFieldValidation;
+    use SearchableField;
 
-    use DField;
+    private $field_disabled;
 
     public function __construct(string $name, string $placeholder = null, int $max_length = null, $height = '50', bool $tip = true, bool $required = false)
     {
@@ -33,7 +38,7 @@ class DText extends TText
     public function setMaxLength(int $length)
     {
         if ($length > 0) {
-            $this->tag->maxlength = $length;
+            $this->setProperty('maxlength', $length);
         }
     }
 
@@ -41,11 +46,12 @@ class DText extends TText
     {
         $this->field_disabled = $disable;
 
-        parent::setEditable(!$disable);
+        $this->setEditable(!$disable);
     }
 
     public function isDisabled()
     {
         return $this->field_disabled;
     }
+
 }

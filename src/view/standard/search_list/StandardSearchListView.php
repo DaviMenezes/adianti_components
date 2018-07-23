@@ -1,15 +1,18 @@
 <?php
 
-namespace Dvi\Adianti\Control;
+namespace Dvi\Adianti\View\Standard\SearchList;
 
 use Adianti\Base\Lib\Control\TAction;
-use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\View\Standard\DviBaseView;
+use Dvi\Adianti\View\Standard\Form\BaseFormView;
+use Dvi\Adianti\View\Standard\PageFormView;
 use Dvi\Adianti\Widget\Base\DataGrid;
-use Dvi\Adianti\Widget\Form\DviPanelGroup;
+use Dvi\Adianti\Widget\Container\DVBox;
+use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
 
 /**
  * Cria tela com formulário de pesquisa com listagem paginada
@@ -21,46 +24,48 @@ use Dvi\Adianti\Widget\Form\DviPanelGroup;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-
-abstract class DviSearchList extends DviControl
+abstract class StandardSearchListView extends BaseFormView
 {
-    protected $objectClass;
-
+    protected $formController;
     /**@var DviPanelGroup $panel*/
     protected $panel;
     /**@var DataGrid $datagrid*/
     protected $datagrid;
     /**@var TPageNavigation $pageNavigation*/
     protected $pageNavigation;
-
     /**@var TDataGridColumn $column_id*/
     protected $column_id;
-
     /**@var TAction $action_delete*/
     protected $action_delete;
-
     protected $panel_grid;
-    private $use_grid_panel;
+    private $vbox;
 
-    use DviTPageForm;
-    use DviTPageSearch;
-    use DviTPageList;
+    use PageFormView;
+    use ListView;
 
     public function __construct($param)
+    {
+        $this->setModel();
+        $this->setStructureFields();
+
+        parent::__construct($param);
+    }
+
+    public function createActions()
+    {
+        $this->createActionSearch();
+
+        $this->createActionClear();
+
+        $this->createActionNew();
+    }
+
+    public function build($param)
     {
         try {
             DTransaction::open();
 
-            if (empty($this->formController)) {
-                $this->formController = self::getClassName($this->objectClass).'Form';
-            }
-            parent::__construct($param);
-
-            $this->createCurrentObject();
-
-            $this->createPanelForm();
-
-            $this->mountModelFields();
+            $this->createPanel($param);
 
             $this->createActions();
 
@@ -68,33 +73,26 @@ abstract class DviSearchList extends DviControl
 
             $this->createDataGrid();
 
-            $this->createPageNavigation();
-
-            $vbox = new TVBox();
-            $vbox->style = 'width:100%;';
-            $vbox->add($this->panel);
-
-            $vbox->add($this->getContentAfterPanel());
-
-            $vbox->add($this->getDatagrid());
-
-            parent::add($vbox);
+            $this->vbox = new DVBox();
+            $this->vbox->add($this->panel);
+            $this->vbox->add($this->getContentAfterPanel());
+            $this->vbox->add($this->getDatagrid());
 
             DTransaction::close();
+
         } catch (\Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
         }
     }
 
-    abstract protected function mountModelFields();
-
-    protected function createActions()
+    public function getContent()
     {
-        $this->createActionSearch();
+        return $this->vbox;
+    }
 
-        $this->createActionClear();
-
-        $this->createActionNew();
+    public function setFormController($formController)
+    {
+        $this->formController = $formController;
     }
 }
