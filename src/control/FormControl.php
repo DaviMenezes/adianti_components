@@ -6,18 +6,16 @@ use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Adianti\Base\Lib\Widget\Form\TField;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DBFormFieldPrepare;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\DviTRecord;
-use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\View\Standard\Form\BaseFormView;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormFieldValidation;
 use Dvi\Adianti\Widget\Form\Field\FormField;
-use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
 use ReflectionClass;
 
 /**
@@ -148,41 +146,25 @@ trait FormControl
         /**@var DviModel $this->currentObj */
         $this->currentObj->addAttribute('id');
 
-        $obj_master_class_name = (new ReflectionClass($model_class))->getShortName();
-
         $models_to_save = array();
-        $models = $this->getModelsToSave($obj_master_class_name, $models_to_save);
+        $models = $this->getModelsToSave($models_to_save);
 
-        $last_obj = '';
-        $i=0;
-        foreach ($models as $model => $attributes) {
-            if ($obj_master_class_name !== $model) {
-                /**@var TRecord $current_obj */
-                $current_model = $models_to_save[$model]['class'];
-                if ($i == 0) {
-                    $current_obj = new $current_model();
-                } else {
-                    $model = strtolower($model);
-                    $current_obj = $last_obj->$model;
-                }
+        $last_model = null;
+        foreach ($models as $key => $instance_object) {
+            $model = $instance_object['model'];
 
-                $this->fillModelsWithAttributeValues($attributes, $current_obj);
+            $this->fillModelsWithAttributeValues($instance_object['attributes'], $model);
 
-                $last_obj = $current_obj;
-
-                $this->prepareObjBeforeSave($current_obj, $last_obj);
-
-                $current_obj->store();
-            } else {
-                $this->fillModelsWithAttributeValues($attributes, $this->currentObj);
-
-                $this->prepareObjBeforeSave($this->currentObj, $last_obj);
-
-                $this->currentObj->store();
-                $last_obj = $this->currentObj;
-                $this->currentObj = $this->currentObj;
+            if (!$this->isEditing() and $key > 0) {
+                $fk_name = $instance_object['foreing_key']['name'];
+                $model->$fk_name = $last_model->id;
             }
-            $i++;
+
+            $this->prepareObjBeforeSave($model, $last_model);
+
+            $model->store();
+
+            $last_model = $model;
         }
         DTransaction::close();
     }
@@ -190,7 +172,7 @@ trait FormControl
     /**
      * Used by child classes to customize the object before save
     */
-    protected function prepareObjBeforeSave($obj, $last_obj)
+    protected function prepareObjBeforeSave(DviModel &$obj, $last_obj)
     {
     }
 
@@ -292,13 +274,15 @@ trait FormControl
         }
     }
 
-    protected function getModelsToSave($obj_master_class_name, &$models_to_save): array
+    protected function getModelsToSave(&$models_to_save): array
     {
+        $obj_master_class_name = (new \ReflectionObject($this->currentObj))->getShortName();
         $models_to_save[$obj_master_class_name] = [
-            'model' => $obj_master_class_name,
+            'model' => $this->currentObj,
             'class' => $this->view->getModel(),
             'parent' => null
         ];
+        
         SearchActionsControl::getForeynKeys($this->currentObj, $models_to_save);
 
         $data = $this->view->getPanel()->getFormData();
@@ -310,9 +294,28 @@ trait FormControl
         foreach ($models as $key => $attributes) {
             $array = explode('.', $key);
             $model = array_pop($array);
-            $new_models[$model] = $attributes;
+            $new_models[] = [
+                'model' => $model,
+                'attributes' => $attributes
+            ];
         }
 
-        return array_reverse($new_models);
+        $new_models = array_reverse($new_models);
+
+        $instance_objects = array();
+        $last_model = null;
+        foreach ($new_models as $key => $item) {
+            if ($item['model'] == $obj_master_class_name) {
+                $instance_objects[] = ['model'=>$this->currentObj, 'attributes'=> $item['attributes']];
+                $last_model = $this->currentObj;
+                continue;
+            }
+            $model = strtolower($item['model']);
+            $instance_objects[$key-1]['foreing_key'] = ['name'=>$model.'_id'];
+
+            $last_model = $last_model->$model;
+            $instance_objects[] = ['model'=>$last_model, 'attributes'=> $item['attributes']];
+        }
+        return array_reverse($instance_objects);
     }
 }
