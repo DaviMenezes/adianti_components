@@ -4,8 +4,9 @@ namespace Dvi\Adianti\View\Standard\Form;
 
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Helpers\Utils;
+use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\View\Standard\DviBaseView;
 use Dvi\Adianti\View\Standard\PageFormView;
 use Dvi\Adianti\Widget\Form\DButton;
@@ -26,6 +27,7 @@ abstract class StandardFormView extends DviBaseView
     protected $button_save;
     /**@var DButton $button_clear*/
     protected $button_clear;
+    /**@var DviModel $currentObj*/
     protected $currentObj;
     protected $pageList;
 
