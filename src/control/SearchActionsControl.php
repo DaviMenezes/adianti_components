@@ -77,7 +77,7 @@ trait SearchActionsControl
 
         $models_to_check = $this->getForeynKeys($objMaster);
         $models_to_check[$obj_master_class_name] = [
-            'model' => $obj_master_class_name,
+            'model' => $this->currentObj,
             'class' => $this->view->getModel(),
             'parent' => null
         ];
@@ -88,8 +88,13 @@ trait SearchActionsControl
 
     public static function getForeynKeys($current_obj, &$models_to_check = null, $last_model = null)
     {
+        if ($current_obj == null) {
+            return;
+        }
         $models_to_check = $models_to_check ?? array();
-        foreach ($current_obj->getForeignKeys() as $foreignKey) {
+        $foreignKeys = $current_obj->getForeignKeys();
+        $last_obj = $current_obj;
+        foreach ($foreignKeys as $key => $foreignKey) {
             $fkShortName = (new ReflectionClass($foreignKey))->getShortName();
 
             if (array_key_exists($fkShortName, $models_to_check)) {
@@ -105,14 +110,15 @@ trait SearchActionsControl
                 $parent = $last_model.'.'. $fkShortName;
             }
 
+            $last_obj = $last_obj->$key;
+
             $models_to_check[$fkShortName] = [
-                'model' => $fkShortName,
+                'model' => $model??$fkShortName,
                 'class' => $foreignKey,
                 'parent' => $parent
             ];
 
-            $fk = new $foreignKey();
-            self::getForeynKeys($fk, $models_to_check, $parent ?? $fkShortName);
+            self::getForeynKeys($last_obj, $models_to_check, $parent ?? $fkShortName);
         }
         return $models_to_check;
     }
