@@ -23,7 +23,7 @@ trait Utils
 
     protected function isEditing()
     {
-        if ((!empty($this->params['id']) and $this->params['id'] != 0) or (!empty($this->currentObj))) {
+        if ((!empty($this->params['id']) and $this->params['id'] != 0)) {
             return true;
         }
         return false;
