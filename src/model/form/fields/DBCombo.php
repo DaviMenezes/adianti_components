@@ -8,6 +8,7 @@ use Adianti\Base\Lib\Widget\Form\TField;
 use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Widget\Form\DCombo;
+use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
@@ -63,7 +64,7 @@ class DBCombo extends DBFormField
         return $this;
     }
 
-    public function setType($type)
+    public function setType(FieldTypeInterface $type)
     {
         $this->field->setType($type);
     }
