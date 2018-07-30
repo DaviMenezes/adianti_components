@@ -34,6 +34,7 @@ trait DviQueryBuilder
     private $preparedFilters;
     protected $sql;
     private $functions = array();
+    private $pdo_fetch;
 
     private $already_prepared_sql;
     private $already_pdo_prepared;
@@ -153,11 +154,18 @@ trait DviQueryBuilder
 
         $this->pdo->execute();
 
+        $pdo_fetch = $pdo_fetch ?? $this->pdo_fetch;
         $result = $this->pdo->fetchAll($pdo_fetch ?? PDO::FETCH_OBJ);
 
         $this->setResult($result);
 
         return $this->getResult();
+    }
+
+    public function returnType(int $pdo_fetch)
+    {
+        $this->pdo_fetch = $pdo_fetch;
+        return $this;
     }
 
     private function setResult($result)
