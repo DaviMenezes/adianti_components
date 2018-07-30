@@ -67,6 +67,7 @@ class DBCombo extends DBFormField
     public function setType(FieldTypeInterface $type)
     {
         $this->field->setType($type);
+        return $this;
     }
 
     private function mountModelItems()
