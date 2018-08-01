@@ -7,6 +7,7 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
+use Dvi\Lib\Widget\Base\DScript;
 
 /**
  * Form DHtmlEditor
@@ -30,5 +31,7 @@ class DHtmlEditor extends THtmlEditor implements FormField
         $this->prepare($label, $required, false);
 
         $this->setSize('100%', $height);
+
+        DScript::add('remove_note-popover', '$(".note-popover").remove();');
     }
 }
