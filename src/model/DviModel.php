@@ -18,6 +18,7 @@ use Dvi\Adianti\Widget\Dialog\DMessage;
 use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
+use Stringizer\Stringizer;
 
 /**
  * Model DviModel
@@ -135,5 +136,21 @@ abstract class DviModel extends DviTRecord
         $query = new DB();
         $query->table(get_called_class())->fields($fields);
         return $query;
+    }
+
+    public function __call($name, $arguments)
+    {
+        $str = new Stringizer($name);
+
+        if ($str->startsWith('set')) {
+            $props = $this->getPublicProperties();
+
+            $prop_name = $str->chopLeft('set')->lowercase()->getString();
+
+            if (array_key_exists($prop_name, $props)) {
+                $this->$prop_name = $arguments[0];
+            }
+        }
+        return $this;
     }
 }
