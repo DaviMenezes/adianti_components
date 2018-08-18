@@ -175,7 +175,8 @@ trait ListActionsControl
             return;
         }
         $this->view->createPageNavigation($this->page_navigation_count, $this->params);
-        $this->vbox_container->add($this->view->getPageNavigation());
+
+        $this->view->addPageNavigationInBoxContainer();
     }
 
     public function show()
@@ -191,6 +192,9 @@ trait ListActionsControl
                 $this->buildView($args);
                 $this->onReload();
             }
+        }
+        if (isset($this->view)) {
+            parent::add($this->view->getContent());
         }
 
         parent::show($this->params);
