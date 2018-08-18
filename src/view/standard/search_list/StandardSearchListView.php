@@ -38,7 +38,8 @@ abstract class StandardSearchListView extends BaseFormView
     /**@var TAction $action_delete*/
     protected $action_delete;
     protected $panel_grid;
-    private $vbox;
+    /**@var DVBox $vbox*/
+    protected $vbox;
 
     use PageFormView;
     use ListView;
@@ -73,10 +74,7 @@ abstract class StandardSearchListView extends BaseFormView
 
             $this->createDataGrid();
 
-            $this->vbox = new DVBox();
-            $this->vbox->add($this->panel);
-            $this->vbox->add($this->getContentAfterPanel());
-            $this->vbox->add($this->getDatagrid());
+            $this->createVBoxContent();
 
             DTransaction::close();
 
@@ -94,5 +92,18 @@ abstract class StandardSearchListView extends BaseFormView
     public function setFormController($formController)
     {
         $this->formController = $formController;
+    }
+
+    protected function createVBoxContent()
+    {
+        $this->vbox = new DVBox();
+        $this->vbox->add($this->panel);
+        $this->vbox->add($this->getContentAfterPanel());
+        $this->vbox->add($this->getDatagrid());
+    }
+
+    public function addPageNavigationInBoxContainer()
+    {
+        $this->vbox->add($this->pageNavigation);
     }
 }

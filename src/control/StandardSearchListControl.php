@@ -45,10 +45,6 @@ abstract class StandardSearchListControl extends DviControl implements StandardS
 
         $this->view->build($param);
 
-        $this->vbox_container = $this->view->getContent();
-
-        parent::add($this->vbox_container);
-
         $this->datagrid = $this->view->getDatagrid();
         $this->pageNavigation = $this->view->getPageNavigation();
 

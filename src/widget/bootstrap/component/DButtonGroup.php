@@ -17,7 +17,7 @@ use Dvi\Adianti\WidgetBootstrap\Component\GroupActions;
  */
 class DButtonGroup extends GroupActions implements IDviWidget
 {
-    protected $style;
+    public $style;
     protected $form_default;
     public $current_group;
     protected $class;
