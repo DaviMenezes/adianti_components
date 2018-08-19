@@ -50,8 +50,11 @@ class DVBox extends TVBox implements IGroupField
 
     public function add($child, $style = null)
     {
+        if ($style) {
+            $child->{'style'} .= $style;
+        }
         $this->childs[] = $child;
-        return parent::add($child, $style);
+        return parent::add($child);
     }
 
     public function getChilds($position = null):array
