@@ -57,6 +57,7 @@ abstract class DviControl extends TPage
             $args = func_get_arg(0) ?? array();
 
             if (!$this->hasMethod($args)) {
+                $this->getViewContent();
                 parent::show();
                 return;
             }
@@ -66,8 +67,12 @@ abstract class DviControl extends TPage
             }
 
             if ($args['method'] !== 'onSave') {
-                $this->buildView($args);
+                if (!$this->view) {
+                    $this->buildView($args);
+                }
             }
+
+            $this->getViewContent();
 
             parent::show();
         } catch (\Exception $e) {
@@ -98,5 +103,12 @@ abstract class DviControl extends TPage
             return true;
         }
         return false;
+    }
+
+    protected function getViewContent()
+    {
+        if (isset($this->view)) {
+            parent::add($this->view->getContent());
+        }
     }
 }

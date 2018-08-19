@@ -22,7 +22,6 @@ abstract class StandardSearchListControl extends DviControl implements StandardS
     protected $vbox_container;
     private $already_build_view;
 
-//    use FormControl;
     use SearchActionsControl;
     use ListActionsControl;
     use CommonActions;

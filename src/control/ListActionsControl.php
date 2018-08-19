@@ -193,9 +193,6 @@ trait ListActionsControl
                 $this->onReload();
             }
         }
-        if (isset($this->view)) {
-            parent::add($this->view->getContent());
-        }
 
         parent::show($this->params);
     }

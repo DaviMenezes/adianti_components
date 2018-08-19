@@ -92,7 +92,7 @@ abstract class StandardFormControl extends DviControl
     public function show()
     {
         if (!$this->hasMethod(func_get_arg(0))) {
-            $this->buildView($this->params);
+            $this->view->build($this->params);
         }
         return parent::show(func_get_arg(0));
     }
