@@ -89,14 +89,6 @@ abstract class StandardFormControl extends DviControl
         parent::add($this->view->getContent());
     }
 
-    public function show()
-    {
-        if (!$this->hasMethod(func_get_arg(0))) {
-            $this->view->build($this->params);
-        }
-        return parent::show(func_get_arg(0));
-    }
-
     private function setPageList()
     {
         $class_name = Route::getClassName(get_called_class());
