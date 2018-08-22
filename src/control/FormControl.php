@@ -53,6 +53,8 @@ trait FormControl
     public function onEdit()
     {
         try {
+            $this->view->build($this->params);
+
             if (isset($this->params['tab']) and $this->params['tab']) {
                 $this->view->getPanel()->setCurrentNotebookPage($this->params['tab']);
             }
@@ -80,6 +82,8 @@ trait FormControl
                         $fieldNames[$referenceName] = $formFieldName->getName();
                     }
                 }
+
+                $this->getViewContent();
 
                 TTransaction::close();
             }
