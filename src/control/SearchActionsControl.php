@@ -35,6 +35,8 @@ trait SearchActionsControl
             }
             DTransaction::open();
 
+            $this->buildView($this->params);
+
             $this->view->getPanel()->keepFormLoaded();
 
             $array_models = $this->prepareArrayModels();
