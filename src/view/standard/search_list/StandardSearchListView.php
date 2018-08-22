@@ -40,6 +40,8 @@ abstract class StandardSearchListView extends BaseFormView
     protected $panel_grid;
     /**@var DVBox $vbox*/
     protected $vbox;
+    protected $actions_created;
+    private $view_builded;
 
     use PageFormView;
     use ListView;
@@ -54,16 +56,25 @@ abstract class StandardSearchListView extends BaseFormView
 
     public function createActions()
     {
+        if ($this->actions_created) {
+            return;
+        }
+
         $this->createActionSearch();
 
         $this->createActionClear();
 
         $this->createActionNew();
+
+        $this->actions_created = true;
     }
 
     public function build($param)
     {
         try {
+            if ($this->view_builded) {
+                return;
+            }
             DTransaction::open();
 
             $this->createPanel($param);
@@ -78,6 +89,7 @@ abstract class StandardSearchListView extends BaseFormView
 
             DTransaction::close();
 
+            $this->view_builded = true;
         } catch (\Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());
