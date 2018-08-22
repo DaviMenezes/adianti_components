@@ -110,6 +110,8 @@ trait ListActionsControl
             if ($this->reloaded) {
                 return;
             }
+            $this->buildView($this->params);
+
             $items = $this->getDatagridItems();
 
             DTransaction::open($this->database);
@@ -117,6 +119,8 @@ trait ListActionsControl
             DTransaction::close();
 
             $this->preparePageNavidation();
+
+            $this->getViewContent();
 
             $this->reloaded = true;
         } catch (\Exception $e) {
@@ -181,15 +185,12 @@ trait ListActionsControl
 
     public function show()
     {
-        $args = func_get_arg(0);
-
         $method = TSession::getValue('method') ?? $_GET['method'] ?? null;
         $black_list_methods = ['onReload', 'onSearch'];
         TSession::setValue('method', null);
 
         if (!$this->grid_loaded and (!isset($method) or (!in_array($method, $black_list_methods)))) {
             if ($method !== 'onSave') {
-                $this->buildView($args);
                 $this->onReload();
             }
         }
