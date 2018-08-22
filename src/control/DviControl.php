@@ -54,25 +54,9 @@ abstract class DviControl extends TPage
     public function show()
     {
         try {
-            $args = func_get_arg(0) ?? array();
-
-            if (!$this->hasMethod($args)) {
-                $this->getViewContent();
-                parent::show();
-                return;
+            if (!$this->validateMethod()) {
+                DMessage::create('die', 'Segurança: Método '.$this->params['method'].' inválido');
             }
-
-            if (!$this->validateMethod($args)) {
-                DMessage::create('die', 'Segurança: Método '.$args['method'].' inválido');
-            }
-
-            if ($args['method'] !== 'onSave') {
-                if (!$this->view) {
-                    $this->buildView($args);
-                }
-            }
-
-            $this->getViewContent();
 
             parent::show();
         } catch (\Exception $e) {
@@ -90,16 +74,20 @@ abstract class DviControl extends TPage
         return false;
     }
 
-    protected function validateMethod($args): bool
+    protected function validateMethod(): bool
     {
+        if (!isset($this->params['method'])) {
+            return true;
+        }
         $rf = new \ReflectionClass(get_called_class());
+
         $array_methods = $rf->getMethods(\ReflectionMethod::IS_PUBLIC);
         $methods = array();
         foreach ($array_methods as $method) {
             $methods[$method->name] = $method->name;
         }
         ksort($methods);
-        if (in_array($args['method'], array_keys($methods))) {
+        if (in_array($this->params['method'], array_keys($methods))) {
             return true;
         }
         return false;
