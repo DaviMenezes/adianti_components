@@ -64,7 +64,7 @@ abstract class DviControl extends TPage
         }
     }
 
-    abstract protected function buildView($params);
+    abstract protected function buildView();
 
     protected function hasMethod($args)
     {

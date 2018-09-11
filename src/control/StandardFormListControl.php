@@ -56,12 +56,12 @@ abstract class StandardFormListControl extends DviControl
         $this->view->createPanel($this->params);
     }
 
-    protected function buildView($param)
+    protected function buildView()
     {
         if ($this->alread_build_view) {
             return;
         }
-        $this->view->build($param);
+        $this->view->build($this->params);
 
         $this->datagrid = $this->view->getDatagrid();
         $this->pageNavigation = $this->view->getPageNavigation();

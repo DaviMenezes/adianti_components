@@ -82,9 +82,9 @@ abstract class StandardFormControl extends DviControl
         }
     }
 
-    protected function buildView($params)
+    protected function buildView()
     {
-        $this->view->build($params);
+        $this->view->build($this->params);
 
         parent::add($this->view->getContent());
     }
@@ -99,5 +99,13 @@ abstract class StandardFormControl extends DviControl
         if (class_exists($class_list)) {
             $this->pageList = $class_list;
         }
+    }
+
+    public function show()
+    {
+        if (!$this->hasMethod($this->params)) {
+            $this->buildView();
+        }
+        parent::show();
     }
 }

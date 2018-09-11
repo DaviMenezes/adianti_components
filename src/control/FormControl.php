@@ -126,7 +126,7 @@ trait FormControl
         }
 
         $this->view->createPanelFields();
-        $this->buildView($this->params);
+        $this->buildView();
 
         $traits = (new ReflectionClass(self::class))->getTraitNames();
         if (in_array(ListActionsControl::class, array_values($traits))) {
