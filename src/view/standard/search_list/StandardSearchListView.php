@@ -83,7 +83,7 @@ abstract class StandardSearchListView extends BaseFormView
 
             $this->createContentAfterPanel();
 
-            $this->createDataGrid();
+            $this->buildDatagrid();
 
             $this->createVBoxContent();
 

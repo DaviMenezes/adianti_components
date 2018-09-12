@@ -6,6 +6,8 @@ use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Helpers\CommonActions;
 use Dvi\Adianti\Route;
+use Dvi\Adianti\View\Standard\Form\BaseFormView;
+use Dvi\Adianti\View\Standard\Form\StandardFormView;
 use Dvi\Adianti\Widget\Dialog\DMessage;
 
 /**
@@ -20,6 +22,8 @@ use Dvi\Adianti\Widget\Dialog\DMessage;
 abstract class StandardFormControl extends DviControl
 {
     protected $viewClass;
+    /**@var StandardFormView $view*/
+    protected $view;
 
     use FormControl;
     use CommonActions;
@@ -85,8 +89,6 @@ abstract class StandardFormControl extends DviControl
     protected function buildView()
     {
         $this->view->build($this->params);
-
-        parent::add($this->view->getContent());
     }
 
     private function setPageList()
@@ -105,6 +107,7 @@ abstract class StandardFormControl extends DviControl
     {
         if (!$this->hasMethod($this->params)) {
             $this->buildView();
+            $this->getViewContent();
         }
         parent::show();
     }

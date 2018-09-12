@@ -104,13 +104,17 @@ trait ListActionsControl
     }
     #endregion
 
-    public function onReload()
+    public function loadDatagrid()
+    {
+        $this->getItemsAndFillDatagrid();
+    }
+
+    public function getItemsAndFillDatagrid()
     {
         try {
             if ($this->reloaded) {
                 return;
             }
-            $this->buildView($this->params);
 
             $items = $this->getDatagridItems();
 
@@ -119,8 +123,6 @@ trait ListActionsControl
             DTransaction::close();
 
             $this->preparePageNavidation();
-
-            $this->getViewContent();
 
             $this->reloaded = true;
         } catch (\Exception $e) {
@@ -186,12 +188,12 @@ trait ListActionsControl
     public function show()
     {
         $method = TSession::getValue('method') ?? $_GET['method'] ?? null;
-        $black_list_methods = ['onReload', 'onSearch'];
+        $black_list_methods = ['loadDatagrid', 'onSearch'];
         TSession::setValue('method', null);
 
         if (!$this->grid_loaded and (!isset($method) or (!in_array($method, $black_list_methods)))) {
             if ($method !== 'onSave') {
-                $this->onReload();
+                $this->loadDatagrid();
             }
         }
 

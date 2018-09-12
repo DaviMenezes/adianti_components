@@ -6,6 +6,7 @@ use Adianti\Base\Lib\Registry\TSession;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Helpers\GUID;
+use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Widget\Form\DHidden;
 use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
 
@@ -50,7 +51,7 @@ abstract class DviBaseView
         $this->setPageTitle();
     }
 
-    protected function createFormToken($param)
+    public function createFormToken($param)
     {
         if ($this->panel->getForm()->getField($param['class'] . '_form_token')) {
             return;

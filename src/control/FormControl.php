@@ -13,6 +13,7 @@ use Dvi\Adianti\Model\DBFormFieldPrepare;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\DviTRecord;
 use Dvi\Adianti\View\Standard\Form\BaseFormView;
+use Dvi\Adianti\View\Standard\Form\StandardFormView;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormFieldValidation;
 use Dvi\Adianti\Widget\Form\Field\FormField;
@@ -29,7 +30,7 @@ use ReflectionClass;
  */
 trait FormControl
 {
-    /**@var BaseFormView $view*/
+    /**@var StandardFormView $view*/
     protected $view;
 
     public function onSave()
@@ -52,8 +53,13 @@ trait FormControl
 
     public function onEdit()
     {
+        $this->edit();
+    }
+
+    public function edit()
+    {
         try {
-            $this->view->build($this->params);
+            $this->buildView();
 
             if (isset($this->params['tab']) and $this->params['tab']) {
                 $this->view->getPanel()->setCurrentNotebookPage($this->params['tab']);
@@ -69,17 +75,18 @@ trait FormControl
                 $query->where($model_alias.'.id', '=', $this->currentObj->id);
                 $result = $query->getObject();
 
-                $formFieldNames = $this->view->getPanel()->getForm()->getFields();
-                $fieldNames = array();
-                foreach ($formFieldNames as $formFieldName) {
-                    if (!method_exists($formFieldName, 'getReferenceName')) {
+                $formFields = $this->view->getPanel()->getForm()->getFields();
+//                $fieldNames = array();
+                foreach ($formFields as $formField) {
+                    if (!method_exists($formField, 'getReferenceName')) {
                         continue;
                     }
-                    /**@var FormField $formFieldName*/
-                    $referenceName = $formFieldName->getReferenceName();
+                    /**@var FormField $formField*/
+                    $referenceName = $formField->getReferenceName();
                     if (!empty($referenceName)) {
-                        $formFieldName->setValue($result->$referenceName);
-                        $fieldNames[$referenceName] = $formFieldName->getName();
+                        $formField->setValue($result->$referenceName);
+                        //Todo remove if not using
+//                        $fieldNames[$referenceName] = $formFieldName->getName();
                     }
                 }
 
@@ -99,7 +106,8 @@ trait FormControl
             throw new \Exception('Ação não permitida');
         }
 
-        $this->view->createPanelForm($this->params);
+        $this->view->createPanelForm();
+        $this->view->createFormToken($this->params);
         $this->view->buildFields();
 
         $fields = $this->view->getBuildFields();
@@ -126,11 +134,13 @@ trait FormControl
         }
 
         $this->view->createPanelFields();
+        //Todo carregar soh o que precisa
         $this->buildView();
+        $this->getViewContent();
 
         $traits = (new ReflectionClass(self::class))->getTraitNames();
         if (in_array(ListActionsControl::class, array_values($traits))) {
-            $this->onReload();
+            $this->loadDatagrid();
         }
 
         if (count($error_message)) {
@@ -182,6 +192,10 @@ trait FormControl
 
     protected function afterSave()
     {
+        if ($this->isEditing()) {
+            return;
+        }
+
         $new_params = Utils::getNewParams();
         unset($new_params['method']);
         $new_params['id'] = $this->currentObj->id;

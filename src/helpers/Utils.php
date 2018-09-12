@@ -23,7 +23,12 @@ trait Utils
 
     protected function isEditing()
     {
-        if ((!empty($this->params['id']) and $this->params['id'] != 0)) {
+        return self::editing($this->params);
+    }
+
+    public static function editing($params)
+    {
+        if ((!empty($params['id']) and $params['id'] != 0)) {
             return true;
         }
         return false;

@@ -66,4 +66,24 @@ abstract class StandardSearchListControl extends DviControl implements StandardS
     {
         $this->query_limit = 10;
     }
+
+    public function loadDatagrid()
+    {
+        $this->buildView();
+        $this->getItemsAndFillDatagrid();
+        if (isset($_GET['method'])) {
+            $this->getViewContent();
+        }
+    }
+
+    public function show()
+    {
+        if (!isset($_GET['method'])) {
+            $this->buildView();
+            $this->loadDatagrid();
+            $this->getViewContent();
+        }
+
+        parent::show();
+    }
 }

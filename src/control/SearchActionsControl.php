@@ -59,7 +59,9 @@ trait SearchActionsControl
                 TSession::setValue($called_class.'_filters', $session_filters);
             }
 
-            $this->onReload();
+            $this->loadDatagrid();
+
+            $this->getViewContent();
         } catch (\Exception $e) {
             DTransaction::rollback();
             new TMessage('error', $e->getMessage());

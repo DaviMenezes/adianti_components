@@ -67,11 +67,11 @@ class DataGrid extends TDataGrid
 
         if (!$this->datagrid_load_method) {
             $class = Route::getPath($this->called_class);
-            $called_class_methods = (new ReflectionClass($class))->hasMethod('onReload');
+            $called_class_methods = (new ReflectionClass($class))->hasMethod('loadDatagrid');
             if (!$called_class_methods) {
                 DMessage::create('die', null, 'Use o método $datagrid->setDatagridLoadMethod(...) para informar qual método será usado para popular a datagrid.');
             }
-            $this->setDatagridLoadMethod('onReload');
+            $this->setDatagridLoadMethod('loadDatagrid');
         }
 
         if ($this->my_columns) {

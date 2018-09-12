@@ -37,7 +37,7 @@ trait ListView
     protected $useCheckButton;
     protected $formController;
 
-    public function createDataGrid($createModel = true, $showId = false): DataGrid
+    public function buildDatagrid($createModel = true, $showId = false): DataGrid
     {
         $class = $this->params['class'];
         $this->datagrid = new DataGrid($class, 'grid', $showId);
@@ -83,7 +83,7 @@ trait ListView
             $new_params =  null;
         }
 
-        $this->pageNavigation->setAction(new TAction([$this->params['class'], 'onReload'], $new_params));
+        $this->pageNavigation->setAction(new TAction([$this->params['class'], 'loadDatagrid'], $new_params));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         $this->pageNavigation->setCount($count);
         $this->pageNavigation->setProperties($params);

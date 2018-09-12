@@ -18,6 +18,19 @@ trait FormView
     /**@var DviPanelGroup $this->panel*/
     protected $panel;
 
+    public function buildForm($param)
+    {
+        $this->createPanelForm();
+
+        $this->createFormToken($param);
+
+        if (!$this->alreadyCreatePanelRows()) {
+            $this->buildFields();
+            $this->createPanelFields();
+        }
+        $this->createActions();
+    }
+
     public function createActionSave()
     {
         return $this->panel->addActionSave();

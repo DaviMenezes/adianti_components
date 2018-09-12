@@ -53,17 +53,9 @@ abstract class StandardSearchFormListView extends BaseFormView
     public function build($param)
     {
         try {
-            $this->createPanelForm();
+            $this->buildForm($param);
 
-            $this->createFormToken($param);
-
-            if (!$this->alreadyCreatePanelRows()) {
-                $this->buildFields();
-                $this->createPanelFields();
-            }
-            $this->createActions();
-
-            $this->createDataGrid();
+            $this->buildDatagrid();
 
         } catch (\Exception $e) {
             DTransaction::rollback();

@@ -57,7 +57,6 @@ abstract class DviControl extends TPage
             if (!$this->validateMethod()) {
                 DMessage::create('die', 'Segurança: Método '.$this->params['method'].' inválido');
             }
-
             parent::show();
         } catch (\Exception $e) {
             DMessage::create('die', null, $e->getMessage());

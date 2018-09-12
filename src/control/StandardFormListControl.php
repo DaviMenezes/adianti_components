@@ -2,6 +2,7 @@
 
 namespace Dvi\Adianti\Control;
 
+use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Helpers\CommonActions;
@@ -66,10 +67,9 @@ abstract class StandardFormListControl extends DviControl
         $this->datagrid = $this->view->getDatagrid();
         $this->pageNavigation = $this->view->getPageNavigation();
 
-        parent::add($this->view->getContent());
-
         $this->alread_build_view = true;
     }
+
     /**@example
     $this->viewClass = MyFormListView::class;
     $this->pageTitle = 'My page';
@@ -84,5 +84,23 @@ abstract class StandardFormListControl extends DviControl
     protected function setQueryLimit()
     {
         $this->query_limit = 10;
+    }
+
+    public function onEdit()
+    {
+        $this->edit();
+
+        $this->loadDatagrid();
+    }
+
+    public function show()
+    {
+        if (!isset($_GET['method'])) {
+            $this->buildView();
+            $this->loadDatagrid();
+            $this->getViewContent();
+        }
+
+        parent::show();
     }
 }
