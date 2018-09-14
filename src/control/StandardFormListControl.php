@@ -70,10 +70,12 @@ abstract class StandardFormListControl extends DviControl
         $this->alread_build_view = true;
     }
 
-    /**@example
-    $this->viewClass = MyFormListView::class;
-    $this->pageTitle = 'My page';
-    $this->formController = MyControllerForm::class;*/
+    /**
+     * @example
+     * $this->viewClass = MyFormListView::class;
+     * $this->pageTitle = 'My page';
+     * $this->formController = MyControllerForm::class;
+     */
     abstract public function init();
 
     protected function createView($param)

@@ -1,9 +1,12 @@
 <?php
 namespace Dvi\Adianti\Widget\Base;
 
+use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Util\TActionLink;
 use Dvi\Adianti\Widget\Container\DVBox;
 use Dvi\Adianti\Widget\Form\DButton;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
@@ -104,10 +107,12 @@ class DGridColumn extends TElement
                 if (in_array(IFormField::class, class_implements($child))) {
                     $msg_error = ' '.$child->getErrorValidation();
                     $class = $msg_error ? 'class="dvi_str_danger"' : null;
-                    $msg_error = '<span '.$class.'>'.$msg_error.'</span>';
+                    $msg_error = ' <span style="border-radius: 50%; background-color: #d9534f; color: whitesmoke; padding: 0 5px 0 5px; font-weight: bold;">?</span>';
+                    $link = new TActionLink($msg_error, new TAction([$_REQUEST['class'], 'showErrorMsg'], ['msg'=>$child->getErrorValidation(), 'static'=>1]));
+                    $link->{'title'} = 'Clique para ver a mensagem';
                 }
 
-                $box->add($this->getElementLabel().($msg_error??null));
+                $box->add($this->getElementLabel().($child->getErrorValidation() ? $link : null));
                 $box->add($this->childs[0]);
 
                 parent::add($box);

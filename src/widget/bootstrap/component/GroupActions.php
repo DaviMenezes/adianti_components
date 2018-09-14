@@ -57,12 +57,9 @@ class GroupActions
         $this->icon_size = $size;
     }
 
-    public function addButton(array $action, $icon = null, $label = null, array $parameters = null, $style = null, $form_name = null):DButton
+    public function addButton(array $action, $icon = null, $label = null, array $parameters = null):DButton
     {
         try {
-            //Todo remove?            if (!$form_name) {
-            //                throw new \Exception('O nome do formulário é obrigatório para ações em '. array_pop(explode('\\', __METHOD__)));
-            //            }
             $btn = new DButton();
             $btn->setAction(new TAction($action, $parameters));
 
@@ -70,13 +67,6 @@ class GroupActions
                 $element_label = new TElement('span');
                 $element_label->add($label);
 
-                /*if ($icon) {
-                    $rrpos = strrpos($icon, 'fa-');
-                    $has_size = strrpos(substr($icon, $rrpos), 'x');
-                    if ($has_size !== false) {
-                        $element_label->style = 'font-size: 14px;';
-                    }
-                }*/
                 $btn->setLabel($element_label);
             }
 

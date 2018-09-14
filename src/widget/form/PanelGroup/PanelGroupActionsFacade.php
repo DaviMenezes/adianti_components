@@ -56,37 +56,11 @@ trait PanelGroupActionsFacade
         $action = $this->group_actions->addButton($callback, 'fa:floppy-o fa-2x', null, $parameters);
         $action->setTip($tip);
         return $this->currentButton = $action;
-
-        //Todo remove?
-        $data = [
-            'id' => GUID::getID(),
-            'callback' => $callback,
-            'parameters' => $parameters,
-            'tip' => $tip
-        ];
-        $this->currentButton = $this->createButton($data);
-        $this->hboxButtonsFooter->addButton($this->currentButton);
-
-        $this->form->addField($this->currentButton);
-
-        return $this->currentButton;
     }
 
     public function footerLink(array $callback, string $image = null, $btn_style = 'default'):DActionLink
     {
         return $this->group_actions->addLink($callback, $image)->styleBtn('btn btn-'.$btn_style.' dvi_panel_group');
-
-        //Todo remove?
-        $data = [
-            'class' => 'btn btn-default',
-            'callback' => $callback,
-            'image' => $image,
-            'label' => $label
-        ];
-        $this->currentButton = $this->createButtonLink($data);
-        $this->hboxButtonsFooter->addButton($this->currentButton);
-
-        return $this->currentButton;
     }
 
     public function addActionBackLink($action = null)

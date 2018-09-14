@@ -5,6 +5,7 @@ namespace Dvi\Adianti\Helpers;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Route;
 
 /**
@@ -118,5 +119,10 @@ trait CommonActions
             return true;
         }
         return false;
+    }
+
+    public function showErrorMsg($param)
+    {
+        new TMessage('error', $param['msg']);
     }
 }

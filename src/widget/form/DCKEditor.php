@@ -79,12 +79,12 @@ class DCKEditor extends TField implements AdiantiWidgetInterface
 
     public function setName($name)
     {
-        // TODO: Implement setName() method.
+        $this->name = $name;
     }
 
     public function getName()
     {
-        // TODO: Implement getName() method.
+        return $this->name;
     }
 
     public function getValue()

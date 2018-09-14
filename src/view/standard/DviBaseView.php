@@ -75,6 +75,7 @@ abstract class DviBaseView
         return $this->panel;
     }
 
+    /**@return DviModel*/
     public function getModel()
     {
         return $this->model;

@@ -51,7 +51,7 @@ trait PanelGroupFormFacade
             if (!$this->validateFormField($field)) {
                 continue;
             }
-            $this->addField($field);
+            $this->addFormField($field);
         }
     }
 
@@ -103,9 +103,10 @@ trait PanelGroupFormFacade
         return false;
     }
 
-    private function addField($field)//Todo rename to addFormField?
+    private function addFormField($field)
     {
         if ($this->form->getField($field->getName())) {
+            //return if already add field
             return;
         }
         if (is_a($field, 'THidden')) {

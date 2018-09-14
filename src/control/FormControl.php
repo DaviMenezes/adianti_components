@@ -76,17 +76,14 @@ trait FormControl
                 $result = $query->getObject();
 
                 $formFields = $this->view->getPanel()->getForm()->getFields();
-//                $fieldNames = array();
                 foreach ($formFields as $formField) {
+                    /**@var FormField $formField*/
                     if (!method_exists($formField, 'getReferenceName')) {
                         continue;
                     }
-                    /**@var FormField $formField*/
                     $referenceName = $formField->getReferenceName();
                     if (!empty($referenceName)) {
                         $formField->setValue($result->$referenceName);
-                        //Todo remove if not using
-//                        $fieldNames[$referenceName] = $formFieldName->getName();
                     }
                 }
 
@@ -111,8 +108,8 @@ trait FormControl
         $this->view->buildFields();
 
         $fields = $this->view->getBuildFields();
-        $error_message = array();
 
+        $has_error = false;
         foreach ($fields as $field) {
             $field->setValue($this->params[$field->getName()]);
 
@@ -121,21 +118,19 @@ trait FormControl
             }
             /**@var FormFieldValidation $field*/
             if (!$field->validating()) {
-                $error_message[] = [
-                    'msg' => $field->getErrorValidation(),
-                    /**@var FormField $field*/
-                    'field_name' => $field->getLabel()
-                ];
+                $has_error = true;
             }
         }
 
-        if (count($error_message)) {
+        if ($has_error) {
             $this->view->getPanel()->useLabelFields(true);
         }
 
         $this->view->createPanelFields();
-        //Todo carregar soh o que precisa
+
+        //continues bulding the view
         $this->buildView();
+
         $this->getViewContent();
 
         $traits = (new ReflectionClass(self::class))->getTraitNames();
@@ -143,7 +138,7 @@ trait FormControl
             $this->loadDatagrid();
         }
 
-        if (count($error_message)) {
+        if ($has_error) {
             throw new \Exception('Verifique os campos em destaque');
         }
     }

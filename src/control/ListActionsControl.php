@@ -11,6 +11,7 @@ use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DBFormFieldPrepare;
+use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\DviTFilter;
 use Dvi\Adianti\View\Standard\SearchList\StandardSearchListView;
 use Dvi\Adianti\Widget\Base\DataGrid;
@@ -177,7 +178,7 @@ trait ListActionsControl
 
     protected function preparePageNavidation()
     {
-        if ($this->page_navigation_count <= 10) {
+        if ($this->page_navigation_count <= $this->query_limit) {
             return;
         }
         $this->view->createPageNavigation($this->page_navigation_count, $this->params);

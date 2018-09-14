@@ -97,7 +97,6 @@ class DviPanelGroup implements IDviWidget
         $this->hboxButtonsFooter = new DHBox;
 
         $this->group_actions = new DButtonGroup($this->form);
-
     }
 
     public function setTitle($title)
@@ -111,16 +110,6 @@ class DviPanelGroup implements IDviWidget
         $className = (new ReflectionClass($class))->getShortName();
         $obj = new DviPanelGroup($className, $title, $formName);
         return $obj;
-    }
-
-    public function addArrayFields(array $fields)
-    {
-        if (count($fields) > 0) {
-            foreach ($fields as $key => $value) {
-                $this->addCols($key, $value);
-            }
-        }
-        return $this;
     }
 
     public function addGroupButton(array $buttons)
@@ -140,7 +129,6 @@ class DviPanelGroup implements IDviWidget
         return $this;
     }
 
-    //Todo Parece que facilita o uso mas não ter padrão de preenchimento dificulta mto
     /**
      * Add fields in form quickly.
      * Pass the parameters separated with commas
@@ -164,13 +152,13 @@ class DviPanelGroup implements IDviWidget
         $columns = array();
         foreach ($rows_columns as $key => $column) {
             $columnElement = $this->createColumnElement($column);
-            $columnClass = (is_array($column) and isset($column[2])) ? $column[2] : null;//Todo refactor after tests
+            $columnClass = (is_array($column) and isset($column[2])) ? $column[2] : null;
             $columnClass = $column[2] ?? null;
             $columnStyle = (is_array($column) and isset($column[3])) ? $column[3] : null;
             $columnStyle = $column[3] ?? null;
             $gridColumn = new Col($columnElement, $columnClass, $columnStyle);
             $element = $columnElement->getElement();
-            $this->addField($element);
+            $this->addFormField($element);
 
             if ($has_visible_field) {
                 $columns[$key] = $gridColumn;
@@ -290,50 +278,6 @@ class DviPanelGroup implements IDviWidget
         $this->hboxButtonsFooter->add($item);
 
         return $this;
-    }
-
-    //Todo remove nao parece ser necessário
-    protected function getWhiteList(): array
-    {
-        $whiteList = [
-            THidden::class,
-            DHidden::class,
-            TEntry::class,
-            DEntry::class,
-            TButton::class,
-            DButton::class,
-            TCheckGroup::class,
-            TColor::class,
-            TCombo::class,
-            DCombo::class,
-            TDate::class,
-            DDate::class,
-            TDateTime::class,
-            DDateTime::class,
-            THidden::class,
-            THtmlEditor::class,
-            DHtmlEditor::class,
-            TMultiField::class,
-            TFile::class,
-            TMultiFile::class,
-            TPassword::class,
-            DPassword::class,
-            TRadioGroup::class,
-            DRadioGroup::class,
-            TSeekButton::class,
-            TDBSeekButton::class,
-            TDBCombo::class,
-            TSelect::class,
-            TSlider::class,
-            TSpinner::class,
-            DSpinner::class,
-            TNumeric::class,
-            DNumeric::class,
-            TText::class,
-            DText::class,
-            DCKEditor::class
-        ];
-        return $whiteList;
     }
 
     protected function getFooterBoxItems()
