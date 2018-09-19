@@ -92,7 +92,7 @@ abstract class StandardSearchListView extends BaseFormView
             $this->view_builded = true;
         } catch (\Exception $e) {
             DTransaction::rollback();
-            new TMessage('error', $e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 

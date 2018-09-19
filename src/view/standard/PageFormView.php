@@ -2,7 +2,9 @@
 namespace Dvi\Adianti\View\Standard;
 
 use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
+use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DGridColumn;
 use Dvi\Adianti\Widget\Dialog\DMessage;
 use Dvi\Adianti\Widget\Form\Field\FormField;
@@ -97,7 +99,7 @@ trait PageFormView
             return $this->build_group_fields;
         } catch (\Exception $e) {
             DTransaction::rollback();
-            DMessage::create('die', $e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -173,7 +175,7 @@ trait PageFormView
         $method = 'createField'.implode('', $array_underline);
 
         if (!method_exists($model, $method)) {
-            DMessage::create('die', null, 'O método '.$method.' precisa ser criado no modelo '.$model);
+            throw new \Exception('O método '.$method.' precisa ser criado no modelo '. (new \ReflectionObject($model))->getShortName());
         }
         $model->$method();
         $field_data = $model->getDviField($field_name);

@@ -55,7 +55,7 @@ abstract class StandardFormControl extends DviControl
     }
 
     /**@example
-     * $this->viewClass = MyFormListView::class; (Representande da view)
+     * $this->viewClass = MyFormListView::class; (Representante da view)
      * $this->pageList = MyListControl::class (Controlador representante da listagem);
      */
     abstract public function init();

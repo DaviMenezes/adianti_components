@@ -97,6 +97,7 @@ trait FormControl
         }
     }
 
+    /**@throws */
     protected function beforeSave()
     {
         if (!$this->validateToken()) {
@@ -133,12 +134,11 @@ trait FormControl
 
         $this->getViewContent();
 
-        $traits = (new ReflectionClass(self::class))->getTraitNames();
-        if (in_array(ListActionsControl::class, array_values($traits))) {
-            $this->loadDatagrid();
-        }
-
         if ($has_error) {
+            $traits = (new ReflectionClass(self::class))->getTraitNames();
+            if (in_array(ListActionsControl::class, array_values($traits))) {
+                $this->loadDatagrid();
+            }
             throw new \Exception('Verifique os campos em destaque');
         }
     }
@@ -188,6 +188,7 @@ trait FormControl
     protected function afterSave()
     {
         if ($this->isEditing()) {
+            $this->loadDatagrid();
             return;
         }
 

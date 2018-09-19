@@ -39,10 +39,17 @@ abstract class DviBaseView
 
     abstract public function getContent();
 
+    /** @example $this->panel->setTitle('My Page title'); */
     abstract public function setPageTitle();
 
+    /** @example $this->model = MyModel::class; */
     abstract protected function setModel();
 
+    /** @example $this->fields([
+     *      ['field1', 'field2']
+     *      ['field3', 'field4', 'field5']
+     * ]);
+     */
     abstract protected function setStructureFields();
 
     public function createPanelForm()

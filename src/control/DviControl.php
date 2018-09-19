@@ -26,7 +26,7 @@ abstract class DviControl extends TPage
 {
     /**@var DviBaseView $view*/
     protected $view;
-    protected $alread_build_view;
+    protected $already_build_view;
     /**@var DviModel $currentObj*/
     protected $currentObj;
     /**@var DviControl $pageList*/
@@ -35,6 +35,7 @@ abstract class DviControl extends TPage
     /**@var DviPanelGroup $panel*/
     protected $panel;
     protected $database = 'default';
+    private $already_get_view_content;
 
     use Utils;
     use Reflection;
@@ -94,8 +95,12 @@ abstract class DviControl extends TPage
 
     protected function getViewContent()
     {
+        if ($this->already_get_view_content) {
+            return;
+        }
         if (isset($this->view)) {
             parent::add($this->view->getContent());
+            $this->already_get_view_content = true;
         }
     }
 }

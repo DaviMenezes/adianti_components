@@ -8,12 +8,11 @@
 
 namespace Dvi\Adianti\Component\Model\Form\Fields;
 
-use Adianti\Base\Lib\Validator\TCPFValidator;
 use Adianti\Base\Lib\Validator\TEmailValidator;
-use Adianti\Base\Lib\Widget\Form\TField;
 use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\Widget\Form\DEntry;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
+use Dvi\Adianti\Widget\Form\Field\Validator\CpfValidator;
 
 class DBVarchar extends DBFormField
 {
@@ -61,7 +60,9 @@ class DBVarchar extends DBFormField
 
     public function validateCpf()
     {
-        $this->field->addValidation($this->field->getLabel(), new TCPFValidator());
+        $this->field->addValidation($this->field->getLabel(), new CPFValidator());
+
+        $this->mask('999-999-999-99');
         return $this;
     }
     #endregion

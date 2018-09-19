@@ -40,7 +40,7 @@ abstract class BaseFormView extends DviBaseView
             DTransaction::close();
         } catch (\Exception $e) {
             DTransaction::rollback();
-            new TMessage('error', $e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 

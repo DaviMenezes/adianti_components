@@ -107,7 +107,9 @@ trait ListActionsControl
 
     public function loadDatagrid()
     {
+        $this->buildView();
         $this->getItemsAndFillDatagrid();
+        $this->getViewContent();
     }
 
     public function getItemsAndFillDatagrid()
