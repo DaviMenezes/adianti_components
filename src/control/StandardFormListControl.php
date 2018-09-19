@@ -30,7 +30,9 @@ abstract class StandardFormListControl extends DviControl
     public function __construct($param)
     {
         try {
-            if ($this->alread_build_view) {
+            $this->formController = $this;
+            
+            if ($this->already_build_view) {
                 return;
             }
             parent::__construct($param);
@@ -59,7 +61,7 @@ abstract class StandardFormListControl extends DviControl
 
     protected function buildView()
     {
-        if ($this->alread_build_view) {
+        if ($this->already_build_view) {
             return;
         }
         $this->view->build($this->params);
@@ -67,13 +69,12 @@ abstract class StandardFormListControl extends DviControl
         $this->datagrid = $this->view->getDatagrid();
         $this->pageNavigation = $this->view->getPageNavigation();
 
-        $this->alread_build_view = true;
+        $this->already_build_view = true;
     }
 
     /**
      * @example
      * $this->viewClass = MyFormListView::class;
-     * $this->pageTitle = 'My page';
      * $this->formController = MyControllerForm::class;
      */
     abstract public function init();
@@ -98,9 +99,7 @@ abstract class StandardFormListControl extends DviControl
     public function show()
     {
         if (!isset($_GET['method'])) {
-            $this->buildView();
             $this->loadDatagrid();
-            $this->getViewContent();
         }
 
         parent::show();

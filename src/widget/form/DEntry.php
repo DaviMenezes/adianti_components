@@ -36,27 +36,4 @@ class DEntry extends TEntry implements FormField
 
         $this->operator('like');
     }
-
-//    public function validate()
-//    {
-//        if ($this->getValidations()) {
-//            foreach ($this->getValidations() as $validation) {
-//                $label      = $validation[0];
-//                $validator  = $validation[1];
-//                $parameters = $validation[2];
-//
-//                if ($validator instanceof RequiredValidator) {
-//                    continue;
-//                }
-//                if ($validator instanceof TEmailValidator and empty($this->value)) {
-//                    continue;
-//                }
-//                /**@var FieldValidator $validator*/
-//                if ($validator->validate($label, $this->getValue(), $parameters)) {
-//                    $this->addErrorMessage($validator->getErrorMsg());
-//                }
-//            }
-//        }
-//    }
-
 }
