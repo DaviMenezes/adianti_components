@@ -59,13 +59,19 @@ trait FormFieldValidation
         }
     }
 
-
     public function getErrorValidation()
     {
         $msg_errors = false;
-        foreach ($this->error_msg as $item) {
+        foreach ($this->error_msg as $key => $item) {
+            if ($key == 0) {
+                $msg_errors .= 'Campo: <b>'. $this->getLabel(). '</b><br>';
+            }
             $msg_errors .= $item;
+            if ($key + 1 < count($this->error_msg)) {
+                $msg_errors .= '<br>';
+            }
         }
+
         return $msg_errors;
     }
 

@@ -14,12 +14,6 @@ namespace Dvi\Adianti\Widget\Form\Field\Validator;
 trait AdiantiValidatorExtender
 {
     protected $error_msg;
-    protected $error_msg_default;
-
-    public function __construct(string $error_msg = null)
-    {
-        $this->error_msg = $error_msg;
-    }
 
     public function getErrorMsg()
     {
@@ -32,7 +26,7 @@ trait AdiantiValidatorExtender
             parent::validate($label, $value, $parameters);
             return true;
         } catch (\Exception $e) {
-            $this->error_msg = $this->error_msg ?? $this->error_msg_default;
+            $this->error_msg = $this->error_msg ?? $e->getMessage();
             return false;
         }
     }
