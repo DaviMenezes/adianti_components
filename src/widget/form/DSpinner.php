@@ -22,4 +22,21 @@ class DSpinner extends TSpinner implements FormField
     use FormFieldTrait;
     use FormFieldValidation;
     use SearchableField;
+
+    public function __construct(
+        string $name,
+        int $min,
+        int $max,
+        int $step,
+        bool $required = false,
+        bool $tip = true
+    ) {
+        parent::__construct($name);
+
+        $this->prepare($name, $required, $tip, strlen($max));
+
+        $this->operator('=');
+
+        $this->setRange($min, $max, $step);
+    }
 }

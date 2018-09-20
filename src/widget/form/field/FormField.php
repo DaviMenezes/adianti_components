@@ -35,25 +35,25 @@ trait FormField
 
         $this->required = $required;
 
-        $this->setFieldLabel($label);
-
         if ($placeholder) {
             $this->placeholder = $label;
         }
 
         $this->ucfirst_label = ucfirst($label);
 
+        $this->setFieldLabel(ucfirst($label));
+
         if (method_exists($this, 'setMaxLength') and $max_length) {
             $this->setMaxLength($max_length);
-            $this->addValidation($this->ucfirst_label, new MaxLengthValidator(), [$max_length]);
+            $this->addValidation($this->getLabel(), new MaxLengthValidator(), [$max_length]);
         }
 
         if ($required) {
-            $this->addValidation($this->ucfirst_label, new RequiredValidator());
+            $this->addValidation($this->getLabel(), new RequiredValidator());
         }
 
         if ($tip) {
-            $this->setTip($this->ucfirst_label);
+            $this->setTip($this->getLabel());
         }
     }
 
