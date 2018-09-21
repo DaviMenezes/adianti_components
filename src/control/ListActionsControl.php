@@ -10,6 +10,7 @@ use Adianti\Base\Lib\Widget\Dialog\TQuestion;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
+use Dvi\Adianti\Model\DB;
 use Dvi\Adianti\Model\DBFormFieldPrepare;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\DviTFilter;
@@ -130,7 +131,7 @@ trait ListActionsControl
             $this->reloaded = true;
         } catch (\Exception $e) {
             DTransaction::rollback();
-            new TMessage('error', $e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 

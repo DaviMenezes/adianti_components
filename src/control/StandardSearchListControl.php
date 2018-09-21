@@ -31,8 +31,6 @@ abstract class StandardSearchListControl extends DviControl implements StandardS
         parent::__construct($param);
 
         $this->init();
-
-        $this->setQueryLimit();
     }
 
     protected function buildView()
@@ -41,6 +39,8 @@ abstract class StandardSearchListControl extends DviControl implements StandardS
             return;
         }
         $this->createView();
+
+        $this->setQueryLimit();
 
         $this->view->build($this->params);
 
@@ -62,9 +62,10 @@ abstract class StandardSearchListControl extends DviControl implements StandardS
         $this->view->setFormController($this->formController);
     }
 
-    protected function setQueryLimit()
+    protected function setQueryLimit($limit = null)
     {
-        $this->query_limit = 10;
+        $this->view->setQueryLimit($limit ?? 10);
+        $this->query_limit = $limit ?? 10;
     }
 
     public function loadDatagrid()

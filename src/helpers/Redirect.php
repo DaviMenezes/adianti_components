@@ -2,6 +2,8 @@
 
 namespace Dvi\Adianti\Helpers;
 
+use App\TApplication;
+
 /**
  * Helpers Redirect
  *
@@ -33,7 +35,7 @@ class Redirect
         $obj = new self($params);
 
         $obj->setAction(function ($class, $method = null, $params = null) {
-            \TApplication::loadPage($class, $method, $params);
+            TApplication::loadPage($class, $method, $params);
         });
         return $obj;
     }
