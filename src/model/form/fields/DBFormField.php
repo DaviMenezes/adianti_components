@@ -2,7 +2,9 @@
 
 namespace Dvi\Adianti\Model\Fields;
 
-use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
+use Adianti\Base\Lib\Validator\TFieldValidator;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
+use Dvi\Adianti\Widget\Form\Field\Validator\RequiredValidator;
 
 /**
  * Model DBFormField
@@ -16,7 +18,7 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
  */
 abstract class DBFormField
 {
-    /**@var IFormField $field*/
+    /**@var FormField $field */
     protected $field;
     protected $label;
     protected $required;
@@ -31,6 +33,12 @@ abstract class DBFormField
     public function getLabel()
     {
         return str_replace('_', ' ', $this->label);
+    }
+
+    public function label(string $label)
+    {
+        $this->label = $label;
+        return $this;
     }
 
     abstract public function getField();
@@ -49,5 +57,18 @@ abstract class DBFormField
     public function getHideInEdit()
     {
         return $this->hide_in_edit;
+    }
+
+    public function validation(TFieldValidator $validator)
+    {
+        $this->field->addValidation($this->getLabel(), $validator);
+        return $this;
+    }
+
+    public function required()
+    {
+        $this->required = true;
+        $this->validation(new RequiredValidator());
+        return $this;
     }
 }

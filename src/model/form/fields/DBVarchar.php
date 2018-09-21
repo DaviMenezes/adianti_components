@@ -13,6 +13,7 @@ use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\Widget\Form\DEntry;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 use Dvi\Adianti\Widget\Form\Field\Validator\CpfValidator;
+use Dvi\Adianti\Widget\Form\Field\Validator\EmailValidator;
 
 class DBVarchar extends DBFormField
 {
@@ -54,7 +55,7 @@ class DBVarchar extends DBFormField
 
     public function validateEmail()
     {
-        $this->field->addValidation($this->field->getLabel(), new TEmailValidator());
+        $this->field->addValidation($this->field->getLabel(), new EmailValidator());
         return $this;
     }
 

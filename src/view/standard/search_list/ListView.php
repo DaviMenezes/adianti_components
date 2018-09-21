@@ -36,6 +36,7 @@ trait ListView
     protected $action_delete;
     protected $useCheckButton;
     protected $formController;
+    private $query_limit;
 
     public function buildDatagrid($createModel = true, $showId = false): DataGrid
     {
@@ -87,7 +88,7 @@ trait ListView
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         $this->pageNavigation->setCount($count);
         $this->pageNavigation->setProperties($params);
-        $this->pageNavigation->setLimit(10);
+        $this->pageNavigation->setLimit($this->query_limit);
     }
 
     public function useCheckButton()
@@ -110,5 +111,15 @@ trait ListView
         $this->panel->getCurrentButton()
             ->getAction()
             ->setParameters(Utils::getNewParams());
+    }
+
+    public function setQueryLimit($limit)
+    {
+        $this->query_limit = $limit;
+    }
+
+    public function getQueryLimit()
+    {
+        return $this->query_limit;
     }
 }
