@@ -19,7 +19,7 @@ class DB
 {
     use DviQueryBuilder;
 
-    public static function call(Closure $closure)
+    public static function transaction(Closure $closure)
     {
         try {
             DTransaction::open();

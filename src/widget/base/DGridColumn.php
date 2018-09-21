@@ -104,15 +104,17 @@ class DGridColumn extends TElement
             if (!is_a($this->childs[0], DButton::class)) {
                 $box = new DVBox();
                 $child = $this->getChilds(0);
+                $link_error = null;
                 if (in_array(IFormField::class, class_implements($child))) {
-                    $msg_error = ' '.$child->getErrorValidation();
-                    $class = $msg_error ? 'class="dvi_str_danger"' : null;
-                    $msg_error = ' <span style="border-radius: 50%; background-color: #d9534f; color: whitesmoke; padding: 0 5px 0 5px; font-weight: bold;">?</span>';
-                    $link = new TActionLink($msg_error, new TAction([$_REQUEST['class'], 'showErrorMsg'], ['msg'=>$child->getErrorValidation(), 'static'=>1]));
-                    $link->{'title'} = 'Clique para ver a mensagem';
+                    /**@var IFormField $child*/
+                    if ($child->getErrorValidation()) {
+                        $msg_error = ' <span class="dvi_str_danger" style="border-radius: 50%; padding: 0 5px 0 5px; font-weight: bold;">?</span>';
+                        $link_error = new TActionLink($msg_error, new TAction([$_REQUEST['class'], 'showErrorMsg'], ['msg' => $child->getErrorValidation(), 'static' => 1]));
+                        $link_error->{'title'} = 'Clique para ver a mensagem';
+                    }
                 }
 
-                $box->add($this->getElementLabel().($child->getErrorValidation() ? $link : null));
+                $box->add($this->getElementLabel().$link_error);
                 $box->add($this->childs[0]);
 
                 parent::add($box);
