@@ -1,53 +1,23 @@
 <?php
 
-namespace Dvi\Adianti\Widget\Form;
+namespace Dvi\Adianti\Widget\Form\Field;
 
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TRepository;
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Adianti\Base\Lib\Widget\Form\TCombo;
 use Dvi\Adianti\Database\DTransaction;
-use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
-use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
-use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
-use Dvi\Adianti\Widget\Form\Field\SearchableField;
 use Exception;
 
 /**
- * Model DCombo
+ * Field SelecttionFieldTrait
  *
- * @version    Dvi 1.0
- * @package    form
- * @subpackage widget
+ * @package    Field
+ * @subpackage
  * @author     Davi Menezes
- * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes
+ * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
+ * @see https://github.com/DaviMenezes
  */
-class DCombo extends TCombo implements FormField
+trait SelectionFieldTrait
 {
-    use FormFieldTrait;
-    use FormFieldValidation;
-    use SearchableField;
-
-    private $field_disabled;
-
-    public function __construct(string $name, string $placeholder = null, $required = false, array $obj_array_value = null, bool $tip = false, bool $enable_search = true)
-    {
-        parent::__construct($name);
-
-        $this->prepare($placeholder, $required, $tip);
-
-        $this->operator('=');
-
-        if ($obj_array_value) {
-            $this->items($this->getObjItems($obj_array_value));
-        }
-
-        if ($enable_search) {
-            $this->enableSearch();
-        }
-    }
-
     private function getObjItems(array $obj_array_value)
     {
         try {
@@ -71,7 +41,7 @@ class DCombo extends TCombo implements FormField
             return $items;
         } catch (Exception $e) {
             DTransaction::rollback();
-            new TMessage('error', $e->getMessage());
+            throw $e;
         }
     }
 
@@ -100,29 +70,9 @@ class DCombo extends TCombo implements FormField
         return $this;
     }
 
-    public static function create($name, string $placeholder = null, $required = false, array $obj_array_value = null, bool $tip = true, bool $enable_search = true)
-    {
-        $obj = new DCombo($name, $placeholder, $required, $obj_array_value, $tip, $enable_search);
-        return $obj;
-    }
-
     public function items(array $items)
     {
         $this->addItems($items);
         return $this;
     }
-
-    public function disable($disable = true)
-    {
-        $this->field_disabled = true;
-
-        $this->setEditable(!$disable);
-    }
-
-    public function isDisabled()
-    {
-        return $this->field_disabled;
-    }
 }
-
-

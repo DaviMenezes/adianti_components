@@ -1,16 +1,15 @@
 <?php
 
-namespace Dvi\Adianti\Widget\Form;
+namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Base\Lib\Widget\Form\THtmlEditor;
+use Adianti\Base\Lib\Widget\Form\TSpinner;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
-use Dvi\Lib\Widget\Base\DScript;
 
 /**
- * Form DHtmlEditor
+ * Form DSpinner
  *
  * @package    Form
  * @subpackage Widget
@@ -18,20 +17,20 @@ use Dvi\Lib\Widget\Base\DScript;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DHtmlEditor extends THtmlEditor implements FormField
+class DSpinner extends TSpinner implements FormField
 {
     use FormFieldTrait;
     use FormFieldValidation;
     use SearchableField;
 
-    public function __construct(string $name, int $height, $label, bool $required = false)
+    public function __construct(string $name, int $min, int $max, int $step, $label = null, bool $required = false)
     {
         parent::__construct($name);
 
-        $this->prepare($label, $required, false);
+        $this->setup($label ?? $name, $required, strlen($max));
 
-        $this->setSize('100%', $height);
+        $this->operator('=');
 
-        DScript::add('remove_note-popover', '$(".note-popover").remove();');
+        $this->setRange($min, $max, $step);
     }
 }

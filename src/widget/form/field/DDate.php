@@ -1,7 +1,7 @@
 <?php
-namespace Dvi\Adianti\Widget\Form;
+namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Base\Lib\Validator\TRequiredValidator;
+use Adianti\Base\App\Lib\Validator\TDateValidator;
 use Adianti\Base\Lib\Widget\Form\TDate;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
@@ -26,28 +26,17 @@ class DDate extends TDate implements FormField
 
     private $field_disabled;
 
-    public function __construct($name, string $placeholder = null, bool $required = false, bool $tip = true)
+    public function __construct($name, string $label = null, bool $required = false)
     {
         parent::__construct($name);
 
-        $this->setLabel($placeholder);
-
-        if ($placeholder) {
-            $this->placeholder = $placeholder;
-        }
-
-        if ($required) {
-            $this->addValidation(ucfirst($placeholder), new TRequiredValidator());
-        }
-
-        if ($tip) {
-            $this->setTip(ucfirst($this->placeholder));
-        }
-
+        $this->setup($label ?? $name, $required);
         $this->setMask('dd/mm/yyyy');
         $this->setDatabaseMask('yyyy-mm-dd');
 
         $this->operator('=');
+
+        $this->addValidation($this->getLabel(), new TDateValidator());
     }
 
     public function disable($disable = true)

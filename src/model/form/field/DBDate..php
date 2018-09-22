@@ -1,23 +1,24 @@
 <?php
 
-namespace Dvi\Adianti\Component\Model\Form\Fields;
+namespace Dvi\Adianti\Model\Form\Field;
 
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\DHtmlEditor;
+use Dvi\Adianti\Widget\Form\Field\DDate;
+use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
- * Fields FieldHtml
+ * Model Date
  *
  * @version    Dvi 1.0
- * @package    Fields
- * @subpackage Form
+ * @package    Model
+ * @subpackage Components
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DBHtml extends DBFormField
+class DBDate extends DBFormField
 {
-    public function __construct(string $name, int $height, bool $required = false, string $label = null)
+    public function __construct(string $name, string $label = null, bool $required = false)
     {
         $array = explode('-', $name);
         $field_name = array_pop($array);
@@ -26,8 +27,9 @@ class DBHtml extends DBFormField
 
         parent::__construct($required, $label);
 
-        $this->field = new DHtmlEditor($name, $height, $label, $required);
-        $this->field->setFieldLabel($label);
+        $this->field = new DDate($name, $label, $required);
+
+        $this->setType(new FieldTypeString());
     }
 
     public function getField()

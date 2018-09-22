@@ -1,46 +1,23 @@
 <?php
 
-namespace Dvi\Adianti\Component\Model\Form\Fields;
+namespace Dvi\Adianti\Model\Form\Field;
 
-use Adianti\Base\Lib\Database\TRecord;
-use Adianti\Base\Lib\Database\TRepository;
-use Adianti\Base\Lib\Widget\Form\TField;
-use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Widget\Form\DCombo;
-use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
-use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
- * Model DBCombo
+ * Field DBSelectionFieldTrait
  *
- * @version    Dvi 1.0
- * @package    Model
- * @subpackage Component
+ * @package    Field
  * @author     Davi Menezes
- * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes
+ * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
+ * @see https://github.com/DaviMenezes
  */
-class DBCombo extends DBFormField
+trait DBSelectionFieldTrait
 {
     /**@var DviModel $this->model*/
     protected $model;
     protected $value;
     protected $criteria;
-
-    public function __construct(string $name, string $label = null, bool $required = false)
-    {
-        $array = explode('-', $name);
-        $field_name = array_pop($array);
-
-        $label = $label ?? $field_name;
-
-        parent::__construct($required, $label);
-
-        $this->field = new DCombo($name, $label, $required);
-
-        $this->setType(new FieldTypeInt());
-    }
 
     public function model(string $model, string $value = 'name', $criteria = null)
     {
@@ -51,22 +28,9 @@ class DBCombo extends DBFormField
         return $this;
     }
 
-    public function getField()
-    {
-        $this->mountModelItems();
-
-        return $this->field;
-    }
-
     public function items(array $items)
     {
         $this->field->items($items);
-        return $this;
-    }
-
-    public function setType(FieldTypeInterface $type)
-    {
-        $this->field->setType($type);
         return $this;
     }
 

@@ -1,10 +1,9 @@
 <?php
 
-namespace Dvi\Adianti\Component\Model\Form\Fields;
+namespace Dvi\Adianti\Model\Form\Field;
 
-use Adianti\Base\Lib\Widget\Form\TField;
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\DText;
+use Dvi\Adianti\Widget\Form\Field\DText;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
@@ -26,9 +25,9 @@ class DBText extends DBFormField
 
         $label = $label ?? $field_name;
 
-        parent::__construct($required, $label);
+        $this->field = new DText($name, $label, $maxlength, $height);
 
-        $this->field = new DText($name, $label, $maxlength, $height, true, $required);
+        parent::__construct($required, $label);
 
         $this->setType(new FieldTypeString());
     }

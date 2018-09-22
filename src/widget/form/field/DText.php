@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvi\Adianti\Widget\Form;
+namespace Dvi\Adianti\Widget\Form\Field;
 
 use Adianti\Base\Lib\Widget\Form\TText;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
@@ -26,11 +26,11 @@ class DText extends TText implements FormField
 
     private $field_disabled;
 
-    public function __construct(string $name, string $placeholder = null, int $max_length = null, $height = '50', bool $tip = true, bool $required = false)
+    public function __construct(string $name, string $label = null, int $max_length = null, $height = '50')
     {
         parent::__construct($name);
 
-        $this->prepare($placeholder, $required, $tip, $max_length);
+        $this->setup($label ?? $name, false, $max_length);
 
         $this->setSize(0, $height);
     }

@@ -1,10 +1,9 @@
 <?php
 
-namespace Dvi\Adianti\Component\Model\Form\Fields;
+namespace Dvi\Adianti\Model\Form\Field;
 
-use Adianti\Base\Lib\Widget\Form\TField;
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\DRadioGroup;
+use Dvi\Adianti\Widget\Form\Field\DRadioGroup;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
