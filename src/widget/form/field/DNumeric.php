@@ -7,6 +7,7 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
+use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeFloat;
 
 /**
  * Fields DNumeric
@@ -22,4 +23,13 @@ class DNumeric extends TNumeric implements FormField
     use FormFieldTrait;
     use FormFieldValidation;
     use SearchableField;
+
+    public function __construct($name, $decimals, $decimalsSeparator, $thousandSeparator, $required = false, string $label = null, bool $replaceOnPost = true)
+    {
+        parent::__construct($name, $decimals, $decimalsSeparator, $thousandSeparator, $replaceOnPost);
+
+        $this->setup($label ?? $name, $required);
+
+        $this->setType(new FieldTypeFloat());
+    }
 }

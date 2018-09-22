@@ -1,12 +1,10 @@
 <?php
 
-namespace Dvi\Adianti\Widget\Form;
+namespace Dvi\Adianti\Widget\Form\Field;
 
 use Adianti\Base\Lib\Widget\Form\THtmlEditor;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
-use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
-use Dvi\Adianti\Widget\Form\Field\SearchableField;
 use Dvi\Lib\Widget\Base\DScript;
 
 /**
@@ -28,7 +26,7 @@ class DHtmlEditor extends THtmlEditor implements FormField
     {
         parent::__construct($name);
 
-        $this->prepare($label, $required, false);
+        $this->setup($label, $required);
 
         $this->setSize('100%', $height);
 

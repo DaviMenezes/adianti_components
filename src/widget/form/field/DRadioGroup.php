@@ -1,14 +1,10 @@
 <?php
 
-namespace Dvi\Adianti\Widget\Form;
+namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Base\Lib\Validator\TRequiredValidator;
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TRadioGroup;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
-use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
-use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
  * DRadioGroup
@@ -28,27 +24,16 @@ class DRadioGroup extends TRadioGroup implements FormField
 
     private $field_disabled;
 
-    public function __construct(string $name, $placeholder, $required = false)
+    public function __construct(string $name, $label, $required = false)
     {
-        try {
-            parent::__construct($name);
+        parent::__construct($name);
 
-            $this->setLayout('horizontal');
-            $this->setUseButton();
+        $this->setup($label ?? $name, $required);
 
-            $fc = mb_strtoupper(mb_substr($placeholder, 0, 1));
-            $label = $fc.mb_substr($placeholder, 1);
+        $this->setLayout('horizontal');
+        $this->setUseButton();
 
-            $this->setLabel($label);
-
-            $this->operator('=');
-
-            if ($required) {
-                $this->addValidation($label, new TRequiredValidator());
-            }
-        } catch (\Exception $e) {
-            new TMessage('info', $e->getMessage());
-        }
+        $this->operator('=');
     }
 
     public function items(array $items)

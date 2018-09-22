@@ -1,11 +1,9 @@
 <?php
-namespace Dvi\Adianti\Widget\Form;
+namespace Dvi\Adianti\Widget\Form\Field;
 
 use Adianti\Base\Lib\Widget\Form\TEntry;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
-use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
-use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
  * Widget Form DEntry
@@ -23,16 +21,11 @@ class DEntry extends TEntry implements FormField
     use FormFieldValidation;
     use SearchableField;
 
-    public function __construct(
-        string $name,
-        string $placeholder = null,
-        int $max_length = null,
-        bool $required = false,
-        bool $tip = true
-    ) {
+    public function __construct(string $name, string $label = null, int $max_length = null, bool $required = false)
+    {
         parent::__construct($name);
 
-        $this->prepare($placeholder, $required, $tip, $max_length);
+        $this->setup($label ?? $name, $required, $max_length);
 
         $this->operator('like');
     }

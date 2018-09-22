@@ -18,7 +18,7 @@ trait FormFieldValidation
     public function addValidations(array $array_validations)
     {
         foreach ($array_validations as $validation) {
-            $this->addValidation($this->ucfirst_label, $validation);
+            $this->addValidation($this->getLabel(), $validation);
         }
     }
 
@@ -77,7 +77,8 @@ trait FormFieldValidation
 
     public function required()
     {
-        return $this->required;
+        $this->required = true;
+        return $this;
     }
 
     public function addErrorMessage($msg)

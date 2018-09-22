@@ -6,12 +6,10 @@
  * Time: 18:33
  */
 
-namespace Dvi\Adianti\Component\Model\Form\Fields;
+namespace Dvi\Adianti\Model\Form\Field;
 
-use Adianti\Base\Lib\Validator\TEmailValidator;
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\DEntry;
-use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
+use Dvi\Adianti\Widget\Form\Field\DEntry;
 use Dvi\Adianti\Widget\Form\Field\Validator\CpfValidator;
 use Dvi\Adianti\Widget\Form\Field\Validator\EmailValidator;
 
@@ -28,16 +26,9 @@ class DBVarchar extends DBFormField
 
         $label = $label ?? $field_name;
 
-        parent::__construct($required, $label);
-
         $this->field = new DEntry($name, $label, $size, $required);
 
-        $this->setType(new FieldTypeString());
-    }
-
-    public function getField()
-    {
-        return $this->field;
+        parent::__construct($required, $label);
     }
 
     #region [FACADE]

@@ -4,6 +4,7 @@ namespace Dvi\Adianti\Model\Fields;
 
 use Adianti\Base\Lib\Validator\TFieldValidator;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
+use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 use Dvi\Adianti\Widget\Form\Field\Validator\RequiredValidator;
 
 /**
@@ -28,11 +29,15 @@ abstract class DBFormField
     {
         $this->label= $label;
         $this->required = $required;
+
+        if (isset($this->field)) {
+            $this->field->setType(new FieldTypeString());
+        }
     }
 
     public function getLabel()
     {
-        return str_replace('_', ' ', $this->label);
+        return ucfirst(str_replace('_', ' ', $this->label));
     }
 
     public function label(string $label)
@@ -41,7 +46,10 @@ abstract class DBFormField
         return $this;
     }
 
-    abstract public function getField();
+    public function getField()
+    {
+        return $this->field;
+    }
 
     public function getRequired()
     {

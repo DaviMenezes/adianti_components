@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Adianti\Component\Model\Form\Fields;
+namespace App\Adianti\Model\Form\Fields;
 
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\DSpinner;
+use Dvi\Adianti\Widget\Form\Field\DSpinner;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
@@ -33,11 +33,6 @@ class DBInteger extends DBFormField
         $this->field->placeholder = $label;
 
         $this->setType(new FieldTypeInt());
-    }
-
-    public function getField()
-    {
-        return $this->field;
     }
 
     public function getLabel()

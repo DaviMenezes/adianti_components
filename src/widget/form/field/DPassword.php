@@ -1,9 +1,8 @@
 <?php
 
-namespace Dvi\Adianti\Widget\Form;
+namespace Dvi\Adianti\Widget\Form\Field;
 
 use Adianti\Base\Lib\Widget\Form\TPassword;
-use Dvi\Adianti\Widget\Form\Field\FormField;
 
 /**
  * Form DPassword
@@ -18,10 +17,10 @@ class DPassword extends TPassword
 {
     use FormField;
 
-    public function __construct(string $name, string $placeholder = null, bool $required = false, bool $tip = true)
+    public function __construct(string $name, int $max_length, string $label = null, bool $required = false)
     {
         parent::__construct($name);
 
-        $this->prepare($placeholder, $required, $tip);
+        $this->setup($label ?? $name, $required, $max_length);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Dvi\Adianti\Widget\Form;
+namespace Dvi\Adianti\Widget\Form\Field;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
@@ -24,10 +24,6 @@ class DCKEditor extends TField implements AdiantiWidgetInterface
     protected $size;
     protected $height;
 
-    /**
-     * Class Constructor
-     * @param $name Widet's name
-     */
     public function __construct($name)
     {
         parent::__construct($name);

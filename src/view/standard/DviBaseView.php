@@ -7,7 +7,7 @@ use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Helpers\GUID;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Widget\Form\DHidden;
+use Dvi\Adianti\Widget\Form\Field\DHidden;
 use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
 
 /**

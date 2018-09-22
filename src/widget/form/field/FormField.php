@@ -2,8 +2,6 @@
 
 namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Base\Lib\Validator\TMaxLengthValidator;
-use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
 use Dvi\Adianti\Widget\Form\Field\Validator\MaxLengthValidator;
 use Dvi\Adianti\Widget\Form\Field\Validator\RequiredValidator;
@@ -19,7 +17,6 @@ use Dvi\Adianti\Widget\Form\Field\Validator\RequiredValidator;
  */
 trait FormField
 {
-    private $ucfirst_label;
     private $field_disabled;
     /**@var FieldTypeInterface $type*/
     private $type;
@@ -28,31 +25,39 @@ trait FormField
     protected $label_class;
     protected $base_class_name;
     private $reference_name;
+    private $tip;
+    private $max_length;
+    private $field_label;
+
+    public function setup(string $label, bool $required = false, int $max_length = null)
+    {
+        $this->field_label = $label;
+        $this->required = $required;
+        $this->max_length = $max_length > 0 ? $max_length : null;
+        $this->tip = true;
+    }
+
+    public function tip(bool $tip)
+    {
+        $this->tip = $tip;
+    }
 
     public function prepare(string $placeholder = null, bool $required = false, bool $tip = true, int $max_length = null)
     {
-        $label = str_replace('_', ' ', $placeholder);
+        $this->label(ucfirst($this->field_label));
 
-        $this->required = $required;
+        $this->{'placeholder'} = strtolower($this->field_label);
 
-        if ($placeholder) {
-            $this->placeholder = $label;
+        if ($this->max_length and method_exists($this, 'setMaxLength')) {
+            $this->setMaxLength($this->max_length);
+            $this->addValidation($this->getLabel(), new MaxLengthValidator(), [$this->max_length]);
         }
 
-        $this->ucfirst_label = ucfirst($label);
-
-        $this->setFieldLabel(ucfirst($label));
-
-        if (method_exists($this, 'setMaxLength') and $max_length) {
-            $this->setMaxLength($max_length);
-            $this->addValidation($this->getLabel(), new MaxLengthValidator(), [$max_length]);
-        }
-
-        if ($required) {
+        if ($this->required) {
             $this->addValidation($this->getLabel(), new RequiredValidator());
         }
 
-        if ($tip) {
+        if ($this->tip) {
             $this->setTip($this->getLabel());
         }
     }
@@ -87,7 +92,7 @@ trait FormField
         return $this->type;
     }
 
-    public function setFieldLabel($label, string $class = null)
+    public function label($label, string $class = null)
     {
         $this->setLabel($label);
 
@@ -133,5 +138,12 @@ trait FormField
             $value = $this->sanitize($value);
         }
         parent::setValue($value);
+    }
+
+    public function show()
+    {
+        $this->prepare();
+
+        parent::show();
     }
 }

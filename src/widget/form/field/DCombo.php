@@ -1,15 +1,13 @@
 <?php
 
-namespace Dvi\Adianti\Widget\Form;
+namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Base\Lib\Widget\Form\TText;
+use Adianti\Base\Lib\Widget\Form\TCombo;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
-use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
-use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
- * Model DText
+ * Model DCombo
  *
  * @version    Dvi 1.0
  * @package    form
@@ -18,33 +16,39 @@ use Dvi\Adianti\Widget\Form\Field\SearchableField;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DText extends TText implements FormField
+class DCombo extends TCombo implements FormField
 {
     use FormFieldTrait;
     use FormFieldValidation;
     use SearchableField;
+    use SelectionFieldTrait;
 
     private $field_disabled;
 
-    public function __construct(string $name, string $placeholder = null, int $max_length = null, $height = '50', bool $tip = true, bool $required = false)
+    public function __construct(string $name, string $label = null, $required = false, array $obj_array_value = null)
     {
         parent::__construct($name);
 
-        $this->prepare($placeholder, $required, $tip, $max_length);
+        $this->setup($label ?? $name, $required);
+        $this->tip(false);
+        $this->operator('=');
 
-        $this->setSize(0, $height);
+        if ($obj_array_value) {
+            $this->items($this->getObjItems($obj_array_value));
+        }
+
+        $this->enableSearch();
     }
 
-    public function setMaxLength(int $length)
+    public function enableSearch()
     {
-        if ($length > 0) {
-            $this->setProperty('maxlength', $length);
-        }
+        parent::enableSearch();
+        return $this;
     }
 
     public function disable($disable = true)
     {
-        $this->field_disabled = $disable;
+        $this->field_disabled = true;
 
         $this->setEditable(!$disable);
     }
@@ -53,5 +57,6 @@ class DText extends TText implements FormField
     {
         return $this->field_disabled;
     }
-
 }
+
+

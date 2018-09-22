@@ -1,33 +1,26 @@
 <?php
 
-namespace Dvi\Adianti\Component\Model\Form\Fields;
+namespace Dvi\Adianti\Model\Form\Field;
 
 use Adianti\Base\Lib\Validator\TRequiredValidator;
-use Adianti\Base\Lib\Widget\Form\TField;
-use Dvi\Adianti\Componente\Model\Form\Fields\DNumeric;
 use Dvi\Adianti\Model\Fields\DBFormField;
+use Dvi\Adianti\Widget\Form\Field\DDateTime;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
- * Fields FieldCurrency
+ * Model DateTime
  *
  * @version    Dvi 1.0
- * @package    Fields
- * @subpackage Form
+ * @package    Model
+ * @subpackage Adianti
  * @author     Davi Menezes
- * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
+ * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DBCurrency extends DBFormField
+class DBDateTime extends DBFormField
 {
-    public function __construct(
-        string $name,
-        int $decimals,
-        string $decimalsSeparator,
-        string $thousandSeparator,
-        bool $required = false,
-        string $label = null
-    ) {
+    public function __construct(string $name, string $label = null, bool $required = false)
+    {
         $array = explode('-', $name);
         $field_name = array_pop($array);
 
@@ -35,14 +28,16 @@ class DBCurrency extends DBFormField
 
         parent::__construct($required, $label);
 
-
-        $this->field = new DNumeric($name, $decimals, $decimalsSeparator, $thousandSeparator);
+        $this->field = new DDateTime($name);
         $this->field->placeholder = $label;
         if ($required) {
-            $this->field->addValidation(ucfirst($label), new TRequiredValidator());
+            $this->field->addValidation($label, new TRequiredValidator());
         }
-        $this->field->setTip($label);
+
         $this->field->setLabel($label);
+
+        $this->field->setMask('dd/mm/yyyy hh:ii:ss');
+        $this->field->setDatabaseMask('yyyy-mm-dd hh:ii:ss');
 
         $this->setType(new FieldTypeString());
     }
@@ -50,6 +45,12 @@ class DBCurrency extends DBFormField
     public function getField()
     {
         return $this->field;
+    }
+
+    public function mask(string $mask)
+    {
+        $this->field->setMask($mask);
+        return $this;
     }
 
     public function setType($type)
