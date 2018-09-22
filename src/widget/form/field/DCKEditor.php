@@ -24,10 +24,6 @@ class DCKEditor extends TField implements AdiantiWidgetInterface
     protected $size;
     protected $height;
 
-    /**
-     * Class Constructor
-     * @param $name Widet's name
-     */
     public function __construct($name)
     {
         parent::__construct($name);

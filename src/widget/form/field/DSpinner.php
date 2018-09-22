@@ -5,8 +5,6 @@ namespace Dvi\Adianti\Widget\Form\Field;
 use Adianti\Base\Lib\Widget\Form\TSpinner;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
-use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
-use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
  * Form DSpinner

@@ -3,7 +3,6 @@
 namespace Dvi\Adianti\Widget\Form\Field;
 
 use Adianti\Base\Lib\Widget\Form\TPassword;
-use Dvi\Adianti\Widget\Form\Field\FormField;
 
 /**
  * Form DPassword

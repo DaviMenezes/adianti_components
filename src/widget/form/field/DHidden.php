@@ -3,8 +3,6 @@
 namespace Dvi\Adianti\Widget\Form\Field;
 
 use Adianti\Base\Lib\Widget\Form\THidden;
-use Dvi\Adianti\Widget\Form\Field\FormField;
-use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**

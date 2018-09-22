@@ -5,9 +5,6 @@ namespace Dvi\Adianti\Widget\Form\Field;
 use Adianti\Base\Lib\Widget\Form\TCombo;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
-use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
-use Dvi\Adianti\Widget\Form\Field\SearchableField;
-use Dvi\Adianti\Widget\Form\Field\SelectionFieldTrait;
 
 /**
  * Model DCombo

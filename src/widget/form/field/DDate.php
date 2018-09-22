@@ -5,8 +5,6 @@ use Adianti\Base\App\Lib\Validator\TDateValidator;
 use Adianti\Base\Lib\Widget\Form\TDate;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
-use Dvi\Adianti\Widget\Form\Field\FormFieldValidation;
-use Dvi\Adianti\Widget\Form\Field\SearchableField;
 
 /**
  * Model DDate

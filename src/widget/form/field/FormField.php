@@ -2,8 +2,6 @@
 
 namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Base\Lib\Validator\TMaxLengthValidator;
-use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
 use Dvi\Adianti\Widget\Form\Field\Validator\MaxLengthValidator;
 use Dvi\Adianti\Widget\Form\Field\Validator\RequiredValidator;
