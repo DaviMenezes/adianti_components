@@ -19,11 +19,11 @@ class DBUniqueSeach extends DBFormField
 {
     use DBSelectionFieldTrait;
 
-    public function __construct($name, $min_length, $max_length, bool $required = false, string $label = null)
+    public function __construct($name, $min_length, $max_length, string $label = null)
     {
         $this->field = new UniqueSearch($name, $min_length, $max_length, $label);
 
-        parent::__construct($required, $label);
+        parent::__construct($label);
 
         $this->field->setType(new FieldTypeInt());
     }

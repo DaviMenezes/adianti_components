@@ -16,10 +16,10 @@ use Dvi\Adianti\Widget\Form\Field\Color;
  */
 class DBColor extends DBFormField
 {
-    public function __construct(string $name, int $max_length = 10, bool $required = false, string $label = null)
+    public function __construct(string $name, int $max_length = 10, string $label = null)
     {
-        $this->field = new Color($name, $label, $max_length, $required);
+        $this->field = new Color($name, $label, $max_length, false);
 
-        parent::__construct($required, $label);
+        parent::__construct($label);
     }
 }

@@ -21,16 +21,11 @@ class DBCombo extends DBFormField
 {
     use DBSelectionFieldTrait;
 
-    public function __construct(string $name, string $label = null, bool $required = false)
+    public function __construct(string $name, string $label = null)
     {
-        $array = explode('-', $name);
-        $field_name = array_pop($array);
+        $this->field = new DCombo($name, $label, false);
 
-        $label = $label ?? $field_name;
-
-        $this->field = new DCombo($name, $label, $required);
-
-        parent::__construct($required, $label);
+        parent::__construct($label);
 
         $this->setType(new FieldTypeInt());
     }

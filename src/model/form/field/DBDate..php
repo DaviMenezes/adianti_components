@@ -18,16 +18,11 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
  */
 class DBDate extends DBFormField
 {
-    public function __construct(string $name, string $label = null, bool $required = false)
+    public function __construct(string $name, string $label = null)
     {
-        $array = explode('-', $name);
-        $field_name = array_pop($array);
+        $this->field = new DDate($name, $label, false);
 
-        $label = $label ?? $field_name;
-
-        parent::__construct($required, $label);
-
-        $this->field = new DDate($name, $label, $required);
+        parent::__construct($label);
 
         $this->setType(new FieldTypeString());
     }

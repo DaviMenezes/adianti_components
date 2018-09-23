@@ -25,10 +25,9 @@ abstract class DBFormField
     protected $required;
     protected $hide_in_edit;
 
-    public function __construct(bool $required = false, string $label = null)
+    public function __construct(string $label = null)
     {
         $this->label= $label;
-        $this->required = $required;
 
         if (isset($this->field)) {
             $this->field->setType(new FieldTypeString());

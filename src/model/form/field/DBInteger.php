@@ -20,17 +20,9 @@ class DBInteger extends DBFormField
 {
     public function __construct(string $name, int $min, int $max, int $step, string $label = null)
     {
-        $array = explode('-', $name);
-        $field_name = array_pop($array);
-
-        $label = $label ?? $field_name;
-
-        parent::__construct(false, $label);
-
         $this->field = new DSpinner($name, $min, $max, $step);
-        $this->field->setLabel($this->getLabel());
-        $this->field->setTip($this->getLabel());
-        $this->field->placeholder = $label;
+
+        parent::__construct($label);
 
         $this->setType(new FieldTypeInt());
     }

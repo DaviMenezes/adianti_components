@@ -18,18 +18,11 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
  */
 class DBRadio extends DBFormField
 {
-    public function __construct(string $name, bool $required = false, string $label = null)
+    public function __construct(string $name, string $label = null)
     {
-        $array = explode('-', $name);
-        $field_name = array_pop($array);
+        $this->field = new DRadioGroup($name, $label);
 
-        $label = $label ?? $field_name;
-
-        parent::__construct($required, $label);
-
-        $this->field = new DRadioGroup($name, $label, $required);
-
-        $this->setType(new FieldTypeString());
+        parent::__construct($label);
     }
 
     public function setType($type)

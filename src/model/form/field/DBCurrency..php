@@ -2,7 +2,6 @@
 
 namespace Dvi\Adianti\Model\Form\Field;
 
-use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Dvi\Adianti\Componente\Model\Form\Fields\DNumeric;
 use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
@@ -19,29 +18,11 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
  */
 class DBCurrency extends DBFormField
 {
-    public function __construct(
-        string $name,
-        int $decimals,
-        string $decimalsSeparator,
-        string $thousandSeparator,
-        bool $required = false,
-        string $label = null
-    ) {
-        $array = explode('-', $name);
-        $field_name = array_pop($array);
-
-        $label = $label ?? $field_name;
-
-        parent::__construct($required, $label);
-
-
+    public function __construct(string $name, int $decimals, string $decimalsSeparator, string $thousandSeparator, string $label = null)
+    {
         $this->field = new DNumeric($name, $decimals, $decimalsSeparator, $thousandSeparator);
-        $this->field->placeholder = $label;
-        if ($required) {
-            $this->field->addValidation(ucfirst($label), new TRequiredValidator());
-        }
-        $this->field->setTip($label);
-        $this->field->setLabel($label);
+
+        parent::__construct($label);
 
         $this->setType(new FieldTypeString());
     }
