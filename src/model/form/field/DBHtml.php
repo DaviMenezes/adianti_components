@@ -17,17 +17,11 @@ use Dvi\Adianti\Widget\Form\Field\DHtmlEditor;
  */
 class DBHtml extends DBFormField
 {
-    public function __construct(string $name, int $height, bool $required = false, string $label = null)
+    public function __construct(string $name, int $height, string $label = null)
     {
-        $array = explode('-', $name);
-        $field_name = array_pop($array);
+        $this->field = new DHtmlEditor($name, $height, $label);
 
-        $label = $label ?? $field_name;
-
-        parent::__construct($required, $label);
-
-        $this->field = new DHtmlEditor($name, $height, $label, $required);
-        $this->field->label($label);
+        parent::__construct($label);
     }
 
     public function getField()

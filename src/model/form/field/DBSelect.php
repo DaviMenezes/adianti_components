@@ -19,11 +19,11 @@ class DBSelect extends DBFormField
 {
     use DBSelectionFieldTrait;
 
-    public function __construct(string $name, string $label = null, bool $required = false)
+    public function __construct(string $name, string $label = null)
     {
-        $this->field = new Select($name, $label, $required);
+        $this->field = new Select($name, $label);
 
-        parent::__construct($required, $label);
+        parent::__construct($label);
 
         $this->field->setType(new FieldTypeInt());
     }

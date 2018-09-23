@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: davi
- * Date: 01/12/17
- * Time: 18:33
- */
-
 namespace Dvi\Adianti\Model\Form\Field;
 
 use Dvi\Adianti\Model\Fields\DBFormField;
@@ -13,22 +6,22 @@ use Dvi\Adianti\Widget\Form\Field\DEntry;
 use Dvi\Adianti\Widget\Form\Field\Validator\CpfValidator;
 use Dvi\Adianti\Widget\Form\Field\Validator\EmailValidator;
 
+/**
+ * Field DBVarchar
+ *
+ * @package    Field
+ * @subpackage Form
+ * @author     Davi Menezes
+ * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
+ * @see https://github.com/DaviMenezes
+ */
 class DBVarchar extends DBFormField
 {
-    protected $size;
-
-    public function __construct(string $name, int $size, bool $required = false, $label = null)
+    public function __construct(string $name, int $size, string $label = null)
     {
-        $this->size = $size;
+        $this->field = new DEntry($name, $label, $size, false);
 
-        $array = explode('-', $name);
-        $field_name = array_pop($array);
-
-        $label = $label ?? $field_name;
-
-        $this->field = new DEntry($name, $label, $size, $required);
-
-        parent::__construct($required, $label);
+        parent::__construct($label);
     }
 
     #region [FACADE]

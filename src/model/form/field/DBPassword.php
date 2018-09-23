@@ -19,10 +19,8 @@ class DBPassword extends DBFormField
 {
     public function __construct(string $name, string $max_length, string $label = null)
     {
-        parent::__construct(false, $label ?? $name);
-
         $this->field = new DPassword($name, $max_length, strtolower($label) ?? 'password');
 
-        $this->field->setType(new FieldTypeString());
+        parent::__construct($label ?? $name);
     }
 }

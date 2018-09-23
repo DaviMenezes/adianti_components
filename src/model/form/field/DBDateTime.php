@@ -19,27 +19,14 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
  */
 class DBDateTime extends DBFormField
 {
-    public function __construct(string $name, string $label = null, bool $required = false)
+    public function __construct(string $name, string $label = null)
     {
-        $array = explode('-', $name);
-        $field_name = array_pop($array);
-
-        $label = $label ?? $field_name;
-
-        parent::__construct($required, $label);
-
         $this->field = new DDateTime($name);
-        $this->field->placeholder = $label;
-        if ($required) {
-            $this->field->addValidation($label, new TRequiredValidator());
-        }
 
-        $this->field->setLabel($label);
+        parent::__construct($label);
 
         $this->field->setMask('dd/mm/yyyy hh:ii:ss');
         $this->field->setDatabaseMask('yyyy-mm-dd hh:ii:ss');
-
-        $this->setType(new FieldTypeString());
     }
 
     public function getField()

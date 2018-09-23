@@ -108,7 +108,7 @@ class DGridColumn extends TElement
                 if (in_array(IFormField::class, class_implements($child))) {
                     /**@var IFormField $child*/
                     if ($child->getErrorValidation()) {
-                        $msg_error = ' <span class="dvi_str_danger" style="border-radius: 50%; padding: 0 5px 0 5px; font-weight: bold;">?</span>';
+                        $msg_error = ' <i class="fa fa-exclamation-triangle red" aria-hidden="true"></i>';
                         $link_error = new TActionLink($msg_error, new TAction([$_REQUEST['class'], 'showErrorMsg'], ['msg' => $child->getErrorValidation(), 'static' => 1]));
                         $link_error->{'title'} = 'Clique para ver a mensagem';
                     }

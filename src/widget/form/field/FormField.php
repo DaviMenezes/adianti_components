@@ -31,7 +31,7 @@ trait FormField
 
     public function setup(string $label, bool $required = false, int $max_length = null)
     {
-        $this->field_label = $label;
+        $this->label(ucfirst($label));
         $this->required = $required;
         $this->max_length = $max_length > 0 ? $max_length : null;
         $this->tip = true;
@@ -95,7 +95,7 @@ trait FormField
     public function label($label, string $class = null)
     {
         $this->setLabel($label);
-
+        $this->field_label = $label;
         $this->label_class = $class;
     }
 

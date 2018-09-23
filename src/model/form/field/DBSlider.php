@@ -16,11 +16,11 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
  */
 class DBSlider extends DBFormField
 {
-    public function __construct(string $name, $min, $max, $step, bool $required = false, string $label = null, $tip = true)
+    public function __construct(string $name, $min, $max, $step, string $label = null)
     {
-        parent::__construct($required, $label);
-
         $this->field = new Slider($name, $min, $max, $step, $label ?? $name);
+
+        parent::__construct($label);
 
         $this->field->setType(new FieldTypeInt());
     }
