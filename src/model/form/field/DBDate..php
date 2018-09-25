@@ -21,7 +21,7 @@ class DBDate extends DBFormField
 {
     public function __construct(string $name, string $label = null)
     {
-        $this->field = new DateTime($name, $label);
+        $this->field = new Date($name, $label);
 
         parent::__construct($label);
 
