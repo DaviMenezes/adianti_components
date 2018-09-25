@@ -3,11 +3,8 @@
 namespace Dvi\Adianti\Model;
 
 use Adianti\Base\Lib\Registry\TSession;
-use Dvi\Adianti\Helpers\Utils;
-use Dvi\Adianti\Control\DviControl;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Helpers\Reflection;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 
 /**
  * Model DBFormFieldPrepare
@@ -112,7 +109,7 @@ class DBFormFieldPrepare extends DB
             }
         } catch (\Exception $e) {
             DTransaction::rollback();
-            DMessage::create('die', $e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 }

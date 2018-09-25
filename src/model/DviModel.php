@@ -2,22 +2,9 @@
 
 namespace Dvi\Adianti\Model;
 
-use Adianti\Base\Lib\Registry\TSession;
 use App\Adianti\Component\Model\Form\Fields\DBInteger;
-use Dvi\Adianti\Model\Form\Field\DBCombo;
-use Dvi\Adianti\Model\Form\Field\DBCurrency;
-use Dvi\Adianti\Model\Form\Field\DBDate;
-use Dvi\Adianti\Model\Form\Field\DBDateTime;
-use Dvi\Adianti\Model\Form\Field\DBHtml;
-use Dvi\Adianti\Model\Form\Field\DBRadio;
-use Dvi\Adianti\Model\Form\Field\DBText;
-use Dvi\Adianti\Model\Form\Field\DBVarchar;
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Base\DGridColumn;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
-use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
-use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 use Stringizer\Stringizer;
 
 /**
@@ -90,12 +77,16 @@ abstract class DviModel extends DviTRecord
     public function getDviField($name):DBFormField
     {
         if (!array_key_exists($name, $this->model_fields)) {
-            $user_msg = 'Ocorreu um erro ao tentar montar o formulário. Entre em contato com o administrador';
-            $dev_msg = 'O nome do campo .' . $name . ' não condiz com os atributos da classe ' . get_called_class();
-            foreach ($this->getAttributes() as $attribute) {
-                $dev_msg .= "<br>".$attribute;
+            if (ENVIRONMENT == 'development') {
+                $msg = 'O nome do campo ' . $name . ' não condiz com os atributos da classe ' . get_called_class();
+            } else {
+                $msg = 'Ocorreu um erro ao tentar montar o formulário. Entre em contato com o administrador';
             }
-            DMessage::create('die', $user_msg, $dev_msg);
+
+            foreach ($this->model_fields as $attribute => $value) {
+                $msg .= "|".$attribute;
+            }
+            throw new \Exception($msg);
         }
 
         return $this->model_fields[$name];

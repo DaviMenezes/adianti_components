@@ -4,7 +4,6 @@ namespace Dvi\Adianti\Model;
 
 use Closure;
 use Dvi\Adianti\Database\DTransaction;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 
 /**
  * Model DviDefaultQuery
@@ -28,7 +27,7 @@ class DB
             return $result;
         } catch (\Exception $e) {
             DTransaction::rollback();
-            DMessage::create('die', $e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 

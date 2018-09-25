@@ -8,9 +8,7 @@ use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Database\TTransaction;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Helpers\Reflection;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 use Exception;
-use PDO;
 use ReflectionObject;
 use ReflectionProperty;
 
@@ -106,7 +104,7 @@ class DviTRecord extends TRecord
             $msg_user = 'Ops... um erro ocorreu ao executar esta ação. Informe ao administrador';
             $msg_dev = 'Para chamar o método getMagicObject é necessário que o ';
             $msg_dev .= 'Objeto Associado esteja mapeado. Use o método setMap no construtor do Modelo';
-            DMessage::create('die', $msg_user, $msg_dev);
+            throw new \Exception($msg_user, $msg_dev);
         }
 
         $attribute_class = $this->foreign_keys[$attribute];
@@ -203,7 +201,9 @@ class DviTRecord extends TRecord
 
     public static function getTableName()
     {
-        $model = get_called_class();
-        return !empty($model::TABLENAME) ? $model::TABLENAME : strtolower(Reflection::getClassName($model));
+        $model = preg_replace('/([^A-Z])([A-Z])/', "$1_$2", Reflection::getClassName(get_called_class()));
+
+        $model = !empty(get_called_class()::TABLENAME) ? get_called_class()::TABLENAME : strtolower($model);
+        return $model;
     }
 }

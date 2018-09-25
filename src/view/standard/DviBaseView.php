@@ -46,7 +46,7 @@ abstract class DviBaseView
     abstract protected function setModel();
 
     /** @example $this->fields([
-     *      ['field1', 'field2']
+     *      ['field1', 'field2'],
      *      ['field3', 'field4', 'field5']
      * ]);
      */

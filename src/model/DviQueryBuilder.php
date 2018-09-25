@@ -1,10 +1,7 @@
 <?php
 namespace Dvi\Adianti\Model;
 
-use Adianti\Base\Lib\Database\TRecord;
-use Adianti\Base\Lib\Database\TTransaction;
 use Dvi\Adianti\Database\DTransaction;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 use Exception;
 use PDO;
 use PDOStatement;
@@ -195,7 +192,7 @@ trait DviQueryBuilder
         /**@var DviTFilter $filter*/
         foreach ($filters as $filter) {
             if (!is_a($filter, DviTFilter::class)) {
-                DMessage::create('die', null, 'Os filtros devem ser do tipo DviTFilter');
+                throw new \Exception(null, 'Os filtros devem ser do tipo DviTFilter');
             }
             $this->where($filter->field, $filter->operator, $filter->value, $filter->value2);
         }

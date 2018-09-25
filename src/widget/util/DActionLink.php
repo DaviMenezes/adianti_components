@@ -3,10 +3,8 @@ namespace Dvi\Adianti\Widget\Util;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Base\Lib\Widget\Util\TImage;
 use Adianti\Base\Lib\Widget\Util\TTextDisplay;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 
 /**
  * Model DActionLink
@@ -121,7 +119,7 @@ class DActionLink extends TTextDisplay
     public function show()
     {
         if (empty($this->image) and empty($this->label)) {
-            DMessage::create('die', 'O botão precisa de um texto ou uma imagem');
+            throw new \Exception('O botão precisa de um texto ou uma imagem');
         }
         $this->a_content->class = 'align_action_middle';
 

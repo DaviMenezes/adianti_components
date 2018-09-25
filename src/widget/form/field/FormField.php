@@ -46,7 +46,7 @@ trait FormField
     {
         $this->label(ucfirst($this->field_label));
 
-        $this->{'placeholder'} = strtolower($this->field_label);
+        $this->setProperty('placeholder', strtolower($this->field_label));
 
         if ($this->max_length and method_exists($this, 'setMaxLength')) {
             $this->setMaxLength($this->max_length);

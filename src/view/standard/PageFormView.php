@@ -2,11 +2,8 @@
 namespace Dvi\Adianti\View\Standard;
 
 use Dvi\Adianti\Database\DTransaction;
-use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DGridColumn;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 use Dvi\Adianti\Widget\Form\Field\FormField;
 use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
 
@@ -113,7 +110,8 @@ trait PageFormView
         }
 
         $rows = 0;
-        foreach ($this->buildFields() as $key => $groups) {
+        $fields = $this->buildFields();
+        foreach ($fields as $key => $groups) {
             if ($groups['tab'] and $key == 0) {
                 $this->panel->addNotebook();
             }
