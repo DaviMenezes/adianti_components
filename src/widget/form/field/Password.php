@@ -5,7 +5,7 @@ namespace Dvi\Adianti\Widget\Form\Field;
 use Adianti\Base\Lib\Widget\Form\TPassword;
 
 /**
- * Form DPassword
+ * Form Password
  *
  * @package    Form
  * @subpackage Widget
@@ -13,7 +13,7 @@ use Adianti\Base\Lib\Widget\Form\TPassword;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DPassword extends TPassword
+class Password extends TPassword
 {
     use FormField;
 

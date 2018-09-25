@@ -7,8 +7,8 @@ use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Dvi\Adianti\Control\PaginationHelper;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Widget\Base\DataGrid;
-use Dvi\Adianti\Widget\Datagrid\DPageNavigation;
-use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
+use Dvi\Adianti\Widget\Datagrid\PageNavigation;
+use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * View ListView
@@ -22,11 +22,11 @@ use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
  */
 trait ListView
 {
-    /**@var DviPanelGroup $panel*/
+    /**@var PanelGroup $panel*/
     protected $panel;
     /**@var DataGrid $datagrid*/
     protected $datagrid;
-    /**@var DPageNavigation $pageNavigation*/
+    /**@var PageNavigation $pageNavigation*/
     protected $pageNavigation;
     /**@var TDataGridColumn $column_id*/
     protected $column_id;
@@ -76,7 +76,7 @@ trait ListView
 
     public function createPageNavigation($count, $params)
     {
-        $this->pageNavigation = new DPageNavigation();
+        $this->pageNavigation = new PageNavigation();
 
         $new_params = PaginationHelper::getUrlPaginationParameters($this->params);
 

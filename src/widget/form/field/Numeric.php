@@ -10,7 +10,7 @@ use Dvi\Adianti\Widget\Form\Field\SearchableField;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeFloat;
 
 /**
- * Fields DNumeric
+ * Fields Numeric
  *
  * @package    Fields
  * @subpackage Form
@@ -18,7 +18,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeFloat;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DNumeric extends TNumeric implements FormField
+class Numeric extends TNumeric implements FormField
 {
     use FormFieldTrait;
     use FormFieldValidation;

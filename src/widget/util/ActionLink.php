@@ -7,7 +7,7 @@ use Adianti\Base\Lib\Widget\Util\TImage;
 use Adianti\Base\Lib\Widget\Util\TTextDisplay;
 
 /**
- * Model DActionLink
+ * Model ActionLink
  *
  * @version    Dvi 1.0
  * @package    util
@@ -16,7 +16,7 @@ use Adianti\Base\Lib\Widget\Util\TTextDisplay;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DActionLink extends TTextDisplay
+class ActionLink extends TTextDisplay
 {
     private $label;
     /**@var TElement $a_content*/
@@ -28,7 +28,7 @@ class DActionLink extends TTextDisplay
     private $icon_size;
 
     public function __construct(
-        DAction $action = null,
+        Action $action = null,
         string $label = null,
         string $icon = null,
         string $color = null,
@@ -95,10 +95,10 @@ class DActionLink extends TTextDisplay
 
     public function action($action, array $params = null)
     {
-        if (is_array($action) or is_a($action, DAction::class)) {
+        if (is_array($action) or is_a($action, Action::class)) {
             if (is_array($action)) {
                 if (count($action)) {
-                    $action = new DAction($action, $params);
+                    $action = new Action($action, $params);
                 }
             }
 

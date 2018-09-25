@@ -7,7 +7,7 @@ use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TDate;
 use Adianti\Base\Lib\Widget\Form\TDateTime;
 use Adianti\Base\Lib\Widget\Form\TField;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
@@ -33,7 +33,7 @@ trait SearchActionsControl
             if (!$this->validateToken()) {
                 throw new \Exception('Ação não permitida');
             }
-            DTransaction::open();
+            Transaction::open();
 
             $this->buildView($this->params);
 
@@ -41,7 +41,7 @@ trait SearchActionsControl
 
             $array_models = $this->prepareArrayModels();
 
-            DTransaction::close();
+            Transaction::close();
 
             $filters = array();
 
@@ -63,7 +63,7 @@ trait SearchActionsControl
 
             $this->getViewContent();
         } catch (\Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             new TMessage('error', $e->getMessage());
         }
     }

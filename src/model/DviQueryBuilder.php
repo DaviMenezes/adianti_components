@@ -1,7 +1,7 @@
 <?php
 namespace Dvi\Adianti\Model;
 
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Exception;
 use PDO;
 use PDOStatement;
@@ -328,11 +328,11 @@ trait DviQueryBuilder
         }
 
         try {
-            $conn = DTransaction::get();
+            $conn = Transaction::get();
             $manual = false;
             if (!$conn) {
-                DTransaction::open();
-                $conn = DTransaction::get();
+                Transaction::open();
+                $conn = Transaction::get();
                 $manual = true;
             }
             $this->pdo = $conn->prepare($this->sql);
@@ -340,7 +340,7 @@ trait DviQueryBuilder
             $this->already_pdo_prepared = true;
 
             if ($manual) {
-                DTransaction::close();
+                Transaction::close();
             }
         } catch (Exception $e) {
             /** @noinspection PhpUnhandledExceptionInspection */

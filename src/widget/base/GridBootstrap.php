@@ -13,7 +13,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DGridBootstrap
+class GridBootstrap
 {
     protected $grid;
     protected $defaultColClass;

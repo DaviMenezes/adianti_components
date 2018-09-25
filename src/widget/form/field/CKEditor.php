@@ -7,7 +7,7 @@ use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Base\Lib\Widget\Form\TField;
 
 /**
- * Html Editor - DCKEditor
+ * Html Editor - CKEditor
  *
 
  * @version    1.0
@@ -15,7 +15,7 @@ use Adianti\Base\Lib\Widget\Form\TField;
  * @subpackage form
  * @author     Davi Menezes
  */
-class DCKEditor extends TField implements AdiantiWidgetInterface
+class CKEditor extends TField implements AdiantiWidgetInterface
 {
     protected $id;
     protected $name;

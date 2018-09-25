@@ -9,7 +9,7 @@ use Dvi\Adianti\Route;
 use Exception;
 
 /**
- * Control DAction
+ * Control Action
  *
  * @version    Dvi 1.0
  * @package    Control
@@ -18,10 +18,10 @@ use Exception;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DAction extends TAction
+class Action extends TAction
 {
     /**
-     * DAction constructor.
+     * Action constructor.
      * @param array $action
      * @param array|null $parameters
      * @throws Exception

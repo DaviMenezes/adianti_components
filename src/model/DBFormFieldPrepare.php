@@ -3,7 +3,7 @@
 namespace Dvi\Adianti\Model;
 
 use Adianti\Base\Lib\Registry\TSession;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 
 /**
@@ -108,7 +108,7 @@ class DBFormFieldPrepare extends DB
                 $this->order($order['field'], $order['direction']);
             }
         } catch (\Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             throw new \Exception($e->getMessage());
         }
     }

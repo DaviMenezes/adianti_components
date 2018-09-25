@@ -12,11 +12,11 @@ use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Util\TImage;
 use Dvi\Adianti\Helpers\GUID;
 use Dvi\Adianti\Helpers\Utils;
-use Dvi\Adianti\Widget\Util\DAction;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
- * Form DButton
+ * Form Button
  *
  * @version    Dvi 1.0
  * @package    Form
@@ -25,7 +25,7 @@ use Exception;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DButton extends TField implements AdiantiWidgetInterface
+class Button extends TField implements AdiantiWidgetInterface
 {
     protected static $class;
 
@@ -48,12 +48,12 @@ class DButton extends TField implements AdiantiWidgetInterface
      * @param array $callback
      * @param string $image
      * @param string|null $label
-     * @return DButton
+     * @return Button
      * @throws Exception
      */
     public static function create(string $name, array $callback, string $image = null, string $label = null)
     {
-        $button = new DButton($name);
+        $button = new Button($name);
 
         if ($label) {
             $element_label = new TElement('div');
@@ -61,9 +61,9 @@ class DButton extends TField implements AdiantiWidgetInterface
             if ($image) {
                 $element_label->class = 'dvi_btn_label';
             }
-            $button->setAction(new DAction($callback), $element_label);
+            $button->setAction(new Action($callback), $element_label);
         } else {
-            $button->setAction(new DAction($callback), $label);
+            $button->setAction(new Action($callback), $label);
         }
 
         if ($image) {

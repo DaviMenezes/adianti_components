@@ -7,8 +7,8 @@ use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Util\TActionLink;
-use Dvi\Adianti\Widget\Container\DVBox;
-use Dvi\Adianti\Widget\Form\DButton;
+use Dvi\Adianti\Widget\Container\VBox;
+use Dvi\Adianti\Widget\Form\Button;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
 
 /**
@@ -101,8 +101,8 @@ class DGridColumn extends TElement
         $this->class = $this->getFormatedClasses();// $this->getClass() ?? $this->default_class;
 
         if ($this->useLabelField) {
-            if (!is_a($this->childs[0], DButton::class)) {
-                $box = new DVBox();
+            if (!is_a($this->childs[0], Button::class)) {
+                $box = new VBox();
                 $child = $this->getChilds(0);
                 $link_error = null;
                 if (in_array(IFormField::class, class_implements($child))) {
@@ -198,7 +198,7 @@ class DGridColumn extends TElement
 
     public static function pack(array $elements, array $class = null, array $style = null)
     {
-        $box = new DVBox();
+        $box = new VBox();
         $box->{'style'} = 'display:block; ';
 
         if ($elements) {

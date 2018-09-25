@@ -2,7 +2,7 @@
 
 namespace Dvi\Adianti\View\Standard\Form;
 
-use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
+use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * Components PageForm
@@ -15,7 +15,7 @@ use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
  */
 trait FormView
 {
-    /**@var DviPanelGroup $this->panel*/
+    /**@var PanelGroup $this->panel*/
     protected $panel;
 
     public function buildForm($param)

@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DBFormFieldPrepare;
@@ -36,7 +36,7 @@ trait FormControl
     public function onSave()
     {
         try {
-            DTransaction::open();
+            Transaction::open();
 
             $this->beforeSave();
 
@@ -44,9 +44,9 @@ trait FormControl
 
             $this->afterSave();
 
-            DTransaction::close();
+            Transaction::close();
         } catch (\Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             new TMessage('error', $e->getMessage());
         }
     }
@@ -145,7 +145,7 @@ trait FormControl
 
     protected function save()
     {
-        DTransaction::open();
+        Transaction::open();
 
         $this->view->getPanel()->keepFormLoaded();
         $model_class = $this->view->getModel();
@@ -175,7 +175,7 @@ trait FormControl
 
             $last_model = $model;
         }
-        DTransaction::close();
+        Transaction::close();
     }
 
     /**
@@ -280,7 +280,7 @@ trait FormControl
             return;
         }
 
-        DTransaction::open();
+        Transaction::open();
         $this->currentObj = $this->view->getModel()::find($this->params['id'] ?? null);
         if (!$this->currentObj) {
             new TMessage('error', 'Registro não encontrado');

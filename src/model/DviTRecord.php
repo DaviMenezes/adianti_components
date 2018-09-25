@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Database\TExpression;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Database\TTransaction;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Exception;
 use ReflectionObject;
@@ -177,14 +177,14 @@ class DviTRecord extends TRecord
     private static function getObjectOpeningConnection($id, $class)
     {
         try {
-            DTransaction::open();
+            Transaction::open();
 
             $obj = self::getObject($id, $class);
 
-            DTransaction::close();
+            Transaction::close();
             return $obj;
         } catch (Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             throw new Exception($e->getMessage());
         }
     }

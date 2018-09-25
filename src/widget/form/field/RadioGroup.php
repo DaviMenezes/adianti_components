@@ -2,21 +2,21 @@
 
 namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Base\Lib\Widget\Form\TText;
+use Adianti\Base\Lib\Widget\Form\TRadioGroup;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 
 /**
- * Model DText
+ * RadioGroup
  *
  * @version    Dvi 1.0
- * @package    form
- * @subpackage widget
+ * @package    Form
+ * @subpackage Widget
  * @author     Davi Menezes
- * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
+ * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DText extends TText implements FormField
+class RadioGroup extends TRadioGroup implements FormField
 {
     use FormFieldTrait;
     use FormFieldValidation;
@@ -24,20 +24,21 @@ class DText extends TText implements FormField
 
     private $field_disabled;
 
-    public function __construct(string $name, string $label = null, int $max_length = null, $height = '50')
+    public function __construct(string $name, $label, $required = false)
     {
         parent::__construct($name);
 
-        $this->setup($label ?? $name, false, $max_length);
+        $this->setup($label ?? $name, $required);
 
-        $this->setSize(0, $height);
+        $this->setLayout('horizontal');
+        $this->setUseButton();
+
+        $this->operator('=');
     }
 
-    public function setMaxLength(int $length)
+    public function items(array $items)
     {
-        if ($length > 0) {
-            $this->setProperty('maxlength', $length);
-        }
+        $this->addItems($items);
     }
 
     public function disable($disable = true)
@@ -51,5 +52,4 @@ class DText extends TText implements FormField
     {
         return $this->field_disabled;
     }
-
 }

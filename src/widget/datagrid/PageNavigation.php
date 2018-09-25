@@ -8,7 +8,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 
 /**
- * DPageNavigation
+ * PageNavigation
  *
  * @version    Dvi 1.0
  * @package    pacageTeste
@@ -17,7 +17,7 @@ use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DPageNavigation extends TPageNavigation
+class PageNavigation extends TPageNavigation
 {
     protected $hidden;
     protected $action;

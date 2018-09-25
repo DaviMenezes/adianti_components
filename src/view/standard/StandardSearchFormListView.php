@@ -6,13 +6,13 @@ use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\View\Standard\Form\BaseFormView;
 use Dvi\Adianti\View\Standard\Form\FormView;
 use Dvi\Adianti\View\Standard\SearchList\ListView;
 use Dvi\Adianti\Widget\Base\DataGrid;
-use Dvi\Adianti\Widget\Container\DVBox;
-use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
+use Dvi\Adianti\Widget\Container\VBox;
+use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * Control DviSearchFormList
@@ -26,7 +26,7 @@ use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
  */
 abstract class StandardSearchFormListView extends BaseFormView
 {
-    /**@var DviPanelGroup $panel*/
+    /**@var PanelGroup $panel*/
     protected $panel;
     /**@var DataGrid $datagrid*/
     protected $datagrid;
@@ -58,7 +58,7 @@ abstract class StandardSearchFormListView extends BaseFormView
             $this->buildDatagrid();
 
         } catch (\Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             new TMessage('error', $e->getMessage());
         }
     }
@@ -87,7 +87,7 @@ abstract class StandardSearchFormListView extends BaseFormView
 
     public function getContent()
     {
-        $vbox = new DVBox();
+        $vbox = new VBox();
 
         $vbox->add($this->getPanel());
         $vbox->add($this->getDatagrid());

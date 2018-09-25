@@ -28,31 +28,31 @@ use Adianti\Base\Lib\Widget\Form\TSpinner;
 use Adianti\Base\Lib\Widget\Form\TText;
 use Adianti\Base\Lib\Widget\Wrapper\TDBCombo;
 use Adianti\Base\Lib\Widget\Wrapper\TDBSeekButton;
-use Dvi\Adianti\Componente\Model\Form\Fields\DNumeric;
+use Dvi\Adianti\Componente\Model\Form\Fields\Numeric;
 use Dvi\Adianti\Route;
-use Dvi\Adianti\Widget\Base\DGridBootstrap;
+use Dvi\Adianti\Widget\Base\GridBootstrap;
 use Dvi\Adianti\Widget\Base\DGridColumn as Col;
 use Dvi\Adianti\Widget\Base\GridElement;
-use Dvi\Adianti\Widget\Bootstrap\Component\DButtonGroup;
-use Dvi\Adianti\Widget\Container\DHBox;
-use Dvi\Adianti\Widget\Container\DVBox;
-use Dvi\Adianti\Widget\Form\DButton;
-use Dvi\Adianti\Widget\Form\Field\DCKEditor;
-use Dvi\Adianti\Widget\Form\Field\DCombo;
-use Dvi\Adianti\Widget\Form\Field\DDate;
-use Dvi\Adianti\Widget\Form\Field\DDateTime;
-use Dvi\Adianti\Widget\Form\Field\DEntry;
-use Dvi\Adianti\Widget\Form\Field\DHidden;
-use Dvi\Adianti\Widget\Form\Field\DHtmlEditor;
-use Dvi\Adianti\Widget\Form\Field\DPassword;
-use Dvi\Adianti\Widget\Form\Field\DRadioGroup;
-use Dvi\Adianti\Widget\Form\Field\DSpinner;
-use Dvi\Adianti\Widget\Form\Field\DText;
+use Dvi\Adianti\Widget\Bootstrap\Component\ButtonGroup;
+use Dvi\Adianti\Widget\Container\HBox;
+use Dvi\Adianti\Widget\Container\VBox;
+use Dvi\Adianti\Widget\Form\Button;
+use Dvi\Adianti\Widget\Form\Field\CKEditor;
+use Dvi\Adianti\Widget\Form\Field\Combo;
+use Dvi\Adianti\Widget\Form\Field\Date;
+use Dvi\Adianti\Widget\Form\Field\DateTime;
+use Dvi\Adianti\Widget\Form\Field\Varchar;
+use Dvi\Adianti\Widget\Form\Field\Hidden;
+use Dvi\Adianti\Widget\Form\Field\HtmlEditor;
+use Dvi\Adianti\Widget\Form\Field\Password;
+use Dvi\Adianti\Widget\Form\Field\RadioGroup;
+use Dvi\Adianti\Widget\Form\Field\Spinner;
+use Dvi\Adianti\Widget\Form\Field\Text;
 use Dvi\Adianti\Widget\IDviWidget;
 use ReflectionClass;
 
 /**
- * Model DviPanelGroup
+ * Model PanelGroup
  *
  * @version    Dvi 1.0
  * @package    Container
@@ -61,7 +61,7 @@ use ReflectionClass;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DviPanelGroup implements IDviWidget
+class PanelGroup implements IDviWidget
 {
     protected $className;
 
@@ -69,9 +69,9 @@ class DviPanelGroup implements IDviWidget
     protected $grid;
     /**@var TForm $form*/
     protected $form;
-    /**@var DHBox $hboxButtonsFooter*/
+    /**@var HBox $hboxButtonsFooter*/
     protected $hboxButtonsFooter;
-    /**@var DButtonGroup $group_actions*/
+    /**@var ButtonGroup $group_actions*/
     protected $group_actions;
     protected $form_data;
 
@@ -94,9 +94,9 @@ class DviPanelGroup implements IDviWidget
 
         $this->title = $title;
 
-        $this->hboxButtonsFooter = new DHBox;
+        $this->hboxButtonsFooter = new HBox;
 
-        $this->group_actions = new DButtonGroup($this->form);
+        $this->group_actions = new ButtonGroup($this->form);
     }
 
     public function setTitle($title)
@@ -108,13 +108,13 @@ class DviPanelGroup implements IDviWidget
     public static function create($class, string $title = null, string $formName = null)
     {
         $className = (new ReflectionClass($class))->getShortName();
-        $obj = new DviPanelGroup($className, $title, $formName);
+        $obj = new PanelGroup($className, $title, $formName);
         return $obj;
     }
 
     public function addGroupButton(array $buttons)
     {
-        $group = new DButtonGroup();
+        $group = new ButtonGroup();
         $form_name = $this->form->getName();
         foreach ($buttons as $button) {
             $group->add($form_name, [$button[0], $button[1]], $button[2], $button[3]);
@@ -208,9 +208,9 @@ class DviPanelGroup implements IDviWidget
         return $gridElement;
     }
 
-    public function getGrid() : DGridBootstrap
+    public function getGrid() : GridBootstrap
     {
-        return $this->grid = $this->grid ?? new DGridBootstrap();
+        return $this->grid = $this->grid ?? new GridBootstrap();
     }
 
     public function show()
@@ -244,7 +244,7 @@ class DviPanelGroup implements IDviWidget
         $columns = array();
 
         foreach ($param_columns as $fields) {
-            $dvbox = new DVBox();
+            $dvbox = new VBox();
             $dvbox->style = 'width: 100%';
 
             if (is_array($fields)) {

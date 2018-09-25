@@ -3,7 +3,7 @@
 namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\CommonActions;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\View\Standard\Form\StandardFormView;
@@ -29,7 +29,7 @@ abstract class StandardFormControl extends DviControl
     public function __construct($param)
     {
         try {
-            DTransaction::open();
+            Transaction::open();
 
             parent::__construct($param);
 
@@ -45,9 +45,9 @@ abstract class StandardFormControl extends DviControl
 
             $this->view->setPageList($this->pageList);
 
-            DTransaction::close();
+            Transaction::close();
         } catch (\Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             new TMessage('error', $e->getMessage());
             die();
         }

@@ -3,12 +3,12 @@
 namespace Dvi\Adianti\View\Standard\Form;
 
 use Adianti\Base\Lib\Widget\Base\TScript;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\View\Standard\DviBaseView;
 use Dvi\Adianti\View\Standard\PageFormView;
-use Dvi\Adianti\Widget\Form\DButton;
+use Dvi\Adianti\Widget\Form\Button;
 
 /**
  * Control DviStandardForm
@@ -22,9 +22,9 @@ use Dvi\Adianti\Widget\Form\DButton;
  */
 abstract class StandardFormView extends DviBaseView
 {
-    /**@var DButton $button_save*/
+    /**@var Button $button_save*/
     protected $button_save;
-    /**@var DButton $button_clear*/
+    /**@var Button $button_clear*/
     protected $button_clear;
     /**@var DviModel $currentObj*/
     protected $currentObj;
@@ -45,7 +45,7 @@ abstract class StandardFormView extends DviBaseView
     public function build($param)
     {
         try {
-            DTransaction::open();
+            Transaction::open();
 
             $this->createPanelForm();
 
@@ -57,11 +57,11 @@ abstract class StandardFormView extends DviBaseView
 
             $this->cancelEnterSubmit();
 
-            DTransaction::close();
+            Transaction::close();
 
             return $this;
         } catch (\Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             throw new \Exception('Erro ao construir a tela. Erro: '. $e->getMessage());
         }
     }

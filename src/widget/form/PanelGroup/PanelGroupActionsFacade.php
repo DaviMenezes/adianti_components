@@ -5,10 +5,10 @@ namespace Dvi\Adianti\Widget\Form\PanelGroup;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Dvi\Adianti\Helpers\GUID;
-use Dvi\Adianti\Widget\Bootstrap\Component\DButtonGroup;
-use Dvi\Adianti\Widget\Form\DButton;
-use Dvi\Adianti\Widget\Util\DAction;
-use Dvi\Adianti\Widget\Util\DActionLink;
+use Dvi\Adianti\Widget\Bootstrap\Component\ButtonGroup;
+use Dvi\Adianti\Widget\Form\Button;
+use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Adianti\Widget\Util\ActionLink;
 use Dvi\Module\Office\Task\Control\TaskList2;
 
 /**
@@ -23,7 +23,7 @@ use Dvi\Module\Office\Task\Control\TaskList2;
 trait PanelGroupActionsFacade
 {
     protected $currentButton;
-    /**@var DButtonGroup $group_actions*/
+    /**@var ButtonGroup $group_actions*/
     protected $group_actions;
 
     public function addActionSave(array $parameters = null, $tip = null)
@@ -58,14 +58,14 @@ trait PanelGroupActionsFacade
         return $this->currentButton = $action;
     }
 
-    public function footerLink(array $callback, string $image = null, $btn_style = 'default'):DActionLink
+    public function footerLink(array $callback, string $image = null, $btn_style = 'default'):ActionLink
     {
         return $this->group_actions->addLink($callback, $image)->styleBtn('btn btn-'.$btn_style.' dvi_panel_group');
     }
 
     public function addActionBackLink($action = null)
     {
-        $this->currentButton = new DActionLink($action, _t('Back'), 'fa:arrow-left fa-2x');
+        $this->currentButton = new ActionLink($action, _t('Back'), 'fa:arrow-left fa-2x');
         $this->currentButton->class = 'btn btn-default';
 
         $this->hboxButtonsFooter->addButton($this->currentButton);
@@ -73,9 +73,9 @@ trait PanelGroupActionsFacade
         return $this->currentButton;
     }
 
-    private function createButton($params):DButton
+    private function createButton($params):Button
     {
-        $btn = new DButton($params['id']);
+        $btn = new Button($params['id']);
         $btn->setAction(new TAction($params['callback'], $params['parameters']));
 
         if (isset($params['label']) and $params['label']) {
@@ -92,17 +92,17 @@ trait PanelGroupActionsFacade
         return $btn;
     }
 
-    public function getCurrentButton():DButton
+    public function getCurrentButton():Button
     {
         return $this->currentButton;
     }
 
-    private function createButtonLink($value): DActionLink
+    private function createButtonLink($value): ActionLink
     {
-        $action = new DAction($value['callback'], $value['parameters']);
+        $action = new Action($value['callback'], $value['parameters']);
         $label = $value['label'];
         $icon = $value['image'];
-        $btn = new DActionLink($action, $label, $icon);
+        $btn = new ActionLink($action, $label, $icon);
         $btn->class = 'dvi_panel_action ' . $value['class'];
         return $btn;
     }

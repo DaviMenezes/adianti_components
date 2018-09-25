@@ -3,7 +3,7 @@
 namespace Dvi\Adianti\View\Standard\Form;
 
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\View\Standard\DviBaseView;
 
 /**
@@ -25,7 +25,7 @@ abstract class BaseFormView extends DviBaseView
             if ($this->panel_created) {
                 return;
             }
-            DTransaction::open();
+            Transaction::open();
 
             $this->createPanelForm();
 
@@ -37,9 +37,9 @@ abstract class BaseFormView extends DviBaseView
 
             $this->panel_created = true;
 
-            DTransaction::close();
+            Transaction::close();
         } catch (\Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             throw new \Exception($e->getMessage());
         }
     }

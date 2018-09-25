@@ -3,7 +3,7 @@
 namespace App\Adianti\Model\Form\Fields;
 
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\Field\DSpinner;
+use Dvi\Adianti\Widget\Form\Field\Spinner;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
@@ -20,7 +20,7 @@ class DBInteger extends DBFormField
 {
     public function __construct(string $name, int $min, int $max, int $step, string $label = null)
     {
-        $this->field = new DSpinner($name, $min, $max, $step);
+        $this->field = new Spinner($name, $min, $max, $step);
 
         parent::__construct($label);
 

@@ -6,7 +6,7 @@ use Dvi\Adianti\Widget\IDviWidget;
 use Dvi\Adianti\WidgetBootstrap\Component\GroupActions;
 
 /**
- * Model DButtonGroup
+ * Model ButtonGroup
  *
  * @version    Dvi 1.0
  * @package    bootstrap
@@ -15,7 +15,7 @@ use Dvi\Adianti\WidgetBootstrap\Component\GroupActions;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DButtonGroup extends GroupActions implements IDviWidget
+class ButtonGroup extends GroupActions implements IDviWidget
 {
     public $style;
     protected $form_default;
@@ -36,9 +36,9 @@ class DButtonGroup extends GroupActions implements IDviWidget
         $this->class .= ';'.$class;
     }
 
-    public function addGroup($action_header = null, $title_group_action = null): DActionGroup
+    public function addGroup($action_header = null, $title_group_action = null): ActionGroup
     {
-        $this->group = new DActionGroup($this->form_default, $action_header, $title_group_action);
+        $this->group = new ActionGroup($this->form_default, $action_header, $title_group_action);
         $this->items[] = $this->group;
         return $this->group;
     }

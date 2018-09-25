@@ -9,7 +9,7 @@ use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Control\DviControl;
 
 /**
- * Dialog DMessage
+ * Dialog Message
  *
  * @package    Dialog
  * @subpackage Widget
@@ -17,7 +17,7 @@ use Dvi\Adianti\Control\DviControl;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DMessage
+class Message
 {
     private function __construct()
     {

@@ -13,7 +13,7 @@ use Adianti\Base\Lib\Widget\Base\TScript;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DScript extends TScript
+class Script extends TScript
 {
     private static $scripts_id = array();
 

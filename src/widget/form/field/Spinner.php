@@ -7,7 +7,7 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 
 /**
- * Form DSpinner
+ * Form Spinner
  *
  * @package    Form
  * @subpackage Widget
@@ -15,7 +15,7 @@ use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DSpinner extends TSpinner implements FormField
+class Spinner extends TSpinner implements FormField
 {
     use FormFieldTrait;
     use FormFieldValidation;

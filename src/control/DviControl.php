@@ -8,7 +8,7 @@ use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\View\Standard\DviBaseView;
-use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
+use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * Trait DviControl
@@ -30,7 +30,7 @@ abstract class DviControl extends TPage
     /**@var DviControl $pageList*/
     protected $pageList;
     protected $params;
-    /**@var DviPanelGroup $panel*/
+    /**@var PanelGroup $panel*/
     protected $panel;
     protected $database = 'default';
     private $already_get_view_content;

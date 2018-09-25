@@ -6,7 +6,7 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 
 /**
- * Widget Form DEntry
+ * Widget Form Varchar
  *
  * @version    Dvi 1.0
  * @package    form
@@ -15,7 +15,7 @@ use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DEntry extends TEntry implements FormField
+class Varchar extends TEntry implements FormField
 {
     use FormFieldTrait;
     use FormFieldValidation;

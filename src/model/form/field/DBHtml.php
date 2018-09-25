@@ -3,7 +3,7 @@
 namespace Dvi\Adianti\Model\Form\Field;
 
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\Field\DHtmlEditor;
+use Dvi\Adianti\Widget\Form\Field\HtmlEditor;
 
 /**
  * Fields FieldHtml
@@ -19,7 +19,7 @@ class DBHtml extends DBFormField
 {
     public function __construct(string $name, int $height, string $label = null)
     {
-        $this->field = new DHtmlEditor($name, $height, $label);
+        $this->field = new HtmlEditor($name, $height, $label);
 
         parent::__construct($label);
     }

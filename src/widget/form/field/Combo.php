@@ -9,7 +9,7 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 
 /**
- * Model DCombo
+ * Model Combo
  *
  * @version    Dvi 1.0
  * @package    form
@@ -18,7 +18,7 @@ use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DCombo extends TCombo implements FormField
+class Combo extends TCombo implements FormField
 {
     use FormFieldTrait;
     use FormFieldValidation;
