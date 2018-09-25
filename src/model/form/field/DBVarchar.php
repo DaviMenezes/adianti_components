@@ -24,7 +24,7 @@ class DBVarchar extends DBFormField
         parent::__construct($label);
     }
 
-    #region [FACADE]
+    #region [FACADE] Especific methods to this class
     public function setType($type)
     {
         $this->field->setType($type);

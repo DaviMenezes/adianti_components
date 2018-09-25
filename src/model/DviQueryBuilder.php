@@ -86,8 +86,9 @@ trait DviQueryBuilder
 
     public function table(string $model_class, string $alias = null)
     {
+        /**@var DviTRecord $model_class*/
         $alias = $alias ?? (new ReflectionClass($model_class))->getShortName();
-        $this->table = ['table' => $model_class::TABLENAME, 'alias' => $alias, 'default_obj'=> $model_class];
+        $this->table = ['table' => $model_class::getTableName(), 'alias' => $alias, 'default_obj'=> $model_class];
         return $this;
     }
 
@@ -112,7 +113,7 @@ trait DviQueryBuilder
 
         $this->joins[] = [
             'type'=> $type,
-            'table' => $model_class::TABLENAME,
+            'table' => $model_class::getTableName(),
             'table_alias'=> $table_alias ?? (new ReflectionClass($model_class))->getShortName(),
             'associated_alias' => $associated_alias,
             'foreing_key' => $forein_key

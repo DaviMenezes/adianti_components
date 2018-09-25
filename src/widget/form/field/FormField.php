@@ -42,7 +42,7 @@ trait FormField
         $this->tip = $tip;
     }
 
-    public function prepare(string $placeholder = null, bool $required = false, bool $tip = true, int $max_length = null)
+    public function prepare()
     {
         $this->label(ucfirst($this->field_label));
 
@@ -50,10 +50,11 @@ trait FormField
 
         if ($this->max_length and method_exists($this, 'setMaxLength')) {
             $this->setMaxLength($this->max_length);
-            $this->addValidation($this->getLabel(), new MaxLengthValidator(), [$this->max_length]);
+            $this->addValidation($this->getLabel(), new MaxLengthValidator($this->max_length));
         }
 
         if ($this->required) {
+            $this->setProperty('required', 'required');
             $this->addValidation($this->getLabel(), new RequiredValidator());
         }
 

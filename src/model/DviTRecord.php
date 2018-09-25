@@ -7,6 +7,7 @@ use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Database\TTransaction;
 use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Widget\Dialog\DMessage;
 use Exception;
 use PDO;
@@ -31,7 +32,6 @@ class DviTRecord extends TRecord
     const IDPOLICY = 'serial';
 
     protected $foreign_keys = array();
-    private $isDirty;
     private $current_obj;
 
     #region [BUILD MODEL] *******************************************
@@ -81,11 +81,6 @@ class DviTRecord extends TRecord
     public function getForeignKeys()
     {
         return $this->foreign_keys;
-    }
-
-    public function isDirty()
-    {
-        return $this->isDirty;
     }
 
     public static function getInstance($id)
@@ -205,4 +200,10 @@ class DviTRecord extends TRecord
         return $obj;
     }
     #endregion
+
+    public static function getTableName()
+    {
+        $model = get_called_class();
+        return !empty($model::TABLENAME) ? $model::TABLENAME : strtolower(Reflection::getClassName($model));
+    }
 }
