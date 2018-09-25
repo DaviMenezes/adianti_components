@@ -1,10 +1,10 @@
 <?php
 namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Base\App\Lib\Validator\TDateValidator;
 use Adianti\Base\Lib\Widget\Form\TDate;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
+use Dvi\Adianti\Widget\Form\Field\Validator\DateValidator;
 
 /**
  * Model DDate
@@ -34,7 +34,7 @@ class DDate extends TDate implements FormField
 
         $this->operator('=');
 
-        $this->addValidation($this->getLabel(), new TDateValidator());
+        $this->addValidation($this->getLabel(), new DateValidator());
     }
 
     public function disable($disable = true)

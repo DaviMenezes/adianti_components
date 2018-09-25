@@ -6,9 +6,7 @@ use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\DTransaction;
 use Dvi\Adianti\Helpers\CommonActions;
 use Dvi\Adianti\Route;
-use Dvi\Adianti\View\Standard\Form\BaseFormView;
 use Dvi\Adianti\View\Standard\Form\StandardFormView;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 
 /**
  * Control StandardFormControl
@@ -44,6 +42,7 @@ abstract class StandardFormControl extends DviControl
             $this->createCurrentObject();
 
             $this->view->setCurrentObj($this->currentObj);
+
             $this->view->setPageList($this->pageList);
 
             DTransaction::close();
@@ -78,11 +77,14 @@ abstract class StandardFormControl extends DviControl
         }
 
         if ($msg_error) {
-            $msg  = 'O método init() é responsável em coletar algumas informações importantes ';
-            $msg .= '<br> para o bom funcionamento do sistema.';
-            $msg .= ' Verifique as mensagens abaixo para corrigir o problema <br><hr>';
-            $msg .= $msg_error;
-            DMessage::create('die', 'Não foi possível criar a tela. Contate o administrador', $msg);
+            if (ENVIRONMENT == 'development') {
+                $msg  = 'O método init() é responsável em coletar algumas informações importantes ';
+                $msg .= '<br> para o bom funcionamento do sistema.';
+                $msg .= ' Verifique as mensagens abaixo para corrigir o problema <br><hr>';
+                $msg .= $msg_error;
+                throw new \Exception($msg);
+            }
+            throw new \Exception('Não foi possível criar a tela. Contate o administrador');
         }
     }
 

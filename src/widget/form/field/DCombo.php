@@ -2,6 +2,8 @@
 
 namespace Dvi\Adianti\Widget\Form\Field;
 
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Form\TCombo;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
@@ -43,6 +45,7 @@ class DCombo extends TCombo implements FormField
     public function enableSearch()
     {
         parent::enableSearch();
+        $this->searchable = true;
         return $this;
     }
 
@@ -56,6 +59,21 @@ class DCombo extends TCombo implements FormField
     public function isDisabled()
     {
         return $this->field_disabled;
+    }
+
+    protected function setSearchable()
+    {
+        if ($this->searchable) {
+            $select = strtolower(AdiantiCoreTranslator::translate('Select') . ' '. $this->field_label);
+            if ($this->isRequired()) {
+                $select = '<span style="color: #d9534f">'.$select.'</span>';
+            }
+            TScript::create("tcombo_enable_search('#{$this->id}', '{$select}')");
+
+            if (!parent::getEditable()) {
+                TScript::create(" tmultisearch_disable_field( '{$this->formName}', '{$this->name}'); ");
+            }
+        }
     }
 }
 

@@ -4,12 +4,10 @@ namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\View\Standard\DviBaseView;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
 
 /**
@@ -56,11 +54,11 @@ abstract class DviControl extends TPage
     {
         try {
             if (!$this->validateMethod()) {
-                DMessage::create('die', 'Segurança: Método '.$this->params['method'].' inválido');
+                throw new \Exception('Segurança: Método '.$this->params['method'].' inválido');
             }
             parent::show();
         } catch (\Exception $e) {
-            DMessage::create('die', null, $e->getMessage());
+            throw new \Exception(null, $e->getMessage());
         }
     }
 

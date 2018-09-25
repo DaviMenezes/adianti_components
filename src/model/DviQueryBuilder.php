@@ -1,10 +1,7 @@
 <?php
 namespace Dvi\Adianti\Model;
 
-use Adianti\Base\Lib\Database\TRecord;
-use Adianti\Base\Lib\Database\TTransaction;
 use Dvi\Adianti\Database\DTransaction;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 use Exception;
 use PDO;
 use PDOStatement;
@@ -86,8 +83,9 @@ trait DviQueryBuilder
 
     public function table(string $model_class, string $alias = null)
     {
+        /**@var DviTRecord $model_class*/
         $alias = $alias ?? (new ReflectionClass($model_class))->getShortName();
-        $this->table = ['table' => $model_class::TABLENAME, 'alias' => $alias, 'default_obj'=> $model_class];
+        $this->table = ['table' => $model_class::getTableName(), 'alias' => $alias, 'default_obj'=> $model_class];
         return $this;
     }
 
@@ -112,7 +110,7 @@ trait DviQueryBuilder
 
         $this->joins[] = [
             'type'=> $type,
-            'table' => $model_class::TABLENAME,
+            'table' => $model_class::getTableName(),
             'table_alias'=> $table_alias ?? (new ReflectionClass($model_class))->getShortName(),
             'associated_alias' => $associated_alias,
             'foreing_key' => $forein_key
@@ -194,7 +192,7 @@ trait DviQueryBuilder
         /**@var DviTFilter $filter*/
         foreach ($filters as $filter) {
             if (!is_a($filter, DviTFilter::class)) {
-                DMessage::create('die', null, 'Os filtros devem ser do tipo DviTFilter');
+                throw new \Exception(null, 'Os filtros devem ser do tipo DviTFilter');
             }
             $this->where($filter->field, $filter->operator, $filter->value, $filter->value2);
         }

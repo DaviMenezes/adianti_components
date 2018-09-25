@@ -7,9 +7,8 @@ use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Database\TTransaction;
 use Dvi\Adianti\Database\DTransaction;
-use Dvi\Adianti\Widget\Dialog\DMessage;
+use Dvi\Adianti\Helpers\Reflection;
 use Exception;
-use PDO;
 use ReflectionObject;
 use ReflectionProperty;
 
@@ -31,7 +30,6 @@ class DviTRecord extends TRecord
     const IDPOLICY = 'serial';
 
     protected $foreign_keys = array();
-    private $isDirty;
     private $current_obj;
 
     #region [BUILD MODEL] *******************************************
@@ -83,11 +81,6 @@ class DviTRecord extends TRecord
         return $this->foreign_keys;
     }
 
-    public function isDirty()
-    {
-        return $this->isDirty;
-    }
-
     public static function getInstance($id)
     {
         $class = get_called_class();
@@ -111,7 +104,7 @@ class DviTRecord extends TRecord
             $msg_user = 'Ops... um erro ocorreu ao executar esta ação. Informe ao administrador';
             $msg_dev = 'Para chamar o método getMagicObject é necessário que o ';
             $msg_dev .= 'Objeto Associado esteja mapeado. Use o método setMap no construtor do Modelo';
-            DMessage::create('die', $msg_user, $msg_dev);
+            throw new \Exception($msg_user, $msg_dev);
         }
 
         $attribute_class = $this->foreign_keys[$attribute];
@@ -205,4 +198,12 @@ class DviTRecord extends TRecord
         return $obj;
     }
     #endregion
+
+    public static function getTableName()
+    {
+        $model = preg_replace('/([^A-Z])([A-Z])/', "$1_$2", Reflection::getClassName(get_called_class()));
+
+        $model = !empty(get_called_class()::TABLENAME) ? get_called_class()::TABLENAME : strtolower($model);
+        return $model;
+    }
 }

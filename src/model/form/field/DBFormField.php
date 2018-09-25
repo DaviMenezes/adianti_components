@@ -22,7 +22,6 @@ abstract class DBFormField
     /**@var FormField $field */
     protected $field;
     protected $label;
-    protected $required;
     protected $hide_in_edit;
 
     public function __construct(string $label = null)
@@ -50,11 +49,6 @@ abstract class DBFormField
         return $this->field;
     }
 
-    public function getRequired()
-    {
-        return $this->required;
-    }
-
     public function hideInEdit()
     {
         $this->hide_in_edit = true;
@@ -74,7 +68,7 @@ abstract class DBFormField
 
     public function required()
     {
-        $this->required = true;
+        $this->field->required();
         $this->validation(new RequiredValidator());
         return $this;
     }
