@@ -1,22 +1,22 @@
 <?php
-
 namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Base\Lib\Widget\Form\TRadioGroup;
+use Adianti\Base\Lib\Widget\Form\TDate;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
+use Dvi\Adianti\Widget\Form\Field\Validator\DateValidator;
 
 /**
- * DRadioGroup
+ * Model Date
  *
  * @version    Dvi 1.0
- * @package    Form
- * @subpackage Widget
+ * @package    form
+ * @subpackage widget
  * @author     Davi Menezes
- * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
+ * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DRadioGroup extends TRadioGroup implements FormField
+class Date extends TDate implements FormField
 {
     use FormFieldTrait;
     use FormFieldValidation;
@@ -24,28 +24,24 @@ class DRadioGroup extends TRadioGroup implements FormField
 
     private $field_disabled;
 
-    public function __construct(string $name, $label, $required = false)
+    public function __construct($name, string $label = null, bool $required = false)
     {
         parent::__construct($name);
 
         $this->setup($label ?? $name, $required);
-
-        $this->setLayout('horizontal');
-        $this->setUseButton();
+        $this->setMask('dd/mm/yyyy');
+        $this->setDatabaseMask('yyyy-mm-dd');
 
         $this->operator('=');
-    }
 
-    public function items(array $items)
-    {
-        $this->addItems($items);
+        $this->addValidation($this->getLabel(), new DateValidator());
     }
 
     public function disable($disable = true)
     {
         $this->field_disabled = $disable;
 
-        $this->setEditable(!$disable);
+        parent::setEditable(!$disable);
     }
 
     public function isDisabled()

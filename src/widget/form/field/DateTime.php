@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 
 /**
- * Fields DDateTime
+ * Fields DateTime
  *
  * @package    Fields
  * @subpackage Form
@@ -16,7 +16,7 @@ use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DDateTime extends TDateTime implements FormField
+class DateTime extends TDateTime implements FormField
 {
     use FormFieldTrait;
     use FormFieldValidation;

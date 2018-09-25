@@ -3,11 +3,8 @@
 namespace Dvi\Adianti\Model;
 
 use Adianti\Base\Lib\Registry\TSession;
-use Dvi\Adianti\Helpers\Utils;
-use Dvi\Adianti\Control\DviControl;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 
 /**
  * Model DBFormFieldPrepare
@@ -77,16 +74,17 @@ class DBFormFieldPrepare extends DB
                         $forein_keys = $last_association->getForeignKeys();
                         $associated_alias = Reflection::getClassName($last_association);
                         $table_alias = ucfirst($item);
+                        /**@var DviTRecord $model_class*/
+                        $model_class = $forein_keys[$item];
                         if (array_key_exists($item, $forein_keys) and !array_key_exists($table_alias, $joins)) {
                             $join['model_class'] = $forein_keys[$item];
-                            $join['table'] = $forein_keys[$item]::TABLENAME;
+                            $join['table'] = $model_class::getTableName();
                             $join['table_alias'] = $table_alias;
                             $join['associated_alias'] = $associated_alias;
                             $join['foreign_key'] = $item.'_id';
 
                             $joins[$table_alias] = $join;
                         }
-                        $model_class = $forein_keys[$item];
                         $last_association = new $model_class();
                     }
                 }
@@ -110,8 +108,8 @@ class DBFormFieldPrepare extends DB
                 $this->order($order['field'], $order['direction']);
             }
         } catch (\Exception $e) {
-            DTransaction::rollback();
-            DMessage::create('die', $e->getMessage());
+            Transaction::rollback();
+            throw new \Exception($e->getMessage());
         }
     }
 }

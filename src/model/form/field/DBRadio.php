@@ -3,7 +3,7 @@
 namespace Dvi\Adianti\Model\Form\Field;
 
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\Field\DRadioGroup;
+use Dvi\Adianti\Widget\Form\Field\RadioGroup;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
@@ -20,7 +20,7 @@ class DBRadio extends DBFormField
 {
     public function __construct(string $name, string $label = null)
     {
-        $this->field = new DRadioGroup($name, $label);
+        $this->field = new RadioGroup($name, $label);
 
         parent::__construct($label);
     }
@@ -30,7 +30,7 @@ class DBRadio extends DBFormField
         $this->field->setType($type);
     }
 
-    /**@return DRadioGroup*/
+    /**@return RadioGroup*/
     public function getField()
     {
         return $this->field;

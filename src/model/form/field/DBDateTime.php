@@ -4,7 +4,7 @@ namespace Dvi\Adianti\Model\Form\Field;
 
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\Field\DDateTime;
+use Dvi\Adianti\Widget\Form\Field\DateTime;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
@@ -21,7 +21,7 @@ class DBDateTime extends DBFormField
 {
     public function __construct(string $name, string $label = null)
     {
-        $this->field = new DDateTime($name);
+        $this->field = new DateTime($name);
 
         parent::__construct($label);
 

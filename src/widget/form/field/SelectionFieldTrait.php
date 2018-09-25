@@ -4,7 +4,7 @@ namespace Dvi\Adianti\Widget\Form\Field;
 
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TRepository;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Exception;
 
 /**
@@ -21,7 +21,7 @@ trait SelectionFieldTrait
     private function getObjItems(array $obj_array_value)
     {
         try {
-            DTransaction::open();
+            Transaction::open();
 
             $result = $obj_array_value[0]::all();
             $items = array();
@@ -36,11 +36,11 @@ trait SelectionFieldTrait
                     $items[$item->id] = $str_value;
                 }
             }
-            DTransaction::close();
+            Transaction::close();
 
             return $items;
         } catch (Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             throw $e;
         }
     }

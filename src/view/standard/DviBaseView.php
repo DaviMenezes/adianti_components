@@ -7,8 +7,8 @@ use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Helpers\GUID;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Widget\Form\Field\DHidden;
-use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
+use Dvi\Adianti\Widget\Form\Field\Hidden;
+use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * View DviBaseView
@@ -22,7 +22,7 @@ use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
 abstract class DviBaseView
 {
     protected $model;
-    /**@var DviPanelGroup $panel*/
+    /**@var PanelGroup $panel*/
     protected $panel;
     protected $groupFields = array();
     protected $params;
@@ -46,7 +46,7 @@ abstract class DviBaseView
     abstract protected function setModel();
 
     /** @example $this->fields([
-     *      ['field1', 'field2']
+     *      ['field1', 'field2'],
      *      ['field3', 'field4', 'field5']
      * ]);
      */
@@ -54,7 +54,7 @@ abstract class DviBaseView
 
     public function createPanelForm()
     {
-        $this->panel = $this->panel ?? new DviPanelGroup($this->params['class']);
+        $this->panel = $this->panel ?? new PanelGroup($this->params['class']);
         $this->setPageTitle();
     }
 
@@ -63,9 +63,9 @@ abstract class DviBaseView
         if ($this->panel->getForm()->getField($param['class'] . '_form_token')) {
             return;
         }
-        $field_id = new DHidden('id');
+        $field_id = new Hidden('id');
         $field_id->setValue($this->params['id'] ?? null);
-        $field_token = new DHidden($param['class'].'_form_token');
+        $field_token = new Hidden($param['class'].'_form_token');
 
         $token = $param[$param['class'].'_form_token'] ?? null;
         if (empty($param[$param['class'].'_form_token'])) {

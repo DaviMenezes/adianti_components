@@ -5,10 +5,10 @@ namespace Dvi\Adianti\Widget\Form\Field;
 use Adianti\Base\Lib\Widget\Form\THtmlEditor;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
-use Dvi\Lib\Widget\Base\DScript;
+use Dvi\Lib\Widget\Base\Script;
 
 /**
- * Form DHtmlEditor
+ * Form HtmlEditor
  *
  * @package    Form
  * @subpackage Widget
@@ -16,7 +16,7 @@ use Dvi\Lib\Widget\Base\DScript;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DHtmlEditor extends THtmlEditor implements FormField
+class HtmlEditor extends THtmlEditor implements FormField
 {
     use FormFieldTrait;
     use FormFieldValidation;
@@ -30,6 +30,6 @@ class DHtmlEditor extends THtmlEditor implements FormField
 
         $this->setSize('100%', $height);
 
-        DScript::add('remove_note-popover', '$(".note-popover").remove();');
+        Script::add('remove_note-popover', '$(".note-popover").remove();');
     }
 }

@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Container\TNotebook;
 use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Lib\Wrapper\BootstrapNotebookWrapper;
-use Dvi\Adianti\Widget\Base\DGridBootstrap;
+use Dvi\Adianti\Widget\Base\GridBootstrap;
 
 /**
  * Form PanelGroupNotebookFacade
@@ -35,7 +35,7 @@ trait PanelGroupNotebookFacade
 
     public function appendPage(string $title)
     {
-        $this->grid = new DGridBootstrap();
+        $this->grid = new GridBootstrap();
         $this->getNotebook()->appendPage($title, $this->grid);
 
         return $this;

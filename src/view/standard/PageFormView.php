@@ -1,14 +1,11 @@
 <?php
 namespace Dvi\Adianti\View\Standard;
 
-use Dvi\Adianti\Database\DTransaction;
-use Dvi\Adianti\Helpers\Utils;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\DGridColumn;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 use Dvi\Adianti\Widget\Form\Field\FormField;
-use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
+use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * Control DviTPageForm
@@ -23,7 +20,7 @@ use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
 trait PageFormView
 {
     protected $panel_rows_columns = array();
-    /**@var DviPanelGroup $panel*/
+    /**@var PanelGroup $panel*/
     protected $panel;
     protected $content_after_panel;
     protected $build_group_fields = array();
@@ -32,7 +29,7 @@ trait PageFormView
     public function buildFields()
     {
         try {
-            DTransaction::open();
+            Transaction::open();
 
             if (count($this->build_group_fields)) {
                 return $this->build_group_fields;
@@ -94,11 +91,11 @@ trait PageFormView
 
                 $this->build_group_fields[$key] = ['tab' => $group->getTab(), 'fields' => $build_fields];
             }
-            DTransaction::close();
+            Transaction::close();
 
             return $this->build_group_fields;
         } catch (\Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             throw new \Exception($e->getMessage());
         }
     }
@@ -113,7 +110,8 @@ trait PageFormView
         }
 
         $rows = 0;
-        foreach ($this->buildFields() as $key => $groups) {
+        $fields = $this->buildFields();
+        foreach ($fields as $key => $groups) {
             if ($groups['tab'] and $key == 0) {
                 $this->panel->addNotebook();
             }

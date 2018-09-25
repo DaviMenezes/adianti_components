@@ -81,6 +81,11 @@ trait FormFieldValidation
         return $this;
     }
 
+    public function isRequired()
+    {
+        return $this->required;
+    }
+
     public function addErrorMessage($msg)
     {
         $this->error_msg[] = $msg;

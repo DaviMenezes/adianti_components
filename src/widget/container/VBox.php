@@ -15,7 +15,7 @@ use Dvi\Adianti\Widget\IGroupField;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DVBox extends TVBox implements IGroupField
+class VBox extends TVBox implements IGroupField
 {
     private $childs;
 

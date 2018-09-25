@@ -3,8 +3,8 @@
 namespace Dvi\Adianti\Widget\Bootstrap\Component;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Dvi\Adianti\Widget\Util\DAction;
-use Dvi\Adianti\Widget\Util\DActionLink;
+use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Adianti\Widget\Util\ActionLink;
 use Dvi\Adianti\WidgetBootstrap\Component\GroupActions;
 
 /**
@@ -16,7 +16,7 @@ use Dvi\Adianti\WidgetBootstrap\Component\GroupActions;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DActionGroup //extends GroupActions
+class ActionGroup //extends GroupActions
 {
     private $actionHeader;
     protected $items = array();
@@ -43,7 +43,7 @@ class DActionGroup //extends GroupActions
         $this->items[] = '<li role="separator" class="divider"></li>';
     }
 
-    public function addLink(array $callback, $icon = null, $label = null, array $parameters = null, $style = null):DActionLink
+    public function addLink(array $callback, $icon = null, $label = null, array $parameters = null, $style = null):ActionLink
     {
         if ($icon) {
             $class_icon = explode(' ', $icon);
@@ -54,7 +54,7 @@ class DActionGroup //extends GroupActions
                 $icon .= ' '.$this->icon_size;
             }
         }
-        $link = new DActionLink(new DAction($callback, $parameters), $label, $icon);
+        $link = new ActionLink(new Action($callback, $parameters), $label, $icon);
 //        $link->class = 'btn btn-default dvi_panel_action';
 
         $this->items[] = $link;

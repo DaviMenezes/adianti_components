@@ -2,7 +2,7 @@
 namespace Dvi\Adianti\Model\Form\Field;
 
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\Field\DEntry;
+use Dvi\Adianti\Widget\Form\Field\Varchar;
 use Dvi\Adianti\Widget\Form\Field\Validator\CpfValidator;
 use Dvi\Adianti\Widget\Form\Field\Validator\EmailValidator;
 
@@ -19,12 +19,12 @@ class DBVarchar extends DBFormField
 {
     public function __construct(string $name, int $size, string $label = null)
     {
-        $this->field = new DEntry($name, $label, $size, false);
+        $this->field = new Varchar($name, $label, $size, false);
 
         parent::__construct($label);
     }
 
-    #region [FACADE]
+    #region [FACADE] Especific methods to this class
     public function setType($type)
     {
         $this->field->setType($type);

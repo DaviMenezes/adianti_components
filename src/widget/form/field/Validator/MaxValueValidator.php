@@ -21,7 +21,7 @@ class MaxValueValidator extends FieldValidator
         parent::__construct($error_msg);
 
         $this->max_value = $max_value;
-        $this->default_msg = $msg ?? 'Valor máximo inválido. Máximo permitido: '.$max_value;
+        $this->default_msg = $msg ?? 'Valor máximo('.$max_value.') inválido';
     }
 
     public function validate($label, $value, $parameters = null)

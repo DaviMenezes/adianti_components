@@ -3,8 +3,7 @@
 namespace Dvi\Adianti\Model;
 
 use Closure;
-use Dvi\Adianti\Database\DTransaction;
-use Dvi\Adianti\Widget\Dialog\DMessage;
+use Dvi\Adianti\Database\Transaction;
 
 /**
  * Model DviDefaultQuery
@@ -22,13 +21,13 @@ class DB
     public static function transaction(Closure $closure)
     {
         try {
-            DTransaction::open();
+            Transaction::open();
             $result = call_user_func($closure);
-            DTransaction::close();
+            Transaction::close();
             return $result;
         } catch (\Exception $e) {
-            DTransaction::rollback();
-            DMessage::create('die', $e->getMessage());
+            Transaction::rollback();
+            throw new \Exception($e->getMessage());
         }
     }
 

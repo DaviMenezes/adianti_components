@@ -27,7 +27,7 @@ trait Reflection
         try {
             return (new ReflectionClass($class ?? get_called_class()))->getShortName();
         } catch (ReflectionException $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
+            throw new Exception($e->getMessage());
         }
     }
 

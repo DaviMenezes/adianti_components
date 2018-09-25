@@ -3,7 +3,7 @@
 namespace Dvi\Adianti\Model\Form\Field;
 
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\Field\DCombo;
+use Dvi\Adianti\Widget\Form\Field\Combo;
 use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
@@ -23,7 +23,7 @@ class DBCombo extends DBFormField
 
     public function __construct(string $name, string $label = null)
     {
-        $this->field = new DCombo($name, $label, false);
+        $this->field = new Combo($name, $label);
 
         parent::__construct($label);
 

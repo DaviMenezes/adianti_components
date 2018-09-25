@@ -6,13 +6,13 @@ use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\View\Standard\DviBaseView;
 use Dvi\Adianti\View\Standard\Form\BaseFormView;
 use Dvi\Adianti\View\Standard\PageFormView;
 use Dvi\Adianti\Widget\Base\DataGrid;
-use Dvi\Adianti\Widget\Container\DVBox;
-use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
+use Dvi\Adianti\Widget\Container\VBox;
+use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * Cria tela com formulário de pesquisa com listagem paginada
@@ -27,7 +27,7 @@ use Dvi\Adianti\Widget\Form\PanelGroup\DviPanelGroup;
 abstract class StandardSearchListView extends BaseFormView
 {
     protected $formController;
-    /**@var DviPanelGroup $panel*/
+    /**@var PanelGroup $panel*/
     protected $panel;
     /**@var DataGrid $datagrid*/
     protected $datagrid;
@@ -38,7 +38,7 @@ abstract class StandardSearchListView extends BaseFormView
     /**@var TAction $action_delete*/
     protected $action_delete;
     protected $panel_grid;
-    /**@var DVBox $vbox*/
+    /**@var VBox $vbox*/
     protected $vbox;
     protected $actions_created;
     private $view_builded;
@@ -75,7 +75,7 @@ abstract class StandardSearchListView extends BaseFormView
             if ($this->view_builded) {
                 return;
             }
-            DTransaction::open();
+            Transaction::open();
 
             $this->createPanel($param);
 
@@ -87,11 +87,11 @@ abstract class StandardSearchListView extends BaseFormView
 
             $this->createVBoxContent();
 
-            DTransaction::close();
+            Transaction::close();
 
             $this->view_builded = true;
         } catch (\Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             throw new \Exception($e->getMessage());
         }
     }
@@ -108,7 +108,7 @@ abstract class StandardSearchListView extends BaseFormView
 
     protected function createVBoxContent()
     {
-        $this->vbox = new DVBox();
+        $this->vbox = new VBox();
         $this->vbox->add($this->panel);
         $this->vbox->add($this->getContentAfterPanel());
         $this->vbox->add($this->getDatagrid());

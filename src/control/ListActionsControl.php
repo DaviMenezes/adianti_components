@@ -7,7 +7,7 @@ use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Dialog\TQuestion;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DB;
@@ -16,7 +16,7 @@ use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\DviTFilter;
 use Dvi\Adianti\View\Standard\SearchList\StandardSearchListView;
 use Dvi\Adianti\Widget\Base\DataGrid;
-use Dvi\Adianti\Widget\Datagrid\DPageNavigation;
+use Dvi\Adianti\Widget\Datagrid\PageNavigation;
 
 /**
  * Control ListActionsControl
@@ -31,7 +31,7 @@ trait ListActionsControl
 {
     /**@var DataGrid $datagrid*/
     protected $datagrid;
-    /**@var DPageNavigation $pageNavigation*/
+    /**@var PageNavigation $pageNavigation*/
     protected $pageNavigation;
     protected $datagrid_items_criteria;
     protected $datagrid_items_obj_repository;
@@ -79,16 +79,16 @@ trait ListActionsControl
     public function delete()
     {
         try {
-            DTransaction::open($this->database);
+            Transaction::open($this->database);
 
             $this->view = new $this->viewClass(array());
             $this->view->getModel()::remove($this->params['id']);
 
-            DTransaction::close();
+            Transaction::close();
 
             $this->onBack();
         } catch (\Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             new TMessage('error', $e->getMessage());
         }
     }
@@ -122,15 +122,15 @@ trait ListActionsControl
 
             $items = $this->getDatagridItems();
 
-            DTransaction::open($this->database);
+            Transaction::open($this->database);
             $this->populateGrids($items);
-            DTransaction::close();
+            Transaction::close();
 
             $this->preparePageNavidation();
 
             $this->reloaded = true;
         } catch (\Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             throw new \Exception($e->getMessage());
         }
     }

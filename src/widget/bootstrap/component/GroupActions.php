@@ -7,9 +7,9 @@ use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TForm;
-use Dvi\Adianti\Widget\Util\DAction;
-use Dvi\Adianti\Widget\Form\DButton;
-use Dvi\Adianti\Widget\Util\DActionLink;
+use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Adianti\Widget\Form\Button;
+use Dvi\Adianti\Widget\Util\ActionLink;
 
 /**
  * Component GroupActions
@@ -57,10 +57,10 @@ class GroupActions
         $this->icon_size = $size;
     }
 
-    public function addButton(array $action, $icon = null, $label = null, array $parameters = null):DButton
+    public function addButton(array $action, $icon = null, $label = null, array $parameters = null):Button
     {
         try {
-            $btn = new DButton();
+            $btn = new Button();
             $btn->setAction(new TAction($action, $parameters));
 
             if ($label) {
@@ -102,9 +102,9 @@ class GroupActions
         return $this->buttons;
     }
 
-    public function addLink(array $callback, $icon = null, $label = null, array $parameters = null):DActionLink
+    public function addLink(array $callback, $icon = null, $label = null, array $parameters = null):ActionLink
     {
-        $link = new DActionLink(new DAction($callback, $parameters), $label, $icon);
+        $link = new ActionLink(new Action($callback, $parameters), $label, $icon);
         $link->class = 'btn btn-default dvi_panel_action';
 
         $this->currentAction = $link;

@@ -2,12 +2,12 @@
 
 namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Base\Lib\Widget\Form\TCombo;
+use Adianti\Base\Lib\Widget\Form\TText;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 
 /**
- * Model DCombo
+ * Model Text
  *
  * @version    Dvi 1.0
  * @package    form
@@ -16,39 +16,33 @@ use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DCombo extends TCombo implements FormField
+class Text extends TText implements FormField
 {
     use FormFieldTrait;
     use FormFieldValidation;
     use SearchableField;
-    use SelectionFieldTrait;
 
     private $field_disabled;
 
-    public function __construct(string $name, string $label = null, $required = false, array $obj_array_value = null)
+    public function __construct(string $name, string $label = null, int $max_length = null, $height = '50')
     {
         parent::__construct($name);
 
-        $this->setup($label ?? $name, $required);
-        $this->tip(false);
-        $this->operator('=');
+        $this->setup($label ?? $name, false, $max_length);
 
-        if ($obj_array_value) {
-            $this->items($this->getObjItems($obj_array_value));
-        }
-
-        $this->enableSearch();
+        $this->setSize(0, $height);
     }
 
-    public function enableSearch()
+    public function setMaxLength(int $length)
     {
-        parent::enableSearch();
-        return $this;
+        if ($length > 0) {
+            $this->setProperty('maxlength', $length);
+        }
     }
 
     public function disable($disable = true)
     {
-        $this->field_disabled = true;
+        $this->field_disabled = $disable;
 
         $this->setEditable(!$disable);
     }
@@ -57,6 +51,5 @@ class DCombo extends TCombo implements FormField
     {
         return $this->field_disabled;
     }
+
 }
-
-

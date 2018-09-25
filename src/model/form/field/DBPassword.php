@@ -3,7 +3,7 @@
 namespace App\Adianti\Model\Form\Fields;
 
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\Field\DPassword;
+use Dvi\Adianti\Widget\Form\Field\Password;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
@@ -19,7 +19,7 @@ class DBPassword extends DBFormField
 {
     public function __construct(string $name, string $max_length, string $label = null)
     {
-        $this->field = new DPassword($name, $max_length, strtolower($label) ?? 'password');
+        $this->field = new Password($name, $max_length, strtolower($label) ?? 'password');
 
         parent::__construct($label ?? $name);
     }

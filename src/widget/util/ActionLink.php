@@ -3,13 +3,11 @@ namespace Dvi\Adianti\Widget\Util;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Base\Lib\Widget\Util\TImage;
 use Adianti\Base\Lib\Widget\Util\TTextDisplay;
-use Dvi\Adianti\Widget\Dialog\DMessage;
 
 /**
- * Model DActionLink
+ * Model ActionLink
  *
  * @version    Dvi 1.0
  * @package    util
@@ -18,7 +16,7 @@ use Dvi\Adianti\Widget\Dialog\DMessage;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DActionLink extends TTextDisplay
+class ActionLink extends TTextDisplay
 {
     private $label;
     /**@var TElement $a_content*/
@@ -30,7 +28,7 @@ class DActionLink extends TTextDisplay
     private $icon_size;
 
     public function __construct(
-        DAction $action = null,
+        Action $action = null,
         string $label = null,
         string $icon = null,
         string $color = null,
@@ -97,10 +95,10 @@ class DActionLink extends TTextDisplay
 
     public function action($action, array $params = null)
     {
-        if (is_array($action) or is_a($action, DAction::class)) {
+        if (is_array($action) or is_a($action, Action::class)) {
             if (is_array($action)) {
                 if (count($action)) {
-                    $action = new DAction($action, $params);
+                    $action = new Action($action, $params);
                 }
             }
 
@@ -121,7 +119,7 @@ class DActionLink extends TTextDisplay
     public function show()
     {
         if (empty($this->image) and empty($this->label)) {
-            DMessage::create('die', 'O botão precisa de um texto ou uma imagem');
+            throw new \Exception('O botão precisa de um texto ou uma imagem');
         }
         $this->a_content->class = 'align_action_middle';
 

@@ -4,7 +4,7 @@ namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\CommonActions;
 
 /**
@@ -37,7 +37,7 @@ abstract class StandardFormListControl extends DviControl
             }
             parent::__construct($param);
 
-            DTransaction::open();
+            Transaction::open();
 
             $this->init();
 
@@ -47,9 +47,9 @@ abstract class StandardFormListControl extends DviControl
 
             $this->createCurrentObject();
 
-            DTransaction::close();
+            Transaction::close();
         } catch (\Exception $e) {
-            DTransaction::rollback();
+            Transaction::rollback();
             new TMessage('error', $e->getMessage());
         }
     }

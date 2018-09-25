@@ -15,7 +15,7 @@ use Closure;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DTransaction
+class Transaction
 {
     public static function open($database = 'default', array $dbinfo = null)
     {

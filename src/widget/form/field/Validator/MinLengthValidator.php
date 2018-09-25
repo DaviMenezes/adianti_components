@@ -13,20 +13,20 @@ namespace Dvi\Adianti\Widget\Form\Field\Validator;
  */
 class MinLengthValidator extends FieldValidator
 {
-    private $min_value;
+    private $min_length;
     private $default_error_msg;
 
     public function __construct($min_value = 0, string $error_msg = null)
     {
-        $this->min_value = $min_value;
-        $this->default_error_msg = $error_msg ?? 'Tamanho mínimo inválido';
+        $this->min_length = $min_value;
+        $this->default_error_msg = $error_msg ?? 'Tamanho mínimo ('.$min_value.') inválido';
 
         parent::__construct($error_msg);
     }
 
     public function validate($label, $value, $parameters = null)
     {
-        if (strlen($value) < $this->min_value) {
+        if (strlen($value) < $this->min_length) {
             $this->error_msg = $this->default_error_msg;
             return false;
         }

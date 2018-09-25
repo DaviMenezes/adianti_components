@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Widget\Form\THidden;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
- * Form DHidden
+ * Form Hidden
  *
  * @version    Dvi 1.0
  * @package    Form
@@ -15,7 +15,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DHidden extends THidden
+class Hidden extends THidden
 {
     use FormField;
 
