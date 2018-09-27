@@ -137,8 +137,6 @@ trait FormControl
         //continues bulding the view
         $this->buildView();
 
-        $this->getViewContent();
-
         if ($has_error) {
             $traits = (new ReflectionClass(self::class))->getTraitNames();
             if (in_array(ListActionsControl::class, array_values($traits))) {
@@ -146,6 +144,7 @@ trait FormControl
             }
             throw new \Exception('Verifique os campos em destaque');
         }
+        $this->getViewContent();
     }
 
     protected function save()
