@@ -131,6 +131,7 @@ trait FormField
     public function setReferenceName($reference_name)
     {
         $this->reference_name = $reference_name;
+        return $this;
     }
 
     public function getReferenceName()

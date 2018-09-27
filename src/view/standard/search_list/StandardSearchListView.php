@@ -89,7 +89,7 @@ abstract class StandardSearchListView extends BaseFormView
             $this->view_builded = true;
         } catch (\Exception $e) {
             Transaction::rollback();
-            throw new \Exception($e->getMessage());
+            throw new \Exception('Construção da view.'.$e->getMessage());
         }
     }
 

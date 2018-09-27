@@ -42,7 +42,7 @@ abstract class BaseFormView extends DviBaseView
             Transaction::close();
         } catch (\Exception $e) {
             Transaction::rollback();
-            throw new \Exception($e->getMessage());
+            throw new \Exception('Criação do painel.'.$e->getMessage());
         }
     }
 

@@ -27,7 +27,7 @@ class DB
             return $result;
         } catch (\Exception $e) {
             Transaction::rollback();
-            throw new \Exception($e->getMessage());
+            throw new \Exception('Transação-'.$e->getMessage());
         }
     }
 

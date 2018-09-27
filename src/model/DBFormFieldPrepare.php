@@ -116,7 +116,7 @@ class DBFormFieldPrepare extends DB
             }
         } catch (\Exception $e) {
             Transaction::rollback();
-            throw new \Exception($e->getMessage());
+            throw new \Exception('Verificando os filtros-'.$e->getMessage());
         }
     }
 }

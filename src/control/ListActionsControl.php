@@ -131,7 +131,7 @@ trait ListActionsControl
             $this->reloaded = true;
         } catch (\Exception $e) {
             Transaction::rollback();
-            throw new \Exception($e->getMessage());
+            throw new \Exception('Obtendo items para datagrid.'.$e->getMessage());
         }
     }
 
