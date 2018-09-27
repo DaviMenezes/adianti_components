@@ -3,7 +3,7 @@
 namespace Dvi\Adianti\Model;
 
 /**
- * Description of DviTFilter
+ * Description of QueryFilter
  *
  * Filtro para a queries uso em conjunto da classe DviTRecord
  *
@@ -13,7 +13,7 @@ namespace Dvi\Adianti\Model;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DviTFilter
+class QueryFilter
 {
     public $field;
     public $operator;

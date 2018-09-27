@@ -61,19 +61,13 @@ class Combo extends TCombo implements FormField
         return $this->field_disabled;
     }
 
-    protected function setSearchable()
+    protected function getTextPlaceholder()
     {
-        if ($this->searchable) {
-            $select = strtolower(AdiantiCoreTranslator::translate('Select') . ' '. $this->field_label);
-            if ($this->isRequired()) {
-                $select = '<span style="color: #d9534f">'.$select.'</span>';
-            }
-            TScript::create("tcombo_enable_search('#{$this->id}', '{$select}')");
-
-            if (!parent::getEditable()) {
-                TScript::create(" tmultisearch_disable_field( '{$this->formName}', '{$this->name}'); ");
-            }
+        $placeholder =  strtolower(AdiantiCoreTranslator::translate('Select') . ' '. $this->field_label);
+        if ($this->isRequired()) {
+            $placeholder = '<span style="color: #d9534f">'.$placeholder.'</span>';
         }
+        return $placeholder;
     }
 }
 

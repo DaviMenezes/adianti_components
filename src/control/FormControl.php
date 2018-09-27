@@ -15,6 +15,7 @@ use Dvi\Adianti\Model\DviTRecord;
 use Dvi\Adianti\View\Standard\Form\BaseFormView;
 use Dvi\Adianti\View\Standard\Form\StandardFormView;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField as FormFieldInterface;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormFieldValidation;
 use Dvi\Adianti\Widget\Form\Field\FormField;
 use ReflectionClass;
@@ -93,7 +94,7 @@ trait FormControl
             }
         } catch (\Exception $e) {
             TTransaction::rollback();
-            new TMessage('error', $e->getMessage());
+            throw $e;
         }
     }
 
@@ -111,16 +112,20 @@ trait FormControl
         $fields = $this->view->getBuildFields();
 
         $has_error = false;
+        /**@var FormFieldInterface $field*/
         foreach ($fields as $field) {
-            $field->setValue($this->params[$field->getName()]);
-
             if (!in_array(IFormField::class, class_implements($field))) {
                 continue;
             }
-            /**@var FormFieldValidation $field*/
-            if (!$field->validating()) {
+            $name = $field->getName();
+            $field->setValue($this->params[$name]);
+
+            if (!$field->validate()) {
                 $has_error = true;
             }
+
+            $value = $field->getValue();
+            $this->params[$name] = $value;
         }
 
         if ($has_error) {
@@ -187,7 +192,7 @@ trait FormControl
 
     protected function afterSave()
     {
-        if ($this->isEditing()) {
+        if ($this->isEditing() and method_exists($this, 'loadDatagrid')) {
             $this->loadDatagrid();
             return;
         }
@@ -238,7 +243,7 @@ trait FormControl
         try {
             return in_array('isDisabled', (new ReflectionClass(get_class($formField)))->getMethods());
         } catch (\ReflectionException $e) {
-            new TMessage('error', $e->getMessage());
+            throw $e;
         }
     }
 
@@ -280,11 +285,14 @@ trait FormControl
             return;
         }
 
-        Transaction::open();
-        $this->currentObj = $this->view->getModel()::find($this->params['id'] ?? null);
-        if (!$this->currentObj) {
-            new TMessage('error', 'Registro não encontrado');
-            die();
+        try {
+            Transaction::open();
+            $this->currentObj = $this->view->getModel()::find($this->params['id'] ?? null);
+            if (!$this->currentObj) {
+                throw new \Exception('O registro solicitado não foi encontrado.');
+            }
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage().' em '.self::class .' linha '.$exception->getLine());
         }
     }
 
@@ -299,7 +307,8 @@ trait FormControl
         
         SearchActionsControl::getForeynKeys($this->currentObj, $models_to_save);
 
-        $data = $this->view->getPanel()->getFormData();
+        $data = $this->getFormData();
+
         $result = array_merge($this->params, (array)$data);
 
         $models = $this->createArrayModels($result, $models_to_save);
@@ -331,5 +340,23 @@ trait FormControl
             $instance_objects[] = ['model'=>$last_model, 'attributes'=> $item['attributes']];
         }
         return array_reverse($instance_objects);
+    }
+
+    public function getFormData()
+    {
+        $data = $this->view->getPanel()->getFormData();
+        $valid_data = new \stdClass();
+        foreach ((array)$data as $prop => $value) {
+            if (empty($value) or is_array($prop) or strpos($prop, 'btn_') !== false) {
+                continue;
+            }
+            $valid_data->$prop = $this->prepareFormFieldData($prop, $value);
+        }
+        return $valid_data;
+    }
+
+    public function prepareFormFieldData($prop, $value)
+    {
+        return htmlspecialchars($value);
     }
 }

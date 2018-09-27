@@ -38,8 +38,7 @@ abstract class StandardSearchListView extends BaseFormView
     /**@var TAction $action_delete*/
     protected $action_delete;
     protected $panel_grid;
-    /**@var VBox $vbox*/
-    protected $vbox;
+
     protected $actions_created;
     private $view_builded;
 
@@ -85,8 +84,6 @@ abstract class StandardSearchListView extends BaseFormView
 
             $this->buildDatagrid();
 
-            $this->createVBoxContent();
-
             Transaction::close();
 
             $this->view_builded = true;
@@ -98,24 +95,18 @@ abstract class StandardSearchListView extends BaseFormView
 
     public function getContent()
     {
+        $this->vbox->add($this->panel);
+        $this->vbox->add($this->getContentAfterPanel());
+        $this->vbox->add($this->getDatagrid());
+        if ($this->datagrid) {
+            $this->vbox->add($this->pageNavigation);
+        }
+
         return $this->vbox;
     }
 
     public function setFormController($formController)
     {
         $this->formController = $formController;
-    }
-
-    protected function createVBoxContent()
-    {
-        $this->vbox = new VBox();
-        $this->vbox->add($this->panel);
-        $this->vbox->add($this->getContentAfterPanel());
-        $this->vbox->add($this->getDatagrid());
-    }
-
-    public function addPageNavigationInBoxContainer()
-    {
-        $this->vbox->add($this->pageNavigation);
     }
 }

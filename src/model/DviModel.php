@@ -100,7 +100,7 @@ abstract class DviModel extends DviTRecord
 
     public function setMap($attribute_name, $class)
     {
-        $this->foreign_keys[$attribute_name] = $class;
+        $this->foreign_keys[$attribute_name] = ['alias'=> $attribute_name, 'class'=>$class];
         $this->addAttribute((string)$attribute_name.'_id');
     }
 

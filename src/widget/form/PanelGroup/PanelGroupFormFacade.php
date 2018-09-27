@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Lib\Widget\Form\TLabel;
-use Dvi\Adianti\Widget\Base\DGridColumn;
+use Dvi\Adianti\Widget\Base\GridColumn;
 use Dvi\Adianti\Widget\Base\GroupField;
 use Dvi\Adianti\Widget\Form\Col;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
@@ -88,7 +88,7 @@ trait PanelGroupFormFacade
     {
         $columnElements = array();
 
-        /**@var DGridColumn $column*/
+        /**@var GridColumn $column*/
         foreach ($columns as $column) {
             $columnElements[] = $column->getChilds(0);
         }
@@ -123,7 +123,7 @@ trait PanelGroupFormFacade
         $qtd_labels = 0;
 
         //GET FIELD OF DGRIDCOLUMN AND ADD FIELD IN FORM
-        /**@var DGridColumn $column */
+        /**@var GridColumn $column */
         foreach ($columns as $column) {
             /**@var GroupField $child*/
             $child = $column->getChilds(0);
@@ -152,9 +152,8 @@ trait PanelGroupFormFacade
     private function validateColumnType($param)
     {
         foreach ($param as $item) {
-            if (!is_a($item, DGridColumn::class)) {
-                new TMessage('error', 'Todas as colunas devem ser do tipo ' . DGridColumn::class);
-                die();
+            if (!is_a($item, GridColumn::class)) {
+                throw new \Exception('Todas as colunas devem ser do tipo ' . GridColumn::class);
             }
         }
     }

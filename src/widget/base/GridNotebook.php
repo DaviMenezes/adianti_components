@@ -40,7 +40,7 @@ class GridNotebook
         $this->rows = $rows;
     }
 
-    public function addRow(DGridRow $row)
+    public function addRow(GridRow $row)
     {
         $this->rows[] = $row;
         return $this;

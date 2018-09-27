@@ -7,6 +7,8 @@ use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\Transaction;
+use Dvi\Adianti\Helpers\Reflection;
+use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\View\Standard\Form\BaseFormView;
 use Dvi\Adianti\View\Standard\Form\FormView;
 use Dvi\Adianti\View\Standard\SearchList\ListView;
@@ -46,8 +48,13 @@ abstract class StandardSearchFormListView extends BaseFormView
     {
         parent::__construct($param);
 
-        $this->setModel();
-        $this->setStructureFields();
+        try {
+            $this->setModel();
+            $this->validateModel();
+            $this->setStructureFields();
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     public function build($param)
@@ -59,7 +66,7 @@ abstract class StandardSearchFormListView extends BaseFormView
 
         } catch (\Exception $e) {
             Transaction::rollback();
-            new TMessage('error', $e->getMessage());
+            throw $e;
         }
     }
 
@@ -87,11 +94,20 @@ abstract class StandardSearchFormListView extends BaseFormView
 
     public function getContent()
     {
-        $vbox = new VBox();
+        $this->vbox->add($this->getPanel());
+        $this->vbox->add($this->getContentAfterPanel());
+        $this->vbox->add($this->getDatagrid());
+        if ($this->pageNavigation) {
+            $this->vbox->add($this->getPageNavigation());
+        }
 
-        $vbox->add($this->getPanel());
-        $vbox->add($this->getDatagrid());
+        return $this->vbox;
+    }
 
-        return $vbox;
+    protected function validateModel()
+    {
+        if (get_parent_class($this->model) != DviModel::class) {
+            throw new \Exception('O modelo em '.Reflection::getClassName(get_called_class()).' deve ser filho de ' . DviModel::class);
+        }
     }
 }

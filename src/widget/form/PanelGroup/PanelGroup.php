@@ -31,7 +31,7 @@ use Adianti\Base\Lib\Widget\Wrapper\TDBSeekButton;
 use Dvi\Adianti\Componente\Model\Form\Fields\Numeric;
 use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\GridBootstrap;
-use Dvi\Adianti\Widget\Base\DGridColumn as Col;
+use Dvi\Adianti\Widget\Base\GridColumn as Col;
 use Dvi\Adianti\Widget\Base\GridElement;
 use Dvi\Adianti\Widget\Bootstrap\Component\ButtonGroup;
 use Dvi\Adianti\Widget\Container\HBox;

@@ -93,7 +93,7 @@ class GroupActions
 
             return $btn;
         } catch (\Exception $e) {
-            new TMessage('error', $e->getMessage());
+            throw $e;
         }
     }
 

@@ -13,7 +13,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DGridRow extends TElement
+class GridRow extends TElement
 {
     private $childStyle;
     private $defaultColClass;
@@ -37,7 +37,7 @@ class DGridRow extends TElement
         $this->childStyle = '';
     }
 
-    public function addCol(DGridColumn $column)
+    public function addCol(GridColumn $column)
     {
         $this->columns[] = $column;
         parent::add($column);
@@ -47,7 +47,7 @@ class DGridRow extends TElement
 
     public function col($element, array $class = null, string $style = null)
     {
-        $col = new DGridColumn($element, $class, $style);
+        $col = new GridColumn($element, $class, $style);
         $this->addCol($col);
         return $this;
     }

@@ -17,6 +17,7 @@ class FieldTypeString implements FieldTypeInterface
 {
     public function sanitize($value)
     {
+        $value = filter_var($value, FILTER_SANITIZE_STRIPPED);
         $value = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
         $value = filter_var($value, FILTER_SANITIZE_STRING);
         return $value;

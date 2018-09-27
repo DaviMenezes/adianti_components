@@ -2,6 +2,9 @@
 
 namespace Dvi\Adianti\Widget\Form\Field;
 
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Widget\Util\TActionLink;
+use Dvi\Adianti\Widget\Container\VBox;
 use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
 use Dvi\Adianti\Widget\Form\Field\Validator\MaxLengthValidator;
 use Dvi\Adianti\Widget\Form\Field\Validator\RequiredValidator;
@@ -28,6 +31,7 @@ trait FormField
     private $tip;
     private $max_length;
     private $field_label;
+    private $use_label_field;
 
     public function setup(string $label, bool $required = false, int $max_length = null)
     {
@@ -37,6 +41,12 @@ trait FormField
         $this->tip = true;
     }
 
+    public function useLabelField(bool $use = true)
+    {
+        $this->use_label_field = $use;
+        return $this;
+    }
+
     public function tip(bool $tip)
     {
         $this->tip = $tip;
@@ -44,9 +54,9 @@ trait FormField
 
     public function prepare()
     {
-        $this->label(ucfirst($this->field_label));
+        $this->label($this->field_label);
 
-        $this->setProperty('placeholder', strtolower($this->field_label));
+        $this->{'placeholder'} = strtolower($this->field_label);
 
         if ($this->max_length and method_exists($this, 'setMaxLength')) {
             $this->setMaxLength($this->max_length);
@@ -59,7 +69,7 @@ trait FormField
         }
 
         if ($this->tip) {
-            $this->setTip($this->getLabel());
+            $this->setTip(parent::getLabel());
         }
     }
 
@@ -95,9 +105,12 @@ trait FormField
 
     public function label($label, string $class = null)
     {
+        $label = ucfirst($label);
         $this->setLabel($label);
         $this->field_label = $label;
-        $this->label_class = $class;
+        if ($class) {
+            $this->label_class = $class;
+        }
     }
 
     public function getLabel()
@@ -109,7 +122,7 @@ trait FormField
         if (!empty($this->label_class)) {
             $class = ' class="dvi_str_' . $this->label_class.'"';
             $label = '<b>'.$label.'</b>';
-            return '<span'.$class.'>'.$label.'</span>';
+            $label = '<span'.$class.'>'.$label.'</span>';
         }
 
         return  $label;
@@ -145,6 +158,25 @@ trait FormField
     {
         $this->prepare();
 
+        $vbox = new VBox();
+        if ($this->use_label_field) {
+            $vbox->add($this->getLabel().$this->getValidationErrorLink());
+        }
+        $vbox->show();
         parent::show();
+    }
+
+    protected function getValidationErrorLink()
+    {
+        $link_error = null;
+        if (in_array(FormFieldValidation::class, array_keys((new \ReflectionClass(self::class))->getTraits()))) {
+            if ($this->error_msg) {
+                $icon_error = ' <i class="fa fa-exclamation-triangle red" aria-hidden="true"></i>';
+                $parameters = ['msg' => $this->getErrorValidation(), 'static' => 1];
+                $link_error = new TActionLink($icon_error, new TAction([$_REQUEST['class'], 'showErrorMsg'], $parameters));
+                $link_error->{'title'} = 'Clique para ver a mensagem';
+            }
+        }
+        return $link_error;
     }
 }

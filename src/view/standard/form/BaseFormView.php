@@ -5,6 +5,7 @@ namespace Dvi\Adianti\View\Standard\Form;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\View\Standard\DviBaseView;
+use Dvi\Adianti\Widget\Container\VBox;
 
 /**
  * Form BaseFormView
@@ -17,6 +18,7 @@ use Dvi\Adianti\View\Standard\DviBaseView;
  */
 abstract class BaseFormView extends DviBaseView
 {
+
     protected $panel_created;
 
     public function createPanel($param)
