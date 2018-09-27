@@ -6,7 +6,7 @@ use Dvi\Adianti\Helpers\CommonActions;
 use Dvi\Adianti\Widget\Container\VBox;
 
 /**
- * Control StandardSearchListControl
+ * Control ListControl
  *
  * @package    Control
  * @subpackage
@@ -14,7 +14,7 @@ use Dvi\Adianti\Widget\Container\VBox;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-abstract class StandardSearchListControl extends DviControl implements StandardSearchListInterface
+abstract class ListControl extends DviControl implements StandardSearchListInterface
 {
     protected $viewClass;
     protected $formController;
@@ -22,8 +22,8 @@ abstract class StandardSearchListControl extends DviControl implements StandardS
     protected $vbox_container;
     protected $already_build_view;
 
-    use SearchActionsControl;
-    use ListActionsControl;
+    use SearchListControlTrait;
+    use ListControlTrait;
     use CommonActions;
 
     public function __construct($param)

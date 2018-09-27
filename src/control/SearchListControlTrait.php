@@ -17,7 +17,7 @@ use Dvi\Adianti\Widget\Form\Field\SearchableField;
 use ReflectionClass;
 
 /**
- * Control SearchActionsControl
+ * Control SearchListControlTrait
  *
  * @package    Control
  * @subpackage
@@ -25,7 +25,7 @@ use ReflectionClass;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-trait SearchActionsControl
+trait SearchListControlTrait
 {
     public function onSearch()
     {

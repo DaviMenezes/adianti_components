@@ -10,8 +10,8 @@ use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\View\Standard\Form\BaseFormView;
-use Dvi\Adianti\View\Standard\Form\FormView;
-use Dvi\Adianti\View\Standard\SearchList\ListView;
+use Dvi\Adianti\View\Standard\Form\FormViewTrait;
+use Dvi\Adianti\View\Standard\SearchList\ListViewTrait;
 use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Container\VBox;
 use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
@@ -26,7 +26,7 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-abstract class StandardSearchFormListView extends BaseFormView
+abstract class FormListView extends BaseFormView
 {
     /**@var PanelGroup $panel*/
     protected $panel;
@@ -40,8 +40,8 @@ abstract class StandardSearchFormListView extends BaseFormView
     protected $action_delete;
     protected $panel_grid;
 
-    use ListView;
-    use FormView;
+    use ListViewTrait;
+    use FormViewTrait;
     use PageFormView;
 
     public function __construct($param)

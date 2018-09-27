@@ -14,12 +14,12 @@ use Dvi\Adianti\Model\DB;
 use Dvi\Adianti\Model\DBFormFieldPrepare;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\QueryFilter;
-use Dvi\Adianti\View\Standard\SearchList\StandardSearchListView;
+use Dvi\Adianti\View\Standard\SearchList\ListView;
 use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Datagrid\PageNavigation;
 
 /**
- * Control ListActionsControl
+ * Control ListControlTrait
  *
  * @package    Control
  * @subpackage
@@ -27,7 +27,7 @@ use Dvi\Adianti\Widget\Datagrid\PageNavigation;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-trait ListActionsControl
+trait ListControlTrait
 {
     /**@var DataGrid $datagrid*/
     protected $datagrid;
@@ -37,7 +37,7 @@ trait ListActionsControl
     protected $datagrid_items_obj_repository;
     protected $page_navigation_count;
     protected $query_limit;
-    /**@var StandardSearchListView $view*/
+    /**@var ListView $view*/
     protected $view;
     protected $fields_to_sql = array();
     protected $grid_loaded =  false;

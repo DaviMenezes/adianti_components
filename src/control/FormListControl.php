@@ -6,9 +6,10 @@ use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\CommonActions;
+use Dvi\Adianti\View\Standard\FormListView;
 
 /**
- * Control StandardFormListControl
+ * Control FormListControl
  *
  * @package    Control
  * @subpackage
@@ -16,14 +17,14 @@ use Dvi\Adianti\Helpers\CommonActions;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-abstract class StandardFormListControl extends DviControl
+abstract class FormListControl extends DviControl
 {
     protected $viewClass;
     protected $formController;
 
-    use FormControl;
-    use SearchActionsControl;
-    use ListActionsControl;
+    use FormControlTrait;
+    use SearchListControlTrait;
+    use ListControlTrait;
     use CommonActions;
     use PaginationHelper;
 
@@ -41,6 +42,8 @@ abstract class StandardFormListControl extends DviControl
 
             $this->init();
 
+            $this->validateViewClass();
+
             $this->setQueryLimit();
 
             $this->createView($param);
@@ -52,6 +55,14 @@ abstract class StandardFormListControl extends DviControl
             Transaction::rollback();
             throw new \Exception($e->getMessage());
         }
+    }
+
+    /** @example $this->viewClass = MyFormListView::class; */
+    abstract public function init();
+
+    protected function setViewClass(FormListView $view_class)
+    {
+        $this->viewClass = $view_class;
     }
 
     protected function createPanel()
@@ -72,12 +83,14 @@ abstract class StandardFormListControl extends DviControl
         $this->already_build_view = true;
     }
 
-    /**
-     * @example
-     * $this->viewClass = MyFormListView::class;
-     * $this->formController = MyControllerForm::class;
-     */
-    abstract public function init();
+    public function validateViewClass()
+    {
+        if (!is_subclass_of($this->viewClass, FormListView::class)) {
+            $str = 'Uma classe do tipo ' . (new \ReflectionClass(self::class))->getShortName();
+            $str .= ' deve ter uma view do tipo '.(new \ReflectionClass(FormListView::class))->getShortName();
+            throw new \Exception($str);
+        }
+    }
 
     protected function createView($param)
     {
