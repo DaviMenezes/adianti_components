@@ -26,4 +26,5 @@ interface FormField extends FormFieldValidation, SearchableField, AdiantiWidgetI
     public function setReferenceName($reference_name);
     public function getReferenceName();
     public function getHideInEdit();
+    public function useLabelField(bool $use = true);
 }

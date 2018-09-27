@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvi\Adianti\Widget\Base;
 
 use Adianti\Base\Lib\Control\TAction;
@@ -10,6 +11,7 @@ use Adianti\Base\Lib\Widget\Util\TActionLink;
 use Dvi\Adianti\Widget\Container\VBox;
 use Dvi\Adianti\Widget\Form\Button;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 
 /**
  * Column to bootstrap grid
@@ -21,7 +23,7 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DGridColumn extends TElement
+class GridColumn extends TElement
 {
     #region [BootstrapGridClasses]
     const XS1 = 'col-xs-1';
@@ -81,7 +83,7 @@ class DGridColumn extends TElement
     protected $useLabelField = false;
 
     /**
-     * DGridColumn constructor.
+     * GridColumn constructor.
      * @param object $child
      * @param string $class
      * @param string $colStyle
@@ -101,23 +103,11 @@ class DGridColumn extends TElement
         $this->class = $this->getFormatedClasses();// $this->getClass() ?? $this->default_class;
 
         if ($this->useLabelField) {
-            if (!is_a($this->childs[0], Button::class)) {
-                $box = new VBox();
-                $child = $this->getChilds(0);
-                $link_error = null;
-                if (in_array(IFormField::class, class_implements($child))) {
-                    /**@var IFormField $child*/
-                    if ($child->getErrorValidation()) {
-                        $msg_error = ' <i class="fa fa-exclamation-triangle red" aria-hidden="true"></i>';
-                        $link_error = new TActionLink($msg_error, new TAction([$_REQUEST['class'], 'showErrorMsg'], ['msg' => $child->getErrorValidation(), 'static' => 1]));
-                        $link_error->{'title'} = 'Clique para ver a mensagem';
-                    }
-                }
+            $child = $this->getChilds(0);
+            if (!is_a($child, Button::class)) {
+                $child->useLabelField();
 
-                $box->add($this->getElementLabel().$link_error);
-                $box->add($this->childs[0]);
-
-                parent::add($box);
+                parent::add($child);
                 parent::show();
 
                 return $this->childs;
@@ -153,6 +143,7 @@ class DGridColumn extends TElement
         return $element;
     }
 
+    /**@return FormField*/
     public function getChilds(int $position = null)
     {
         if (is_null($position)) {
@@ -166,7 +157,7 @@ class DGridColumn extends TElement
     {
         if (is_array($param)) {
             foreach ($param as $class) {
-                $this->custom_class .= count($param) > 1 ? ' '.$class : $class;
+                $this->custom_class .= count($param) > 1 ? ' ' . $class : $class;
             }
         } else {
             $this->custom_class = $param;
@@ -183,7 +174,7 @@ class DGridColumn extends TElement
         if (empty($this->custom_class)) {
             $this->custom_class = $this->default_class;
         }
-        $type_classes  = (is_string($this->custom_class)) ? explode(' ', $this->custom_class) : null;
+        $type_classes = (is_string($this->custom_class)) ? explode(' ', $this->custom_class) : null;
 
         $classes = array();
         if (is_array($type_classes)) {
@@ -193,7 +184,7 @@ class DGridColumn extends TElement
         }
 
         $this->custom_class = implode(' ', $classes);
-        return $this->custom_class. ' dvi_grid_col';
+        return $this->custom_class . ' dvi_grid_col';
     }
 
     public static function pack(array $elements, array $class = null, array $style = null)
@@ -206,7 +197,7 @@ class DGridColumn extends TElement
                 $box->add($element);
             }
         }
-        $column = new DGridColumn($box, $class, $style);
+        $column = new GridColumn($box, $class, $style);
         return $column;
     }
 
@@ -219,7 +210,7 @@ class DGridColumn extends TElement
     {
         $element = $this->childs[0];
         if (is_subclass_of($element, TField::class)) {
-            /**@var TField $element*/
+            /**@var TField $element */
             return $element->getLabel();
         }
     }

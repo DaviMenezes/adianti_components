@@ -11,7 +11,7 @@ use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Model\DviTFilter;
+use Dvi\Adianti\Model\QueryFilter;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
 use ReflectionClass;
@@ -64,7 +64,7 @@ trait SearchActionsControl
             $this->getViewContent();
         } catch (\Exception $e) {
             Transaction::rollback();
-            new TMessage('error', $e->getMessage());
+            throw $e;
         }
     }
 
@@ -156,7 +156,7 @@ trait SearchActionsControl
                 if (!is_a($field, TDate::class) and !is_a($field, TDateTime::class)) {
                     $value = $field->getSearchableValue();
                 }
-                $filter = new DviTFilter($model_name . '.' . $attribute, $searchOperator, $value);
+                $filter = new QueryFilter($model_name . '.' . $attribute, $searchOperator, $value);
 
                 $filters[$model . '.' . $attribute] = $filter;
             }

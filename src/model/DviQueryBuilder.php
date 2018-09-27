@@ -45,7 +45,7 @@ trait DviQueryBuilder
 
     public function where($field, $operator, $value = null, $value2 = null, $query_operator = 'AND')
     {
-        $dvifilter = new DviTFilter($field, $operator, $value, $value2, $query_operator);
+        $dvifilter = new QueryFilter($field, $operator, $value, $value2, $query_operator);
         $this->filters[] = $dvifilter;
 
         $this->preparedFilters = false;
@@ -55,6 +55,12 @@ trait DviQueryBuilder
 
     public function order(string $order, $direction = 'asc')
     {
+        if (strpos($order, '.') !== false) {
+            $array = explode('.', $order);
+            $model = ucfirst($array[0]);
+            unset($array[0]);
+            $order = $model . '.' . implode('.', $array);
+        }
         $this->params['order'] = $order;
         $this->params['direction'] = $direction;
         return $this;
@@ -133,9 +139,9 @@ trait DviQueryBuilder
 
         $this->pdo->execute();
 
-        $result = $this->pdo->fetchObject();
+        $this->result = $this->pdo->fetchObject();
 
-        return $result;
+        return $this->getResult();
     }
 
     public function get($limit = null, $pdo_fetch = null)
@@ -173,7 +179,6 @@ trait DviQueryBuilder
 
     private function getResult()
     {
-        $this->pdo = null;
         return $this->result;
     }
 
@@ -189,10 +194,10 @@ trait DviQueryBuilder
 
     public function filters(array $filters)
     {
-        /**@var DviTFilter $filter*/
+        /**@var QueryFilter $filter*/
         foreach ($filters as $filter) {
-            if (!is_a($filter, DviTFilter::class)) {
-                throw new \Exception(null, 'Os filtros devem ser do tipo DviTFilter');
+            if (!is_a($filter, QueryFilter::class)) {
+                throw new \Exception('Os filtros devem ser do tipo QueryFilter');
             }
             $this->where($filter->field, $filter->operator, $filter->value, $filter->value2);
         }

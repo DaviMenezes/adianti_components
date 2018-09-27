@@ -168,7 +168,7 @@ class DataGrid extends TDataGrid
     {
         $has_method = (new ReflectionClass(Route::getPath($this->called_class)))->hasMethod($method);
         if (!$has_method) {
-            throw new \Exception(null, 'O método '.$method.' informado em '."<br>".' $datagrid->setDatagridLoadMethod("'.$method.'") não existe.', false);
+            throw new \Exception('O método '.$method.' informado em '."<br>".' $datagrid->setDatagridLoadMethod("'.$method.'") não existe.', false);
         }
         $this->datagrid_load_method = $method;
     }

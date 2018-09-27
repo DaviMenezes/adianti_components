@@ -68,25 +68,32 @@ class DBFormFieldPrepare extends DB
             if ($pos !== false) {
                 /**@var DviModel $last_association*/
                 $last_association = new $this->model();
+                $forein_keys = $last_association->getForeignKeys();
                 $column_name_array = explode('.', $column_name_alias);
+                $associated_alias = Reflection::getClassName($last_association);
                 foreach ($column_name_array as $key => $item) {
-                    if ($key+1 < count($column_name_array)) {
-                        $forein_keys = $last_association->getForeignKeys();
-                        $associated_alias = Reflection::getClassName($last_association);
-                        $table_alias = ucfirst($item);
-                        /**@var DviTRecord $model_class*/
-                        $model_class = $forein_keys[$item];
-                        if (array_key_exists($item, $forein_keys) and !array_key_exists($table_alias, $joins)) {
-                            $join['model_class'] = $forein_keys[$item];
-                            $join['table'] = $model_class::getTableName();
-                            $join['table_alias'] = $table_alias;
-                            $join['associated_alias'] = $associated_alias;
-                            $join['foreign_key'] = $item.'_id';
-
-                            $joins[$table_alias] = $join;
-                        }
-                        $last_association = new $model_class();
+                    $table_alias = ucfirst($item);
+                    if (!isset($forein_keys[$item])) {
+                        throw new \Exception('Processo: Construção da query (joins). O Modelo '.$item.' não foi encontrado ('.$field_key.')');
                     }
+
+                    if (array_key_exists($item, $forein_keys) and !array_key_exists($table_alias, $joins)) {
+                        $join['model_class'] = $forein_keys[$item]['class'];
+                        $join['table_alias'] = $table_alias;
+                        $join['associated_alias'] = $associated_alias;
+                        $join['table'] = $last_association::getTableName();
+                        $join['foreign_key'] = $item.'_id';
+
+                        $joins[$table_alias] = $join;
+                    }
+                    if ($key+1 == count($column_name_array)-1) {
+                        break;
+                    }
+                    $associated_alias = ucfirst($forein_keys[$item]['alias']);
+                    $last_association = $forein_keys[$item]['class'];
+                    /**@var DviTRecord $model_class*/
+                    $model_class = $forein_keys[$item]['class'];
+                    $forein_keys = (new $model_class())->getForeignKeys();
                 }
             }
         }

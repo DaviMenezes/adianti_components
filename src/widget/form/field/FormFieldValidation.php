@@ -30,7 +30,7 @@ trait FormFieldValidation
         if (empty($this->type)) {
             return $value;
         }
-        return $this->type->sanitize($value);
+        return htmlspecialchars_decode($this->type->sanitize($value));
     }
 
     public function validating()
@@ -43,7 +43,7 @@ trait FormFieldValidation
         return count($this->error_msg) ? false : true;
     }
 
-    public function validate()
+    public function validate(): bool
     {
         if ($this->getValidations()) {
             foreach ($this->getValidations() as $validation) {
@@ -57,6 +57,12 @@ trait FormFieldValidation
                 }
             }
         }
+        if (count($this->error_msg)) {
+            $this->label_class = 'danger';
+
+            return false;
+        }
+        return true;
     }
 
     public function getErrorValidation()
@@ -73,6 +79,14 @@ trait FormFieldValidation
         }
 
         return $msg_errors;
+    }
+
+    public function noValidate()
+    {
+        if (count($this->error_msg)) {
+            return true;
+        }
+        return false;
     }
 
     public function required()

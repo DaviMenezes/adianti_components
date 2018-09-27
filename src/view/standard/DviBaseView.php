@@ -7,6 +7,7 @@ use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Helpers\GUID;
 use Dvi\Adianti\Model\DviModel;
+use Dvi\Adianti\Widget\Container\VBox;
 use Dvi\Adianti\Widget\Form\Field\Hidden;
 use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
@@ -21,6 +22,9 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
  */
 abstract class DviBaseView
 {
+    /**@var VBox $vbox*/
+    protected $vbox;
+
     protected $model;
     /**@var PanelGroup $panel*/
     protected $panel;
@@ -33,6 +37,7 @@ abstract class DviBaseView
     public function __construct($param)
     {
         $this->params = $param;
+        $this->vbox = new VBox();
     }
 
     abstract public function build($param);

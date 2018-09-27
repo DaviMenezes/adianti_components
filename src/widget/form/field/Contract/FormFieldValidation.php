@@ -15,7 +15,8 @@ interface FormFieldValidation
 {
     public function addValidations(array $array_validations);
     public function sanitize($value);
-    public function validating();
+    public function validate();
+    public function noValidate();
     public function getErrorValidation();
     public function required();
 }

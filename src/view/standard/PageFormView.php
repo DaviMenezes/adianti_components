@@ -3,7 +3,7 @@ namespace Dvi\Adianti\View\Standard;
 
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Widget\Base\DGridColumn;
+use Dvi\Adianti\Widget\Base\GridColumn;
 use Dvi\Adianti\Widget\Form\Field\FormField;
 use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
@@ -121,7 +121,7 @@ trait PageFormView
             foreach ($groups['fields'] as $row_fields) {
                 $columns = array();
                 foreach ($row_fields as $field_array) {
-                    $columns[] = new DGridColumn($field_array['field'], $field_array['class'], $field_array['style']);
+                    $columns[] = new GridColumn($field_array['field'], $field_array['class'], $field_array['style']);
                 }
                 $this->panel->addRow($columns);
                 $rows++;

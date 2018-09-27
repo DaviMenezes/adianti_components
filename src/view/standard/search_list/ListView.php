@@ -91,6 +91,26 @@ trait ListView
         $this->pageNavigation->setLimit($this->query_limit);
     }
 
+    public function addPageNavigationInBoxContainer()
+    {
+        if ($this->alreadyAddPagenavigation()) {
+            return;
+        }
+        if ($this->pageNavigation) {
+            $this->vbox->add($this->pageNavigation);
+        }
+    }
+
+    protected function alreadyAddPagenavigation()
+    {
+        foreach ($this->vbox->getChilds() as $item) {
+            if (is_a($item, PageNavigation::class)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function useCheckButton()
     {
         $this->useCheckButton = true;

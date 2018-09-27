@@ -40,9 +40,9 @@ class GridBootstrap
         $this->grid->class = 'container';
     }
 
-    public function addRow(string $rowStyle = null): DGridRow
+    public function addRow(string $rowStyle = null): GridRow
     {
-        $row = new DGridRow($rowStyle, $this->defaultColClass, $this->defaultColStyle);
+        $row = new GridRow($rowStyle, $this->defaultColClass, $this->defaultColStyle);
         $this->grid->add($row);
 
         $this->rows[] = $row;

@@ -13,7 +13,7 @@ use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DB;
 use Dvi\Adianti\Model\DBFormFieldPrepare;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Model\DviTFilter;
+use Dvi\Adianti\Model\QueryFilter;
 use Dvi\Adianti\View\Standard\SearchList\StandardSearchListView;
 use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Datagrid\PageNavigation;
@@ -45,7 +45,7 @@ trait ListActionsControl
 
     abstract protected function setQueryLimit();
 
-    protected function addDatagridFilter(DviTFilter $filter)
+    protected function addDatagridFilter(QueryFilter $filter)
     {
         $called_class = Reflection::getClassName(get_called_class());
 
@@ -89,7 +89,7 @@ trait ListActionsControl
             $this->onBack();
         } catch (\Exception $e) {
             Transaction::rollback();
-            new TMessage('error', $e->getMessage());
+            throw $e;
         }
     }
 
@@ -137,27 +137,25 @@ trait ListActionsControl
 
     protected function getDatagridItems()
     {
-        $this->prepareFieldsToBuildQuery();
+        try {
+            $this->prepareFieldsToBuildQuery();
 
-        $query = new DBFormFieldPrepare($this->view->getModel(), get_called_class());
-        $query->mountQueryByFields($this->getFieldsBuiltToQuery());
+            $query = new DBFormFieldPrepare($this->view->getModel(), get_called_class());
+            $query->mountQueryByFields($this->getFieldsBuiltToQuery());
 
-        $this->checkOrderColumn();
+            $this->checkOrderColumn();
 
-        $query->checkFilters(get_called_class());
+            $query->checkFilters(get_called_class());
 
+            $this->setPageNavigationCount($query->count());
+            $query->offset($this->params['offset'] ?? null);
 
-        $this->setPageNavigationCount($query->count());
-
-        $tableAlias = Reflection::getClassName($this->view->getModel());
-
-        $order = empty($this->params['order']) ? $tableAlias .'.id' : $this->params['order'];
-        $direction = empty($this->params['direction']) ? 'asc' : $this->params['direction'];
-
-        $query->order($order, $direction);
-        $query->offset($this->params['offset'] ?? null);
-
-        return $query->get($this->query_limit);
+            return $query->get($this->query_limit);
+        } catch (\Exception $e) {
+            $session_name = Reflection::getClassName(get_called_class()) . '_listOrder';
+            TSession::setValue($session_name, null);
+            throw new \Exception('Montando query para popular datagrid '.$e->getMessage());
+        }
     }
 
     protected function createCustomSqlFields()
@@ -185,8 +183,6 @@ trait ListActionsControl
             return;
         }
         $this->view->createPageNavigation($this->page_navigation_count, $this->params);
-
-        $this->view->addPageNavigationInBoxContainer();
     }
 
     public function show()
@@ -247,15 +243,19 @@ trait ListActionsControl
 
     protected function checkOrderColumn()
     {
+        $session_name = Reflection::getClassName(get_called_class()) . '_listOrder';
         if (isset($this->params['order_field']) and $this->params['order_field']) {
             $direction_array = ['asc' => 'desc', 'desc' => 'asc'];
-            $session_name = Reflection::getClassName(get_called_class()) . '_listOrder';
             $listOrder = TSession::getValue($session_name);
 
             $direction = $direction_array[$listOrder['direction'] ?? 'desc'];
 
-            $order = ['field' => $this->params['order_field'], 'direction' => $direction];
-            TSession::setValue($session_name, $order);
+            $order = $this->params['order_field'];
+            TSession::setValue($session_name, ['field' => $order, 'direction' => $direction ?? 'asc']);
+            return;
         }
+        $tableAlias = Reflection::getClassName($this->view->getModel());
+        $order = $tableAlias .'.id';
+        TSession::setValue($session_name, ['field' => $order, 'direction' => $direction ?? 'asc']);
     }
 }

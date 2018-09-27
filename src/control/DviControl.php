@@ -58,7 +58,7 @@ abstract class DviControl extends TPage
             }
             parent::show();
         } catch (\Exception $e) {
-            throw new \Exception(null, $e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 

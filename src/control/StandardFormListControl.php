@@ -30,7 +30,7 @@ abstract class StandardFormListControl extends DviControl
     public function __construct($param)
     {
         try {
-            $this->formController = $this;
+            $this->formController = get_called_class();
             
             if ($this->already_build_view) {
                 return;
@@ -50,7 +50,7 @@ abstract class StandardFormListControl extends DviControl
             Transaction::close();
         } catch (\Exception $e) {
             Transaction::rollback();
-            new TMessage('error', $e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -94,6 +94,8 @@ abstract class StandardFormListControl extends DviControl
         $this->edit();
 
         $this->loadDatagrid();
+
+        $this->view->addPageNavigationInBoxContainer();
     }
 
     public function show()

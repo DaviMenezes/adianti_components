@@ -48,8 +48,7 @@ abstract class StandardFormControl extends DviControl
             Transaction::close();
         } catch (\Exception $e) {
             Transaction::rollback();
-            new TMessage('error', $e->getMessage());
-            die();
+            throw $e;
         }
     }
 
