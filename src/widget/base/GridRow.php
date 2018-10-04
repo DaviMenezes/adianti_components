@@ -15,14 +15,14 @@ use Adianti\Base\Lib\Widget\Base\TElement;
  */
 class GridRow extends TElement
 {
-    private $childStyle;
-    private $defaultColClass;
-    private $defaultColStyle;
-    private $columns = array();
-    private $maxColumns = 12;
+    protected $childStyle;
+    protected $defaultColClass;
+    protected $defaultColStyle;
+    protected $columns = array();
+    protected $maxColumns = 12;
 
-    private $bootstrapClassDefault;
-    private $defaultColType;
+    protected $bootstrapClassDefault;
+    protected $defaultColType;
 
     public function __construct($rowStyle = null, $defaultClass = null, $colStyle = null)
     {

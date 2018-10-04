@@ -33,7 +33,7 @@ abstract class DviControl extends TPage
     /**@var PanelGroup $panel*/
     protected $panel;
     protected $database = 'default';
-    private $already_get_view_content;
+    protected $already_get_view_content;
 
     use Utils;
     use Reflection;

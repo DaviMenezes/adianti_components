@@ -9,7 +9,7 @@ use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\DviTRecord;
-use Dvi\Adianti\Route;
+use Dvi\AdiantiExtension\Route;
 use ReflectionClass;
 
 /**

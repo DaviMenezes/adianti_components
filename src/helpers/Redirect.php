@@ -15,9 +15,9 @@ use App\TApplication;
  */
 class Redirect
 {
-    private $action;
-    private $method;
-    private $params;
+    protected $action;
+    protected $method;
+    protected $params;
 
     private function __construct(array $params)
     {

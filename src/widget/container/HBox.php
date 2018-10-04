@@ -18,7 +18,7 @@ use Dvi\Adianti\Widget\IGroupField;
  */
 class HBox extends THBox implements IGroupField
 {
-    private $childs = array();
+    protected $childs = array();
 
     public function __construct()
     {

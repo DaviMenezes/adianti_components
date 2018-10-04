@@ -9,7 +9,7 @@ use PDOStatement;
 use ReflectionClass;
 
 /**
- * Model DviQueryBuilder
+ *  DviQueryBuilder
  *
  * @version    Dvi 1.0
  * @package    querybuilder
@@ -20,30 +20,30 @@ use ReflectionClass;
  */
 trait DviQueryBuilder
 {
-    private $table;
-    private $fields = array();
-    private $joins = array();
-    private $str_joins = array();
+    protected $table;
+    protected $fields = array();
+    protected $joins = array();
+    protected $str_joins = array();
 
-    private $filters = array();
-    private $params;
+    protected $filters = array();
+    protected $params;
 
     /**@var PDOStatement $pdo */
-    private $pdo;
-    private $preparedFilters;
+    protected $pdo;
+    protected $preparedFilters;
     protected $sql;
-    private $functions = array();
-    private $pdo_fetch;
+    protected $functions = array();
+    protected $pdo_fetch;
 
-    private $already_prepared_sql;
-    private $already_pdo_prepared;
-    private $already_bind_params;
-    private $already_set_group_by;
-    private $already_set_order_by;
-    private $already_set_limit;
-    private $already_set_offset;
-    private $already_set_having;
-    private $result;
+    protected $already_prepared_sql;
+    protected $already_pdo_prepared;
+    protected $already_bind_params;
+    protected $already_set_group_by;
+    protected $already_set_order_by;
+    protected $already_set_limit;
+    protected $already_set_offset;
+    protected $already_set_having;
+    protected $result;
 
     public function where($field, $operator, $value = null, $value2 = null, $query_operator = 'AND')
     {

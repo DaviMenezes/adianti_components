@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Modules\Admin\Model\SystemUser;
 
 /**
- * Model ObjectDvi
+ *  ObjectDvi
  *
  * @version    Dvi 1.0
  * @package    model

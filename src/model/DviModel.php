@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
 use Stringizer\Stringizer;
 
 /**
- * Model DviModel
+ *  DviModel
  *
  * @version    Dvi 1.0
  * @package    Model

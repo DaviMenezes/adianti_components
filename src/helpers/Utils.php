@@ -2,7 +2,7 @@
 namespace Dvi\Adianti\Helpers;
 
 /**
- * Model Utils
+ *  Utils
  *
  * @version    Dvi 1.0
  * @package    control

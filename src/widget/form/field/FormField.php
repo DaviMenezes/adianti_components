@@ -20,18 +20,18 @@ use Dvi\Adianti\Widget\Form\Field\Validator\RequiredValidator;
  */
 trait FormField
 {
-    private $field_disabled;
+    protected $field_disabled;
     /**@var FieldTypeInterface $type*/
-    private $type;
+    protected $type;
     protected $error_msg = array();
     protected $required;
     protected $label_class;
     protected $base_class_name;
-    private $reference_name;
-    private $tip;
-    private $max_length;
-    private $field_label;
-    private $use_label_field;
+    protected $reference_name;
+    protected $tip;
+    protected $max_length;
+    protected $field_label;
+    protected $use_label_field;
 
     public function setup(string $label, bool $required = false, int $max_length = null)
     {

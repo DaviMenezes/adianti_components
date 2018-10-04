@@ -6,7 +6,7 @@ use Closure;
 use Dvi\Adianti\Database\Transaction;
 
 /**
- * Model DviDefaultQuery
+ *  DviDefaultQuery
  *
  * @package    Model
  * @subpackage Components

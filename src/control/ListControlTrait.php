@@ -37,7 +37,7 @@ trait ListControlTrait
     protected $view;
     protected $fields_to_sql = array();
     protected $grid_loaded = false;
-    private $reloaded;
+    protected $reloaded;
 
     abstract protected function setQueryLimit();
 

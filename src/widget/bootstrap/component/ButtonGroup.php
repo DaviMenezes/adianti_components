@@ -6,7 +6,7 @@ use Dvi\Adianti\Widget\IDviWidget;
 use Dvi\Adianti\WidgetBootstrap\Component\GroupActions;
 
 /**
- * Model ButtonGroup
+ *  ButtonGroup
  *
  * @version    Dvi 1.0
  * @package    bootstrap
@@ -22,7 +22,7 @@ class ButtonGroup extends GroupActions implements IDviWidget
     public $current_group;
     protected $class;
 
-    private $group;
+    protected $group;
 
     public function __construct($default_form = null)
     {

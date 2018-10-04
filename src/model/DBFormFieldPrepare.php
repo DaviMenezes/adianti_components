@@ -7,7 +7,7 @@ use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 
 /**
- * Model DBFormFieldPrepare
+ *  DBFormFieldPrepare
  *
  * @package    Model
  * @subpackage DviAdianti Components

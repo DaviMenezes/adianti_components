@@ -5,7 +5,7 @@ namespace Dvi\Adianti\Model;
 use Dvi\Adianti\Helpers\Reflection;
 
 /**
- * Model Relationship
+ *  Relationship
  *
  * @package    Model
  * @subpackage
@@ -17,7 +17,7 @@ class Relationship
 {
     const HASONE = 1;
     const BELONGSTO = 2;
-    private $relationships = array();
+    protected $relationships = array();
 
     public function hasOne(string $model)
     {

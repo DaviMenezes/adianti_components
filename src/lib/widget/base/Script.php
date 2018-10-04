@@ -15,7 +15,7 @@ use Adianti\Base\Lib\Widget\Base\TScript;
  */
 class Script extends TScript
 {
-    private static $scripts_id = array();
+    protected static $scripts_id = array();
 
     public static function add(string $id, string $code, bool $show = true)
     {

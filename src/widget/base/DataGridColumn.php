@@ -17,9 +17,9 @@ use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 
 class DataGridColumn extends TDataGridColumn
 {
-    private $order_params;
-    private $order;
-    private $datagrid_load_method;
+    protected $order_params;
+    protected $order;
+    protected $datagrid_load_method;
 
     public function __construct($name, $label, $align = 'left', $width = '100%')
     {

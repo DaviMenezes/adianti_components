@@ -30,7 +30,7 @@ class DviTRecord extends TRecord
     const IDPOLICY = 'serial';
 
     protected $foreign_keys = array();
-    private $current_obj;
+    protected $current_obj;
 
     #region [BUILD MODEL] *******************************************
     public function __get($property)

@@ -7,7 +7,7 @@ use Dvi\Adianti\Widget\Form\Field\Text;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
- * Model FieldText
+ *  FieldText
  *
  * @version    Dvi 1.0
  * @package    Model

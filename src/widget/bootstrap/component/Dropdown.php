@@ -89,12 +89,9 @@ class DviDropdown
         $button->class = 'btn btn-default dropdown-toggle';
         $button->type = 'button';
         $button->id = $this->button_id;
-        $property = 'data-toggle';
-        $button->$property =  'dropdown';
-        $property = 'aria-haspopup';
-        $button->$property = 'true';
-        $property = 'aria-expanded';
-        $button->$property = 'true';
+        $button->{'data-toggle'} =  'dropdown';
+        $button->{'aria-haspopup'} = 'true';
+        $button->{'aria-expanded'} = 'true';
 
         $button_icon_bars = new TElement('i');
         $button_icon_bars->class = 'fa fa-bars';
@@ -108,8 +105,6 @@ class DviDropdown
         $button_icon_caret->class = 'caret';
 
         $button->add($button_icon_caret);
-
-        
 
         return $button;
     }

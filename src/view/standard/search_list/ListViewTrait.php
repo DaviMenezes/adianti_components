@@ -36,7 +36,7 @@ trait ListViewTrait
     protected $action_delete;
     protected $useCheckButton;
     protected $formController;
-    private $query_limit;
+    protected $query_limit;
 
     public function buildDatagrid($createModel = true, $showId = false): DataGrid
     {

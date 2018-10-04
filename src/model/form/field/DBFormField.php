@@ -9,7 +9,7 @@ use Dvi\Adianti\Widget\Form\Field\Validator\RequiredValidator;
 use Dvi\Adianti\Widget\Form\Field\Validator\UniqueValidator;
 
 /**
- * Model DBFormField
+ *  DBFormField
  *
  * @version    Dvi 1.0
  * @package    Model

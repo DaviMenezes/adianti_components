@@ -17,7 +17,7 @@ class RelationshipModelType
 {
     use Reflection;
 
-    private $class_name;
+    protected $class_name;
     public $type;
 
     public function __construct(string $model, int $type)

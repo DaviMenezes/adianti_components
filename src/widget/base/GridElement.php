@@ -15,7 +15,7 @@ use Adianti\Base\Lib\Widget\Form\TLabel;
  */
 class GridElement
 {
-    private $element;
+    protected $element;
     public $insideForm;
 
     public function __construct($element, $inside_form = 'inside')

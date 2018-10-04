@@ -18,10 +18,10 @@ use Dvi\Adianti\WidgetBootstrap\Component\GroupActions;
  */
 class ActionGroup //extends GroupActions
 {
-    private $actionHeader;
+    protected $actionHeader;
     protected $items = array();
-    private $title_group_action;
-    private $icon_size;
+    protected $title_group_action;
+    protected $icon_size;
 
     public function __construct($form, $action_header = null, string $title_group_action = null)
     {

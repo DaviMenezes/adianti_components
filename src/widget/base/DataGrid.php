@@ -3,7 +3,7 @@ namespace Dvi\Adianti\Widget\Base;
 
 use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
-use Dvi\Adianti\Route;
+use Dvi\AdiantiExtension\Route;
 use ReflectionClass;
 
 /**
@@ -18,14 +18,14 @@ use ReflectionClass;
  */
 class DataGrid extends TDataGrid
 {
-    private $grid_action_delete;
-    private $grid_action_edit;
+    protected $grid_action_delete;
+    protected $grid_action_edit;
 
     protected $custom_actions = array();
-    private $called_class;
-    private $my_columns;
-    private $order_default_parameters;
-    private $datagrid_load_method;
+    protected $called_class;
+    protected $my_columns;
+    protected $order_default_parameters;
+    protected $datagrid_load_method;
 
     public function __construct($called_class, $function_prefix = 'grid', $use_column_id = true, $use_edit_action = false, $use_delete_action = false, $params_delete = null)
     {

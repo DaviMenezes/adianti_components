@@ -3,13 +3,12 @@
 namespace Dvi\Adianti\Widget\Form\Field;
 
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Form\TCombo;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 
 /**
- * Model Combo
+ *  Combo
  *
  * @version    Dvi 1.0
  * @package    form
@@ -25,7 +24,7 @@ class Combo extends TCombo implements FormField
     use SearchableField;
     use SelectionFieldTrait;
 
-    private $field_disabled;
+    protected $field_disabled;
 
     public function __construct(string $name, string $label = null, $required = false, array $obj_array_value = null)
     {

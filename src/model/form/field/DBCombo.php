@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
- * Model DBCombo
+ *  DBCombo
  *
  * @version    Dvi 1.0
  * @package    Model

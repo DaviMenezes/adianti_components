@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\DateTime;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
- * Model Date
+ *  Date
  *
  * @version    Dvi 1.0
  * @package    Model

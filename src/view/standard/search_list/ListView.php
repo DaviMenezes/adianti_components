@@ -34,7 +34,7 @@ abstract class ListView extends BaseFormView
     protected $panel_grid;
 
     protected $actions_created;
-    private $view_builded;
+    protected $view_builded;
 
     use PageFormView;
     use ListViewTrait;

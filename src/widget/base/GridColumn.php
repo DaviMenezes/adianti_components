@@ -76,9 +76,9 @@ class GridColumn extends TElement
     const LG12 = 'col-lg-12';
     #endregion
 
-    private $childs;
-    private $custom_class;
-    private $default_class = 'col-md-12';
+    protected $childs;
+    protected $custom_class;
+    protected $default_class = 'col-md-12';
 
     protected $useLabelField = false;
 
