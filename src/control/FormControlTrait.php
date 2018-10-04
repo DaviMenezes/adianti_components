@@ -59,11 +59,11 @@ trait FormControlTrait
         try {
             $this->buildView();
 
-            if (isset($this->params['tab']) and $this->params['tab']) {
-                $this->view->getPanel()->setCurrentNotebookPage($this->params['tab']);
+            if (isset($this->request['tab']) and $this->request['tab']) {
+                $this->view->getPanel()->setCurrentNotebookPage($this->request['tab']);
             }
 
-            if (isset($this->params['id'])) {
+            if (isset($this->request['id'])) {
                 TTransaction::open($this->database);
 
                 $model_alias = Reflection::shortName($this->view->getModel());
@@ -103,7 +103,7 @@ trait FormControlTrait
         }
 
         $this->view->createPanelForm();
-        $this->view->createFormToken($this->params);
+        $this->view->createFormToken($this->request);
         $this->view->buildFields();
 
         $fields = $this->view->getBuildFields();
@@ -115,14 +115,14 @@ trait FormControlTrait
                 continue;
             }
             $name = $field->getName();
-            $field->setValue($this->params[$name]);
+            $field->setValue($this->request[$name]);
 
             if (!$field->validate()) {
                 $has_error = true;
             }
 
             $value = $field->getValue();
-            $this->params[$name] = $value;
+            $this->request[$name] = $value;
         }
 
         if ($has_error) {
@@ -192,7 +192,7 @@ trait FormControlTrait
     protected function setFormWithParams()
     {
         $object = new \stdClass();
-        foreach ($this->params as $key => $value) {
+        foreach ($this->request as $key => $value) {
             $object->$key = $value;
         }
         $this->view->getPanel()->setFormData($object);
@@ -226,7 +226,7 @@ trait FormControlTrait
 
         try {
             Transaction::open();
-            $this->currentObj = $this->view->getModel()::find($this->params['id'] ?? null);
+            $this->currentObj = $this->view->getModel()::find($this->request['id'] ?? null);
             if (!$this->currentObj) {
                 throw new \Exception('O registro solicitado não foi encontrado.');
             }

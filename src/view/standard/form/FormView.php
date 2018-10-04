@@ -20,7 +20,7 @@ use Dvi\Adianti\Widget\Form\Button;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-abstract class FormView extends DviBaseView
+abstract class FormView extends BaseFormView
 {
     /**@var Button $button_save*/
     protected $button_save;

@@ -23,7 +23,7 @@ trait Utils
 
     protected function isEditing()
     {
-        return self::editing($this->params);
+        return self::editing($this->request);
     }
 
     public static function editing($params)

@@ -26,8 +26,6 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
  */
 abstract class FormListView extends BaseFormView
 {
-    /**@var PanelGroup $panel */
-    protected $panel;
     /**@var DataGrid $datagrid */
     protected $datagrid;
     /**@var TPageNavigation $pageNavigation */

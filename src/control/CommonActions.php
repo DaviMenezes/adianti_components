@@ -41,7 +41,7 @@ trait CommonActions
     protected function validateToken()
     {
         $called_class = Route::getClassName(get_called_class());
-        $token = $this->params[$called_class . '_form_token'];
+        $token = $this->request[$called_class . '_form_token'];
         if (!empty($token) and (
                 $token === TSession::getValue($called_class . '_form_token'))) {
             return true;
@@ -53,10 +53,10 @@ trait CommonActions
     {
         $model_default = $this->view->getModel();
 
-        $this->currentObj = new $model_default($this->params[Reflection::shortName($model_default) . '-id'] ?? null);
+        $this->currentObj = new $model_default($this->request[Reflection::shortName($model_default) . '-id'] ?? null);
 
         //get result form data
-        $form_data = array_merge($this->params, (array)$this->getFormData());
+        $form_data = array_merge($this->request, (array)$this->getFormData());
         unset($form_data['class'], $form_data['method'], $form_data[Reflection::shortName(get_called_class()) . '_form_token']);
 
         /**@var DviModel $last_model */

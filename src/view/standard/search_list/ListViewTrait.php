@@ -40,7 +40,7 @@ trait ListViewTrait
 
     public function buildDatagrid($createModel = true, $showId = false): DataGrid
     {
-        $class = $this->params['class'];
+        $class = $this->request['class'];
         $this->datagrid = new DataGrid($class, 'grid', $showId);
 
         $this->datagrid->useEditAction($this->formController ?? $class);
@@ -78,13 +78,13 @@ trait ListViewTrait
     {
         $this->pageNavigation = new PageNavigation();
 
-        $new_params = PaginationHelper::getUrlPaginationParameters($this->params);
+        $new_params = PaginationHelper::getUrlPaginationParameters($this->request);
 
         if (!count($new_params)) {
             $new_params =  null;
         }
 
-        $this->pageNavigation->setAction(new TAction([$this->params['class'], 'loadDatagrid'], $new_params));
+        $this->pageNavigation->setAction(new TAction([$this->request['class'], 'loadDatagrid'], $new_params));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         $this->pageNavigation->setCount($count);
         $this->pageNavigation->setProperties($params);

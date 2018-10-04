@@ -78,7 +78,7 @@ trait ListControlTrait
             Transaction::open($this->database);
 
             $this->view = new $this->viewClass(array());
-            $this->view->getModel()::remove($this->params['id']);
+            $this->view->getModel()::remove($this->request['id']);
 
             Transaction::close();
 
@@ -92,13 +92,13 @@ trait ListControlTrait
     private function onBack()
     {
         unset(
-            $this->params['url_params']['class'],
-            $this->params['url_params']['method'],
-            $this->params['url_params']['id'],
-            $this->params['url_params']['key'],
-            $this->params['url_params']['static']
+            $this->request['url_params']['class'],
+            $this->request['url_params']['method'],
+            $this->request['url_params']['id'],
+            $this->request['url_params']['key'],
+            $this->request['url_params']['static']
         );
-        AdiantiCoreApplication::loadPage(get_called_class(), null, $this->params['url_params'] ?? null);
+        AdiantiCoreApplication::loadPage(get_called_class(), null, $this->request['url_params'] ?? null);
     }
 
     #endregion
@@ -145,7 +145,7 @@ trait ListControlTrait
             $query->checkFilters(get_called_class());
 
             $this->setPageNavigationCount($query->count());
-            $query->offset($this->params['offset'] ?? null);
+            $query->offset($this->request['offset'] ?? null);
 
             return $query->get($this->query_limit);
         } catch (\Exception $e) {
@@ -179,7 +179,7 @@ trait ListControlTrait
         if ($this->page_navigation_count <= $this->query_limit) {
             return;
         }
-        $this->view->createPageNavigation($this->page_navigation_count, $this->params);
+        $this->view->createPageNavigation($this->page_navigation_count, $this->request);
     }
 
     public function show()
@@ -194,7 +194,7 @@ trait ListControlTrait
             }
         }
 
-        parent::show($this->params);
+        parent::show($this->request);
     }
 
     protected function prepareFieldsToBuildQuery()
@@ -241,13 +241,13 @@ trait ListControlTrait
     protected function checkOrderColumn()
     {
         $session_name = Reflection::shortName(get_called_class()) . '_listOrder';
-        if (isset($this->params['order_field']) and $this->params['order_field']) {
+        if (isset($this->request['order_field']) and $this->request['order_field']) {
             $direction_array = ['asc' => 'desc', 'desc' => 'asc'];
             $listOrder = TSession::getValue($session_name);
 
             $direction = $direction_array[$listOrder['direction'] ?? 'desc'];
 
-            $order = $this->params['order_field'];
+            $order = $this->request['order_field'];
             TSession::setValue($session_name, ['field' => $order, 'direction' => $direction ?? 'asc']);
             return;
         }

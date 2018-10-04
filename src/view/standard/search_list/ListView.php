@@ -9,7 +9,6 @@ use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\View\Standard\Form\BaseFormView;
 use Dvi\Adianti\View\Standard\PageFormView;
 use Dvi\Adianti\Widget\Base\DataGrid;
-use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * Cria tela com formulário de pesquisa com listagem paginada
@@ -24,8 +23,6 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 abstract class ListView extends BaseFormView
 {
     protected $formController;
-    /**@var PanelGroup $panel*/
-    protected $panel;
     /**@var DataGrid $datagrid*/
     protected $datagrid;
     /**@var TPageNavigation $pageNavigation*/

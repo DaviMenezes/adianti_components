@@ -24,19 +24,16 @@ abstract class DviBaseView
 {
     /**@var VBox $vbox */
     protected $vbox;
-
     protected $model;
-    /**@var PanelGroup $panel */
-    protected $panel;
     protected $groupFields = array();
-    protected $params;
+    protected $request;
 
     use Utils;
     use GUID;
 
     public function __construct($param)
     {
-        $this->params = $param;
+        $this->request = $param;
         $this->vbox = new VBox();
     }
 
@@ -57,36 +54,6 @@ abstract class DviBaseView
      */
     abstract protected function setStructureFields();
 
-    public function createPanelForm()
-    {
-        $this->panel = $this->panel ?? new PanelGroup($this->params['class']);
-        $this->setPageTitle();
-    }
-
-    public function createFormToken($param)
-    {
-        if ($this->panel->getForm()->getField($param['class'] . '_form_token')) {
-            return;
-        }
-        $field_id = new Hidden(Reflection::shortName($this->model) . '-id');
-        $field_id->setValue($this->params['id'] ?? null);
-        $field_token = new Hidden($param['class'] . '_form_token');
-
-        $token = $param[$param['class'] . '_form_token'] ?? null;
-        if (empty($param[$param['class'] . '_form_token'])) {
-            $token = GUID::getID();
-            TSession::setValue($param['class'] . '_form_token', $token);
-        }
-        $field_token->setValue($token);
-
-        $this->panel->addHiddenFields([$field_id, $field_token]);
-    }
-
-    public function getPanel()
-    {
-        return $this->panel;
-    }
-
     /**@return DviModel */
     public function getModel()
     {
@@ -103,17 +70,5 @@ abstract class DviBaseView
         $this->groupFields[] = $group = (new GroupFieldView())->fields($fields);
 
         return $group;
-    }
-
-    private function getPublicModelProperties($class = null)
-    {
-        $model = $class ?? $this->getModel();
-
-        return Reflection::getPublicModelPropertyNames(new $model);
-    }
-
-    protected function modelProperties()
-    {
-        return $this->getPublicModelProperties();
     }
 }

@@ -32,7 +32,7 @@ trait SearchListControlTrait
             }
             Transaction::open();
 
-            $this->buildView($this->params);
+            $this->buildView($this->request);
 
             $this->view->getPanel()->keepFormLoaded();
 
