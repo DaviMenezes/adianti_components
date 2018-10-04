@@ -3,9 +3,9 @@
 namespace Dvi\Adianti\View\Standard;
 
 use Adianti\Base\Lib\Registry\TSession;
+use Dvi\Adianti\Helpers\GUID;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
-use Dvi\Adianti\Helpers\GUID;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Widget\Container\VBox;
 use Dvi\Adianti\Widget\Form\Field\Hidden;
@@ -22,11 +22,11 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
  */
 abstract class DviBaseView
 {
-    /**@var VBox $vbox*/
+    /**@var VBox $vbox */
     protected $vbox;
 
     protected $model;
-    /**@var PanelGroup $panel*/
+    /**@var PanelGroup $panel */
     protected $panel;
     protected $groupFields = array();
     protected $params;
@@ -52,7 +52,7 @@ abstract class DviBaseView
 
     /** @example $this->fields([
      *      ['field1', 'field2'],
-     *      ['field3', 'field4', 'field5']
+     *      ['modelX.field4', 'modeldY.field2', 'modelZ.field3']
      * ]);
      */
     abstract protected function setStructureFields();
@@ -68,14 +68,14 @@ abstract class DviBaseView
         if ($this->panel->getForm()->getField($param['class'] . '_form_token')) {
             return;
         }
-        $field_id = new Hidden('id');
+        $field_id = new Hidden(Reflection::shortName($this->model) . '-id');
         $field_id->setValue($this->params['id'] ?? null);
-        $field_token = new Hidden($param['class'].'_form_token');
+        $field_token = new Hidden($param['class'] . '_form_token');
 
-        $token = $param[$param['class'].'_form_token'] ?? null;
-        if (empty($param[$param['class'].'_form_token'])) {
+        $token = $param[$param['class'] . '_form_token'] ?? null;
+        if (empty($param[$param['class'] . '_form_token'])) {
             $token = GUID::getID();
-            TSession::setValue($param['class'].'_form_token', $token);
+            TSession::setValue($param['class'] . '_form_token', $token);
         }
         $field_token->setValue($token);
 
@@ -87,7 +87,7 @@ abstract class DviBaseView
         return $this->panel;
     }
 
-    /**@return DviModel*/
+    /**@return DviModel */
     public function getModel()
     {
         return $this->model;
@@ -98,11 +98,9 @@ abstract class DviBaseView
         return $this->groupFields;
     }
 
-    protected function fields($fields)
+    protected function fields(array $fields)
     {
-        $group = new GroupFieldView();
-        $group->fields($fields);
-        $this->groupFields[] = $group;
+        $this->groupFields[] = $group = (new GroupFieldView())->fields($fields);
 
         return $group;
     }

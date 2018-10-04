@@ -6,7 +6,10 @@ use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Dvi\Adianti\Model\DviModel;
+use Dvi\Adianti\Model\DviTRecord;
 use Dvi\Adianti\Route;
+use ReflectionClass;
 
 /**
  * Helpers CommonActions
@@ -21,7 +24,7 @@ trait CommonActions
 {
     public static function onClear($param)
     {
-        $className = Reflection::getClassName(get_called_class());
+        $className = Reflection::shortName(get_called_class());
         TSession::setValue($className . '_form_data', null);
         TSession::setValue($className . '_filters', null);
         TSession::setValue($className . '_listOrder', null);
@@ -33,9 +36,7 @@ trait CommonActions
         AdiantiCoreApplication::loadPage($className, null, $params);
     }
 
-    /**
-     * check if form has token and if is valid(session value)
-     */
+    /** * check if form has token and if is valid(session value) */
     protected function validateToken()
     {
         $called_class = Route::getClassName(get_called_class());
@@ -47,82 +48,115 @@ trait CommonActions
         return false;
     }
 
-    protected function createArrayModels($result, $models_to_check): array
+    protected function getModelAndAttributesOfTheForm(): array
     {
-        $array_models = array();
-        foreach ($result as $attribute => $value) {
-            if (!isset($value)) {
+        $model_default = $this->view->getModel();
+
+        $this->currentObj = new $model_default($this->params[Reflection::shortName($model_default) . '-id'] ?? null);
+
+        //get result form data
+        $form_data = array_merge($this->params, (array)$this->getFormData());
+        unset($form_data['class'], $form_data['method'], $form_data[Reflection::shortName(get_called_class()).'_form_token']);
+
+        /**@var DviModel $last_model*/
+        $last_model = $this->currentObj;
+        $model_form_attributes[$model_default] = $last_model;
+
+        foreach ($form_data as $property => $value) {
+            if (empty($value)) {
                 continue;
             }
-            if (!$this->isObjectAttribute($attribute, $models_to_check)) {
-                continue;
-            }
 
-            $position = strpos($attribute, '-');
+            $models = explode('-', $property);
+            $property = array_pop($models);//removing property name of array
 
-            if ($position === false) {
-                continue;
-            }
-
-            $model = substr($attribute, 0, $position);
-
-            if (in_array($model, array_keys($models_to_check))) {
-                $attribute = substr($attribute, $position+1);
-                $parent = $models_to_check[$model]['parent'];
-
-                $array_models[$parent??$model][$attribute] = $value;
-            }
-        };
-
-        return $array_models;
-    }
-
-    protected function isObjectAttribute($attribute, $models_to_save)
-    {
-        foreach ($models_to_save as $item) {
-            /**@var TRecord $rf*/
-            $model_class = $item['class'];
-            $rf = new $model_class();
-            $model_attributes = $rf->getAttributes();
-            $model_attributes[] = 'id';
-
-            $position_separator = strpos($attribute, '-');
-            $invalid = $this->invalidAttribute($attribute, $position_separator, $model_attributes);
-            if ($invalid) {
-                continue;
-            }
-            if (in_array($attribute, array_values($model_attributes))) {
-                return true;
-            }
-
-            $attribute_name = $attribute;
-            if ($position_separator !== false) {
-                $model = (new \ReflectionClass($item['class']))->getShortName();
-
-                $array_attribute = explode('-', $attribute);
-
-                if ($array_attribute[0] === $model) {
-                    $attribute_name = $array_attribute[1];
+            foreach ($models as $model_name) {
+                if ($model_name == $model_default) {
+                    $last_model = $this->currentObj;
+                    $this->setModelAttributeValue($last_model, $property, $value);
+                    continue;
                 }
-            }
 
-            if (in_array($attribute_name, array_values($model_attributes))) {
-                return true;
+                $relationships = $last_model->getRelationships();
+                $model_name_lower = strtolower($model_name);
+                if (array_key_exists($model_name_lower, $relationships)) {
+                    $last_model = $last_model->$model_name_lower();
+                }
+
+                $this->setModelAttributeValue($last_model, $property, $value);
+
+                $model_form_attributes[$model_name] = $last_model;
             }
         }
-        return false;
-    }
-
-    protected function invalidAttribute($attribute, $position_separator, $model_attributes): bool
-    {
-        if ($position_separator === false and !in_array($attribute, array_values($model_attributes))) {
-            return true;
-        }
-        return false;
+        return $model_form_attributes;
     }
 
     public function showErrorMsg($param)
     {
         new TMessage('error', $param['msg']);
+    }
+
+    public function getFormData()
+    {
+        $data = $this->view->getPanel()->getFormData();
+        $valid_data = new \stdClass();
+        foreach ((array)$data as $prop => $value) {
+            if (empty($value) or is_array($prop) or strpos($prop, 'btn_') !== false) {
+                continue;
+            }
+            $valid_data->$prop = $this->prepareFormFieldData($prop, $value);
+        }
+        return $valid_data;
+    }
+
+    /** apply filters in form data*/
+    public function prepareFormFieldData($prop, $value)
+    {
+        return htmlspecialchars($value);
+    }
+
+    protected function setModelAttributeValue(DviModel &$current_obj, $attribute_name, $value)
+    {
+        if (!in_array($attribute_name, $current_obj->getAttributes())) {
+            return;
+        }
+
+        if ($this->formFieldModelAttributeIsDisabled($current_obj, $attribute_name)) {
+            return;
+        }
+
+        if ($this->modelSetMethodExists($current_obj, $attribute_name)) {
+            $set_attibute_method = 'set_' . $attribute_name;
+            $current_obj->$set_attibute_method($value);
+            return;
+        }
+        $current_obj->addAttributeValue($attribute_name, $value);
+    }
+
+    protected function formFieldModelAttributeIsDisabled(DviTRecord &$current_obj, $attribute_name)
+    {
+        $class_name = Reflection::shortName($current_obj);
+        $formField = $this->view->getPanel()->getForm()->getField($class_name . '-' . $attribute_name);
+
+        $method_exist = $this->hasIsDisabledMethod($formField);
+
+        if ($method_exist and $formField->isDisabled()) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function modelSetMethodExists(DviTRecord &$current_obj, $attribute_name)
+    {
+        $methods = get_class_methods(get_class($current_obj));
+        if (in_array('set_' . $attribute_name, $methods)) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function hasIsDisabledMethod($formField): bool
+    {
+        return in_array('isDisabled', (new ReflectionClass(get_class($formField)))->getMethods());
     }
 }

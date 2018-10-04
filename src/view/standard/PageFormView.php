@@ -1,10 +1,12 @@
 <?php
+
 namespace Dvi\Adianti\View\Standard;
 
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Model\DviModel;
+use Dvi\Adianti\Model\RelationshipModelType;
+use Dvi\Adianti\View\Standard\Form\FormView;
 use Dvi\Adianti\Widget\Base\GridColumn;
-use Dvi\Adianti\Widget\Form\Field\FormField;
 use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
@@ -20,7 +22,7 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 trait PageFormView
 {
     protected $panel_rows_columns = array();
-    /**@var PanelGroup $panel*/
+    /**@var PanelGroup $panel */
     protected $panel;
     protected $content_after_panel;
     protected $build_group_fields = array();
@@ -42,7 +44,7 @@ trait PageFormView
             return $this->build_group_fields;
         } catch (\Exception $e) {
             Transaction::rollback();
-            throw new \Exception('Construção de campos.'.$e->getMessage());
+            throw new \Exception('Construção de campos.' . $e->getMessage());
         }
     }
 
@@ -55,7 +57,6 @@ trait PageFormView
             $this->panel->useLabelFields(true);
         }
 
-        $rows = 0;
         $fields = $this->buildFields();
         foreach ($fields as $key => $groups) {
             if ($groups['tab'] and $key == 0) {
@@ -70,7 +71,6 @@ trait PageFormView
                     $columns[] = new GridColumn($field_array['field'], $field_array['class'], $field_array['style']);
                 }
                 $this->panel->addRow($columns);
-                $rows++;
             }
         }
         $this->already_create_panel_rows = true;
@@ -96,7 +96,7 @@ trait PageFormView
 
     protected function getFormField($model, $field_name)
     {
-        /**@var DviModel $model*/
+        /**@var DviModel $model */
 
         $dot_position = strpos($field_name, '.');
         if ($dot_position !== false) {
@@ -106,7 +106,7 @@ trait PageFormView
             $last_associated = null;
             foreach ($associateds as $key => $associated) {
                 $last_associated = $model->getForeignKeys()[$associated];
-                if ($key+1 == count($associateds)) {
+                if ($key + 1 == count($associateds)) {
                     $model = new $last_associated();
                     break;
                 }
@@ -116,10 +116,10 @@ trait PageFormView
         foreach ($array_underline as $key => $item) {
             $array_underline[$key] = ucfirst($item);
         }
-        $method = 'createField'.implode('', $array_underline);
+        $method = 'createField' . implode('', $array_underline);
 
         if (!method_exists($model, $method)) {
-            throw new \Exception('O método '.$method.' precisa ser criado no modelo '. (new \ReflectionObject($model))->getShortName());
+            throw new \Exception('O método ' . $method . ' precisa ser criado no modelo ' . (new \ReflectionObject($model))->getShortName());
         }
         $model->$method();
         $field_data = $model->getDviField($field_name);
@@ -179,14 +179,20 @@ trait PageFormView
 
         $model_alias = substr($field, 0, $pos);
 
-        /**@var FormField $dviField */
-        if ($model_alias and in_array($model_alias, array_keys($dviModel->getForeignKeys()))) {
-            $model_class = $dviModel->getForeignKeys()[$model_alias];
+        /**@var DviModel $dviModel */
+        $relationships = $dviModel->associateds()->getRelationships();
+        if ($model_alias and in_array($model_alias, array_keys($relationships))) {
+            /**@var RelationshipModelType $model_type */
+            $model_type = $dviModel->getRelationships()[$model_alias];
 
-            $form_field = $this->getFormField(new $model_class(), $field_name);
-        } else {
-            $form_field = $this->getFormField($dviModel, $field_name);
+            $model_class = $model_type->getClassName();
+            $model = new $model_class();
+            $form_field = $this->getFormField($model, $field_name);
+            return $form_field;
         }
+
+        $form_field = $this->getFormField($dviModel, $field_name);
+
         return $form_field;
     }
 
@@ -215,6 +221,10 @@ trait PageFormView
                     }
 
                     $dviField = $form_field->getField()->setReferenceName($field);
+
+                    if (get_parent_class($this) == FormView::class) {
+                        $dviField->class .= ' dvi_field_required';
+                    }
 
                     $build_fields[$row][] = ['field' => $dviField, 'class' => $class, 'style' => $this->getFieldStyle($component_name)];
                 }

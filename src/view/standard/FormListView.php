@@ -5,7 +5,6 @@ namespace Dvi\Adianti\View\Standard;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Model\DviModel;
@@ -13,7 +12,6 @@ use Dvi\Adianti\View\Standard\Form\BaseFormView;
 use Dvi\Adianti\View\Standard\Form\FormViewTrait;
 use Dvi\Adianti\View\Standard\SearchList\ListViewTrait;
 use Dvi\Adianti\Widget\Base\DataGrid;
-use Dvi\Adianti\Widget\Container\VBox;
 use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
@@ -28,15 +26,15 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
  */
 abstract class FormListView extends BaseFormView
 {
-    /**@var PanelGroup $panel*/
+    /**@var PanelGroup $panel */
     protected $panel;
-    /**@var DataGrid $datagrid*/
+    /**@var DataGrid $datagrid */
     protected $datagrid;
-    /**@var TPageNavigation $pageNavigation*/
+    /**@var TPageNavigation $pageNavigation */
     protected $pageNavigation;
-    /**@var TDataGridColumn $column_id*/
+    /**@var TDataGridColumn $column_id */
     protected $column_id;
-    /**@var TAction $action_delete*/
+    /**@var TAction $action_delete */
     protected $action_delete;
     protected $panel_grid;
 
@@ -63,7 +61,6 @@ abstract class FormListView extends BaseFormView
             $this->buildForm($param);
 
             $this->buildDatagrid();
-
         } catch (\Exception $e) {
             Transaction::rollback();
             throw $e;
@@ -106,8 +103,8 @@ abstract class FormListView extends BaseFormView
 
     protected function validateModel()
     {
-        if (get_parent_class($this->model) != DviModel::class) {
-            throw new \Exception('O modelo em '.Reflection::getClassName(get_called_class()).' deve ser filho de ' . DviModel::class);
+        if (!is_subclass_of($this->model, DviModel::class)) {
+            throw new \Exception('O modelo em ' . Reflection::shortName(get_called_class()) . ' deve ser filho de ' . DviModel::class);
         }
     }
 }

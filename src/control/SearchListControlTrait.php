@@ -3,18 +3,15 @@
 namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Registry\TSession;
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TDate;
 use Adianti\Base\Lib\Widget\Form\TDateTime;
 use Adianti\Base\Lib\Widget\Form\TField;
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
-use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\QueryFilter;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\SearchableField;
-use ReflectionClass;
 
 /**
  * Control SearchListControlTrait
@@ -39,24 +36,25 @@ trait SearchListControlTrait
 
             $this->view->getPanel()->keepFormLoaded();
 
-            $array_models = $this->prepareArrayModels();
+            $array_models = $this->getModelAndAttributesOfTheForm();
 
             Transaction::close();
 
             $filters = array();
 
-            foreach ($array_models as $model => $attributes) {
-                $this->createFilters($attributes, $model, $filters);
+            /**@var DviModel $model */
+            foreach ($array_models as $model_name => $model) {
+                $this->createFilters($model->getPublicProperties(), $model_name, $filters);
             }
 
-            $called_class = Reflection::getClassName(get_called_class());
-            TSession::setValue($called_class.'_form_data', $this->view->getPanel()->getFormData());
+            $called_class = Reflection::shortName(get_called_class());
+            TSession::setValue($called_class . '_form_data', $this->view->getPanel()->getFormData());
             if (count($filters)) {
                 $session_filters = TSession::getValue($called_class . '_filters');
                 foreach ($filters as $key => $filter) {
                     $session_filters[$key] = $filter;
                 }
-                TSession::setValue($called_class.'_filters', $session_filters);
+                TSession::setValue($called_class . '_filters', $session_filters);
             }
 
             $this->loadDatagrid();
@@ -68,89 +66,27 @@ trait SearchListControlTrait
         }
     }
 
-    protected function prepareArrayModels()
-    {
-        $obj_master_class_name = (new ReflectionClass($this->view->getModel()))->getShortName();
-
-        $default_model = $this->view->getModel();
-        /**@var DviModel $objMaster */
-        $objMaster = new $default_model;
-        $objMaster->addAttribute('id');
-
-        $data = (array)$this->view->getPanel()->getFormData();
-
-        $models_to_check = $this->getForeynKeys($objMaster);
-        $models_to_check[$obj_master_class_name] = [
-            'model' => $this->currentObj,
-            'class' => $this->view->getModel(),
-            'parent' => null
-        ];
-
-        $array_models = $this->createArrayModels($data, $models_to_check);
-        return $array_models;
-    }
-
-    public static function getForeynKeys($current_obj, &$models_to_check = null, $last_model = null)
-    {
-        if ($current_obj == null) {
-            return;
-        }
-        $models_to_check = $models_to_check ?? array();
-        $foreignKeys = $current_obj->getForeignKeys();
-        $last_obj = $current_obj;
-        foreach ($foreignKeys as $key => $foreignKey) {
-            $fkShortName = (new ReflectionClass($foreignKey))->getShortName();
-
-            if (array_key_exists($fkShortName, $models_to_check)) {
-                continue;
-            }
-            $parent = null;
-
-            if ($last_model) {
-                $valid_array = explode('.', $last_model);
-                if ($valid_array[0] == $valid_array[1]) {
-                    continue;
-                }
-                $parent = $last_model.'.'. $fkShortName;
-            }
-
-            $last_obj = $last_obj->$key;
-
-            $models_to_check[$fkShortName] = [
-                'model' => $model??$fkShortName,
-                'class' => $foreignKey,
-                'parent' => $parent
-            ];
-
-            self::getForeynKeys($last_obj, $models_to_check, $parent ?? $fkShortName);
-        }
-        return $models_to_check;
-    }
-
-    protected function createFilters($attributes, $model, &$filters)
+    protected function createFilters($attributes, $model_name, &$filters)
     {
         foreach ($attributes as $attribute => $value) {
             if (empty($value)) {
                 continue;
             }
 
-            $model_array = explode('.', $model);
-            $model_name = array_pop($model_array);
             $attribute_name = $model_name . '-' . $attribute;
-
 
             $field = $this->view->getPanel()->getForm()->getField($attribute_name);
 
             if (!$field) {
                 continue;
             }
-            /**@var TField $field*/
+            /**@var TField $field */
             $field->setValue($value);
 
             $traits = class_uses($field);
 
             if (in_array(SearchableField::class, $traits)) {
-                /**@var FormField $field*/
+                /**@var FormField $field */
                 $searchOperator = $field->getSearchOperator();
 
                 if (!is_a($field, TDate::class) and !is_a($field, TDateTime::class)) {
@@ -158,7 +94,7 @@ trait SearchListControlTrait
                 }
                 $filter = new QueryFilter($model_name . '.' . $attribute, $searchOperator, $value);
 
-                $filters[$model . '.' . $attribute] = $filter;
+                $filters[$model_name . '.' . $attribute] = $filter;
             }
         }
     }

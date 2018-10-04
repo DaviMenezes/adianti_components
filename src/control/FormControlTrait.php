@@ -3,7 +3,6 @@
 namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
-use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\Transaction;
@@ -11,12 +10,10 @@ use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DBFormFieldPrepare;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Model\DviTRecord;
-use Dvi\Adianti\View\Standard\Form\BaseFormView;
+use Dvi\Adianti\Model\Relationship;
 use Dvi\Adianti\View\Standard\Form\FormView;
-use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField as FormFieldInterface;
-use Dvi\Adianti\Widget\Form\Field\Contract\FormFieldValidation;
+use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
 use Dvi\Adianti\Widget\Form\Field\FormField;
 use ReflectionClass;
 
@@ -31,7 +28,7 @@ use ReflectionClass;
  */
 trait FormControlTrait
 {
-    /**@var FormView $view*/
+    /**@var FormView $view */
     protected $view;
 
     public function onSave()
@@ -69,16 +66,16 @@ trait FormControlTrait
             if (isset($this->params['id'])) {
                 TTransaction::open($this->database);
 
-                $model_alias = Reflection::getClassName($this->view->getModel());
+                $model_alias = Reflection::shortName($this->view->getModel());
 
                 $query = new DBFormFieldPrepare($this->view->getModel());
                 $query->mountQueryByFields($this->getFormFieldReferenceNames());
-                $query->where($model_alias.'.id', '=', $this->currentObj->id);
+                $query->where($model_alias . '.id', '=', $this->currentObj->id);
                 $result = $query->getObject();
 
                 $formFields = $this->view->getPanel()->getForm()->getFields();
                 foreach ($formFields as $formField) {
-                    /**@var FormField $formField*/
+                    /**@var FormField $formField */
                     if (!method_exists($formField, 'getReferenceName')) {
                         continue;
                     }
@@ -112,7 +109,7 @@ trait FormControlTrait
         $fields = $this->view->getBuildFields();
 
         $has_error = false;
-        /**@var FormFieldInterface $field*/
+        /**@var FormFieldInterface $field */
         foreach ($fields as $field) {
             if (!in_array(IFormField::class, class_implements($field))) {
                 continue;
@@ -137,14 +134,14 @@ trait FormControlTrait
         //continues bulding the view
         $this->buildView();
 
-        if ($has_error) {
-            $traits = (new ReflectionClass(self::class))->getTraitNames();
-            if (in_array(ListControlTrait::class, array_values($traits))) {
-                $this->loadDatagrid();
-            }
-            throw new \Exception('Verifique os campos em destaque');
+        $traits = (new ReflectionClass(self::class))->getTraitNames();
+        if (in_array(ListControlTrait::class, array_values($traits))) {
+            $this->loadDatagrid();
         }
         $this->getViewContent();
+        if ($has_error) {
+            throw new \Exception('Verifique os campos em destaque');
+        }
     }
 
     protected function save()
@@ -152,41 +149,29 @@ trait FormControlTrait
         Transaction::open();
 
         $this->view->getPanel()->keepFormLoaded();
-        $model_class = $this->view->getModel();
 
-        $this->currentObj = new $model_class($this->params['id'] ?? null);
+        $models_in_form = $this->getModelAndAttributesOfTheForm();
 
-        /**@var DviModel $this->currentObj */
-        $this->currentObj->addAttribute('id');
+        //Saving model default
+        /**@var DviModel $last_model */
+        $last_model = $models_in_form[Reflection::shortName($this->view->getModel())];
+        $last_model->save();
 
-        $models_to_save = array();
-        $models = $this->getModelsToSave($models_to_save);
+        unset($models_in_form[Reflection::shortName($this->view->getModel())]);
 
-        $last_model = null;
-        foreach ($models as $key => $instance_object) {
-            $model = $instance_object['model'];
-
-            $this->fillModelsWithAttributeValues($instance_object['attributes'], $model);
-
-            if (!$this->isEditing() and $key > 0) {
-                $fk_name = $instance_object['foreing_key']['name'];
-                $model->$fk_name = $last_model->id;
+        //Saving associateds
+        foreach ($models_in_form as $model_name => $model) {
+            $associate = $last_model->getRelationship(strtolower($model_name));
+            if ($associate and $associate->type == Relationship::HASONE) {
+                $fk = Reflection::lowerName($last_model) . '_id';
+                $model->$fk = $last_model->id;
             }
 
-            $this->prepareObjBeforeSave($model, $last_model);
-
-            $model->store();
-
+            $model->save();
             $last_model = $model;
         }
-        Transaction::close();
-    }
 
-    /**
-     * Used by child classes to customize the object before save
-    */
-    protected function prepareObjBeforeSave(DviModel &$obj, $last_obj)
-    {
+        Transaction::close();
     }
 
     protected function afterSave()
@@ -200,7 +185,7 @@ trait FormControlTrait
         unset($new_params['method']);
         $new_params['id'] = $this->currentObj->id;
 
-        $class = Reflection::getClassName(get_called_class());
+        $class = Reflection::shortName(get_called_class());
         AdiantiCoreApplication::loadPage($class, 'onEdit', $new_params);
     }
 
@@ -211,51 +196,6 @@ trait FormControlTrait
             $object->$key = $value;
         }
         $this->view->getPanel()->setFormData($object);
-    }
-
-    /**
-     * @param $attributes
-     * @param TRecord $current_obj
-     * @throws \Exception
-     */
-    protected function fillModelsWithAttributeValues($attributes, TRecord &$current_obj)
-    {
-        $obj_attributes = $current_obj->getAttributes();
-
-        foreach ($attributes as $attribute_name => $value) {
-            if (in_array($attribute_name, array_keys($obj_attributes))) {
-                $class_name = Reflection::getClassName($current_obj);
-                $formField = $this->view->getPanel()->getForm()->getField($class_name.'-'.$attribute_name);
-
-                $method_exist = $this->hasIsDisabledMethod($formField);
-
-                if ($method_exist and $formField->isDisabled()) {
-                    continue;
-                }
-                $this->setAttributeValue($current_obj, $attribute_name, $value);
-            }
-        }
-    }
-
-    protected function hasIsDisabledMethod($formField): bool
-    {
-        try {
-            return in_array('isDisabled', (new ReflectionClass(get_class($formField)))->getMethods());
-        } catch (\ReflectionException $e) {
-            throw $e;
-        }
-    }
-
-    protected function setAttributeValue(DviTRecord &$current_obj, $attribute_name, $value)
-    {
-        $methods =  get_class_methods(get_class($current_obj));
-        $set_attibute_method = 'set_' . $attribute_name;
-
-        if (in_array($set_attibute_method, $methods)) {
-            $current_obj->$set_attibute_method($value);
-            return;
-        }
-        $current_obj->addAttributeValue($attribute_name, $value);
     }
 
     protected function getFormFieldReferenceNames(): array
@@ -291,71 +231,7 @@ trait FormControlTrait
                 throw new \Exception('O registro solicitado não foi encontrado.');
             }
         } catch (\Exception $exception) {
-            throw new \Exception($exception->getMessage().' em '.self::class .' linha '.$exception->getLine());
+            throw new \Exception($exception->getMessage() . ' em ' . self::class . ' linha ' . $exception->getLine());
         }
-    }
-
-    protected function getModelsToSave(&$models_to_save): array
-    {
-        $obj_master_class_name = (new \ReflectionObject($this->currentObj))->getShortName();
-        $models_to_save[$obj_master_class_name] = [
-            'model' => $this->currentObj,
-            'class' => $this->view->getModel(),
-            'parent' => null
-        ];
-        
-        SearchListControlTrait::getForeynKeys($this->currentObj, $models_to_save);
-
-        $data = $this->getFormData();
-
-        $result = array_merge($this->params, (array)$data);
-
-        $models = $this->createArrayModels($result, $models_to_save);
-
-        $new_models = array();
-        foreach ($models as $key => $attributes) {
-            $array = explode('.', $key);
-            $model = array_pop($array);
-            $new_models[] = [
-                'model' => $model,
-                'attributes' => $attributes
-            ];
-        }
-
-        $new_models = array_reverse($new_models);
-
-        $instance_objects = array();
-        $last_model = null;
-        foreach ($new_models as $key => $item) {
-            if ($item['model'] == $obj_master_class_name) {
-                $instance_objects[] = ['model'=>$this->currentObj, 'attributes'=> $item['attributes']];
-                $last_model = $this->currentObj;
-                continue;
-            }
-            $model = strtolower($item['model']);
-            $instance_objects[$key-1]['foreing_key'] = ['name'=>$model.'_id'];
-
-            $last_model = $last_model->$model;
-            $instance_objects[] = ['model'=>$last_model, 'attributes'=> $item['attributes']];
-        }
-        return array_reverse($instance_objects);
-    }
-
-    public function getFormData()
-    {
-        $data = $this->view->getPanel()->getFormData();
-        $valid_data = new \stdClass();
-        foreach ((array)$data as $prop => $value) {
-            if (empty($value) or is_array($prop) or strpos($prop, 'btn_') !== false) {
-                continue;
-            }
-            $valid_data->$prop = $this->prepareFormFieldData($prop, $value);
-        }
-        return $valid_data;
-    }
-
-    public function prepareFormFieldData($prop, $value)
-    {
-        return htmlspecialchars($value);
     }
 }

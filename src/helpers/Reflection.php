@@ -2,9 +2,7 @@
 
 namespace Dvi\Adianti\Helpers;
 
-use Exception;
 use ReflectionClass;
-use ReflectionException;
 
 /**
  * Helpers Reflection
@@ -20,15 +18,20 @@ trait Reflection
     /**
      * @param null $class
      * @return string
-     * @throws Exception
      */
-    public static function getClassName($class = null)
+    public static function shortName($class = null)
     {
-        try {
-            return (new ReflectionClass($class ?? get_called_class()))->getShortName();
-        } catch (ReflectionException $e) {
-            throw new Exception($e->getMessage());
-        }
+        return self::obj($class ?? get_called_class())->getShortName();
+    }
+
+    public static function lowerName($class = null)
+    {
+        return strtolower(self::shortName($class));
+    }
+
+    public static function obj($class = null): ReflectionClass
+    {
+        return new ReflectionClass($class ?? get_called_class());
     }
 
     public static function getPublicModelPropertyNames($obj)

@@ -2,10 +2,8 @@
 
 namespace Dvi\Adianti\Control;
 
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\CommonActions;
-use Dvi\Adianti\Route;
 use Dvi\Adianti\View\Standard\Form\FormView;
 
 /**
@@ -20,7 +18,7 @@ use Dvi\Adianti\View\Standard\Form\FormView;
 abstract class FormControl extends DviControl
 {
     protected $viewClass;
-    /**@var FormView $view*/
+    /**@var FormView $view */
     protected $view;
 
     use FormControlTrait;
@@ -67,19 +65,26 @@ abstract class FormControl extends DviControl
     {
         $msg_error = null;
         if (empty($this->viewClass)) {
-            $msg_error .= 'Defina a propriedade viewClass no método init() do seu controlador ('.self::getClassName(get_called_class()).')'."<br>";
+            $msg_error .= 'Defina a propriedade viewClass no método init() do seu controlador (' . self::shortName(get_called_class()) . ')' . "<br>";
         }
-        $this->setPageList();
+        if (!is_subclass_of($this->viewClass, FormView::class)) {
+            $msg_error .= 'A view deve ser filha de ' . (new \ReflectionClass(FormView::class))->getShortName();
+        }
+
         if (empty($this->pageList)) {
-            $msg_error .= 'Defina a propriedade pageList. <br>
-            Ela representa o controlador de listagem e será usada por alguns componentes.'."<br>";
+            $msg_error .= 'Defina a propriedade pageList.';
+            $msg_error .= 'Ela representa o controlador de listagem e será usada por alguns componentes.';
+        } else {
+            if (!is_subclass_of($this->pageList, ListControl::class)) {
+                $msg_error = 'A sua listagem deve ser do tipo ' . (new \ReflectionClass(ListControl::class))->getShortName();
+            }
         }
 
         if ($msg_error) {
             if (ENVIRONMENT == 'development') {
-                $msg  = 'O método init() é responsável em coletar algumas informações importantes ';
-                $msg .= '<br> para o bom funcionamento do sistema.';
-                $msg .= ' Verifique as mensagens abaixo para corrigir o problema <br><hr>';
+                $msg = 'O método init() é responsável em coletar algumas informações importantes ';
+                $msg .= ' para o bom funcionamento do sistema.';
+                $msg .= ' Verifique as mensagens a seguir para corrigir o problema ';
                 $msg .= $msg_error;
                 throw new \Exception($msg);
             }
@@ -90,18 +95,6 @@ abstract class FormControl extends DviControl
     protected function buildView()
     {
         $this->view->build($this->params);
-    }
-
-    private function setPageList()
-    {
-        $class_name = Route::getClassName(get_called_class());
-        $array = explode('\\', get_called_class());
-        array_pop($array);
-        $called_class_path = implode('/', $array);
-        $class_list = $called_class_path.'/'.$class_name.'List';
-        if (class_exists($class_list)) {
-            $this->pageList = $class_list;
-        }
     }
 
     public function show()

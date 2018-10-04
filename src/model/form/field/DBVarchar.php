@@ -1,10 +1,11 @@
 <?php
+
 namespace Dvi\Adianti\Model\Form\Field;
 
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\Field\Varchar;
 use Dvi\Adianti\Widget\Form\Field\Validator\CpfValidator;
 use Dvi\Adianti\Widget\Form\Field\Validator\EmailValidator;
+use Dvi\Adianti\Widget\Form\Field\Varchar;
 
 /**
  * Field DBVarchar
@@ -47,7 +48,7 @@ class DBVarchar extends DBFormField
     {
         $this->field->addValidation($this->field->getLabel(), new CPFValidator());
 
-        $this->mask('999-999-999-99');
+        $this->mask('999.999.999-99');
         return $this;
     }
     #endregion

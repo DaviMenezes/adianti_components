@@ -2,7 +2,7 @@
 
 namespace Dvi\Adianti\Model;
 
-use App\Adianti\Component\Model\Form\Fields\DBInteger;
+use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
 use Stringizer\Stringizer;
@@ -21,6 +21,7 @@ abstract class DviModel extends DviTRecord
 {
     protected $model_fields;
     public $id;
+    protected $relationship;
 
     public function __construct($id = null, bool $callObjectLoad = true)
     {
@@ -29,6 +30,26 @@ abstract class DviModel extends DviTRecord
         $this->addPublicAttributes();
         $this->setAttributeValues($this->getPublicProperties());
         $this->setPublicAttributeValues();
+    }
+
+    public function associateds(): Relationship
+    {
+        return $this->relationship ?? $this->relationship = new Relationship();
+    }
+
+    public function getRelationships()
+    {
+        return $this->relationship->getRelationships();
+    }
+
+    public function getRelationship($model): ?RelationshipModelType
+    {
+        return $this->getRelationships()[$model] ?? null;
+    }
+
+    public function getJoin($model)
+    {
+        return $this->relationship->getJoin(get_called_class(), $model);
     }
 
     protected function setAttributeValues($properties)
@@ -74,7 +95,7 @@ abstract class DviModel extends DviTRecord
         return $table_field_name;
     }
 
-    public function getDviField($name):DBFormField
+    public function getDviField($name): DBFormField
     {
         if (!array_key_exists($name, $this->model_fields)) {
             if (ENVIRONMENT == 'development') {
@@ -84,7 +105,7 @@ abstract class DviModel extends DviTRecord
             }
 
             foreach ($this->model_fields as $attribute => $value) {
-                $msg .= "|".$attribute;
+                $msg .= "|" . $attribute;
             }
             throw new \Exception($msg);
         }
@@ -96,12 +117,28 @@ abstract class DviModel extends DviTRecord
     {
         return $this->model_fields;
     }
+
     #endregion
 
     public function setMap($attribute_name, $class)
     {
-        $this->foreign_keys[$attribute_name] = ['alias'=> $attribute_name, 'class'=>$class];
-        $this->addAttribute((string)$attribute_name.'_id');
+        $this->foreign_keys[$attribute_name] = ['alias' => $attribute_name, 'class' => $class];
+        $this->addAttribute((string)$attribute_name . '_id');
+    }
+
+
+    public function hasOne(string $model)
+    {
+        /**@var DviModel $model */
+        return $model::where(Reflection::lowerName(get_called_class()) . '_id', '=', $this->id)->first() ?? new $model();
+    }
+
+    public function belongsTo(string $model): DviModel
+    {
+        return DB::transaction(function () use ($model) {
+            $foreign_key = Reflection::lowerName($model) . '_id';
+            return new $model($this->$foreign_key);
+        });
     }
 
     public function getAttributes()

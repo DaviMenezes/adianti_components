@@ -68,7 +68,7 @@ class DviTRecord extends TRecord
     protected function getEntity()
     {
         $class = get_class($this);
-        $tablename =  constant("{$class}::TABLENAME");
+        $tablename = constant("{$class}::TABLENAME");
 
         if (empty($tablename)) {
             return (new \ReflectionClass($this))->getShortName();
@@ -93,7 +93,9 @@ class DviTRecord extends TRecord
         $publics = $this->getPublicProperties();
         foreach ($publics as $key => $value) {
             if (!array_key_exists($key, $this->foreign_keys)) {
-                parent::addAttribute($key);
+                if ($key != 'id') {
+                    parent::addAttribute($key);
+                }
             }
         }
     }
@@ -107,8 +109,8 @@ class DviTRecord extends TRecord
             throw new \Exception($msg_user, $msg_dev);
         }
 
-        $attribute_class = $this->foreign_keys[$attribute];
-        $attribute_id = $attribute.'_id';
+        $attribute_class = $this->foreign_keys[$attribute]['class'];
+        $attribute_id = $attribute . '_id';
 
         $this->current_obj = $this->$attribute ?? $this->current_obj;
         if (empty($this->current_obj)) {
@@ -141,13 +143,13 @@ class DviTRecord extends TRecord
 
     #endregion
 
-    public static function remove($id = null) : bool
+    public static function remove($id = null): bool
     {
         $class = get_called_class();
 
-        /**@var DviTRecord $class*/
+        /**@var DviTRecord $class */
         $class::where('id', '=', $id)->delete();
-        
+
         return true;
     }
 
@@ -158,6 +160,7 @@ class DviTRecord extends TRecord
     }
 
     #region [GET OBJECT] ********************************************
+
     /**@throws */
     public static function getObject($id, $class)
     {
@@ -173,7 +176,7 @@ class DviTRecord extends TRecord
         }
     }
 
-    /**@throws*/
+    /**@throws */
     private static function getObjectOpeningConnection($id, $class)
     {
         try {
@@ -197,11 +200,12 @@ class DviTRecord extends TRecord
         }
         return $obj;
     }
+
     #endregion
 
     public static function getTableName()
     {
-        $model = preg_replace('/([^A-Z])([A-Z])/', "$1_$2", Reflection::getClassName(get_called_class()));
+        $model = preg_replace('/([^A-Z])([A-Z])/', "$1_$2", Reflection::shortName(get_called_class()));
 
         $model = !empty(get_called_class()::TABLENAME) ? get_called_class()::TABLENAME : strtolower($model);
         return $model;

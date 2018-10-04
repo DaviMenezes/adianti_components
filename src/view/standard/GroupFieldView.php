@@ -4,7 +4,7 @@ namespace Dvi\Adianti\View\Standard;
 
 /**
  * Control GroupFieldView
- *
+ * This class organizes the fields into groups with tabs. Or not.
  * @package    Control
  * @subpackage
  * @author     Davi Menezes
@@ -27,7 +27,7 @@ class GroupFieldView
         return $this;
     }
 
-    public function hasTab():bool
+    public function hasTab(): bool
     {
         if (!empty($this->tab)) {
             return true;
