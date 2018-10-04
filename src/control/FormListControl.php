@@ -64,7 +64,7 @@ abstract class FormListControl extends DviControl
 
     protected function createPanel()
     {
-        $this->view->createPanel($this->params);
+        $this->view->createPanel($this->request);
     }
 
     protected function buildView()
@@ -72,7 +72,7 @@ abstract class FormListControl extends DviControl
         if ($this->already_build_view) {
             return;
         }
-        $this->view->build($this->params);
+        $this->view->build($this->request);
 
         $this->datagrid = $this->view->getDatagrid();
         $this->pageNavigation = $this->view->getPageNavigation();

@@ -41,7 +41,7 @@ abstract class ListControl extends DviControl implements StandardSearchListInter
 
         $this->setQueryLimit();
 
-        $this->view->build($this->params);
+        $this->view->build($this->request);
 
         $this->datagrid = $this->view->getDatagrid();
         $this->pageNavigation = $this->view->getPageNavigation();
@@ -57,7 +57,7 @@ abstract class ListControl extends DviControl implements StandardSearchListInter
 
     protected function createView()
     {
-        $this->view = new $this->viewClass($this->params);
+        $this->view = new $this->viewClass($this->request);
         $this->view->setFormController($this->formController);
     }
 

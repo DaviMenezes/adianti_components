@@ -93,12 +93,12 @@ abstract class FormControl extends DviControl
 
     protected function buildView()
     {
-        $this->view->build($this->params);
+        $this->view->build($this->request);
     }
 
     public function show()
     {
-        if (!$this->hasMethod($this->params)) {
+        if (!$this->hasMethod($this->request)) {
             $this->buildView();
             $this->getViewContent();
         }
