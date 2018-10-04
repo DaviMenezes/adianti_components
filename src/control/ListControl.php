@@ -2,7 +2,6 @@
 
 namespace Dvi\Adianti\Control;
 
-use Dvi\Adianti\Helpers\CommonActions;
 use Dvi\Adianti\Widget\Container\VBox;
 
 /**
@@ -18,7 +17,7 @@ abstract class ListControl extends DviControl implements StandardSearchListInter
 {
     protected $viewClass;
     protected $formController;
-    /**@var VBox $vbox_container*/
+    /**@var VBox $vbox_container */
     protected $vbox_container;
     protected $already_build_view;
 

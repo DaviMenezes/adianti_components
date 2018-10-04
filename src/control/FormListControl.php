@@ -2,10 +2,7 @@
 
 namespace Dvi\Adianti\Control;
 
-use Adianti\Base\Lib\Registry\TSession;
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\Transaction;
-use Dvi\Adianti\Helpers\CommonActions;
 use Dvi\Adianti\View\Standard\FormListView;
 
 /**
@@ -32,7 +29,7 @@ abstract class FormListControl extends DviControl
     {
         try {
             $this->formController = get_called_class();
-            
+
             if ($this->already_build_view) {
                 return;
             }
@@ -87,7 +84,7 @@ abstract class FormListControl extends DviControl
     {
         if (!is_subclass_of($this->viewClass, FormListView::class)) {
             $str = 'Uma classe do tipo ' . (new \ReflectionClass(self::class))->getShortName();
-            $str .= ' deve ter uma view do tipo '.(new \ReflectionClass(FormListView::class))->getShortName();
+            $str .= ' deve ter uma view do tipo ' . (new \ReflectionClass(FormListView::class))->getShortName();
             throw new \Exception($str);
         }
     }
