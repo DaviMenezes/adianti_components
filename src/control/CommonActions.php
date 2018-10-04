@@ -43,7 +43,7 @@ trait CommonActions
         $called_class = Route::getClassName(get_called_class());
         $token = $this->params[$called_class . '_form_token'];
         if (!empty($token) and (
-                $token === TSession::getValue($called_class.'_form_token'))) {
+                $token === TSession::getValue($called_class . '_form_token'))) {
             return true;
         }
         return false;
@@ -57,11 +57,11 @@ trait CommonActions
 
         //get result form data
         $form_data = array_merge($this->params, (array)$this->getFormData());
-        unset($form_data['class'], $form_data['method'], $form_data[Reflection::shortName(get_called_class()).'_form_token']);
+        unset($form_data['class'], $form_data['method'], $form_data[Reflection::shortName(get_called_class()) . '_form_token']);
 
-        /**@var DviModel $last_model*/
+        /**@var DviModel $last_model */
         $last_model = $this->currentObj;
-        $model_form_attributes[$model_default] = $last_model;
+        $model_form_attributes[Reflection::shortName($model_default)] = $last_model;
 
         foreach ($form_data as $property => $value) {
             if (empty($value)) {
@@ -72,18 +72,16 @@ trait CommonActions
             $property = array_pop($models);//removing property name of array
 
             foreach ($models as $model_name) {
-                if ($model_name == $model_default) {
+                if ($model_name == Reflection::shortName($model_default)) {
                     $last_model = $this->currentObj;
                     $this->setModelAttributeValue($last_model, $property, $value);
                     continue;
                 }
 
-                $relationships = $last_model->getRelationships();
                 $model_name_lower = strtolower($model_name);
-                if (array_key_exists($model_name_lower, $relationships)) {
+                if ($last_model->getRelationship($model_name_lower)) {
                     $last_model = $last_model->$model_name_lower();
                 }
-
                 $this->setModelAttributeValue($last_model, $property, $value);
 
                 $model_form_attributes[$model_name] = $last_model;

@@ -135,10 +135,8 @@ abstract class DviModel extends DviTRecord
 
     public function belongsTo(string $model): DviModel
     {
-        return DB::transaction(function () use ($model) {
-            $foreign_key = Reflection::lowerName($model) . '_id';
-            return new $model($this->$foreign_key);
-        });
+        $foreign_key = Reflection::lowerName($model) . '_id';
+        return new $model($this->$foreign_key);
     }
 
     public function getAttributes()
