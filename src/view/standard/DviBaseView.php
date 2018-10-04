@@ -2,14 +2,10 @@
 
 namespace Dvi\Adianti\View\Standard;
 
-use Adianti\Base\Lib\Registry\TSession;
 use Dvi\Adianti\Helpers\GUID;
-use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Widget\Container\VBox;
-use Dvi\Adianti\Widget\Form\Field\Hidden;
-use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * View DviBaseView
@@ -25,7 +21,6 @@ abstract class DviBaseView
     /**@var VBox $vbox */
     protected $vbox;
     protected $model;
-    protected $groupFields = array();
     protected $request;
 
     use Utils;
@@ -58,17 +53,5 @@ abstract class DviBaseView
     public function getModel()
     {
         return $this->model;
-    }
-
-    public function getGroupFields()
-    {
-        return $this->groupFields;
-    }
-
-    protected function fields(array $fields)
-    {
-        $this->groupFields[] = $group = (new GroupFieldView())->fields($fields);
-
-        return $group;
     }
 }

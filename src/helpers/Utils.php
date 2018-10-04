@@ -58,11 +58,11 @@ trait Utils
 
     public function loadPage(array $params = null)
     {
-        return Redirect::loadPage($params)->go(get_called_class());
+        Redirect::loadPage($params)->go(get_called_class());
     }
 
     public function goToPage(array $params = null)
     {
-        return Redirect::goToPage($params)->go(get_called_class());
+        Redirect::goToPage($params)->go(get_called_class());
     }
 }

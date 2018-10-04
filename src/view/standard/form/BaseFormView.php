@@ -7,6 +7,7 @@ use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\GUID;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\View\Standard\DviBaseView;
+use Dvi\Adianti\View\Standard\GroupFieldView;
 use Dvi\Adianti\Widget\Form\Field\Hidden;
 use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
@@ -24,6 +25,7 @@ abstract class BaseFormView extends DviBaseView
     /**@var PanelGroup $panel */
     protected $panel;
     protected $panel_created;
+    protected $groupFields = array();
 
     public function createPanel($param)
     {
@@ -77,6 +79,18 @@ abstract class BaseFormView extends DviBaseView
     public function getPanel()
     {
         return $this->panel;
+    }
+
+    public function getGroupFields()
+    {
+        return $this->groupFields;
+    }
+
+    protected function fields(array $fields)
+    {
+        $this->groupFields[] = $group = (new GroupFieldView())->fields($fields);
+
+        return $group;
     }
 
     abstract public function createPanelFields();
