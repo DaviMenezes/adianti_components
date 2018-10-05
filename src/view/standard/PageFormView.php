@@ -3,10 +3,12 @@
 namespace Dvi\Adianti\View\Standard;
 
 use Dvi\Adianti\Database\Transaction;
+use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\RelationshipModelType;
 use Dvi\Adianti\View\Standard\Form\FormView;
 use Dvi\Adianti\Widget\Base\GridColumn;
+use Dvi\Adianti\Widget\Form\Button;
 use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
@@ -141,6 +143,16 @@ trait PageFormView
         return $this->panel->addActionClear();
         $this->button_clear = $this->panel->getCurrentButton();
         return $this->button_clear;
+    }
+
+    public function createActionDelete()
+    {
+        if (!Utils::editing($this->request)) {
+            return;
+        }
+        $this->panel->addActionDelete();
+
+        return $this;
     }
 
     public function createContentAfterPanel($obj = null)

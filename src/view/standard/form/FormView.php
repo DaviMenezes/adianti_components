@@ -31,7 +31,6 @@ abstract class FormView extends BaseFormView
     protected $pageList;
 
     use PageFormView;
-    use Utils;
     use FormViewTrait;
 
     public function __construct($param)
@@ -73,6 +72,8 @@ abstract class FormView extends BaseFormView
         $this->createActionSave();
 
         $this->createActionClear();
+
+        $this->createActionDelete();
     }
 
     public function getButtonSave()
