@@ -23,7 +23,7 @@ class DBDateTime extends DBFormField
     {
         $this->field = new DateTime($name);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->field->setMask('dd/mm/yyyy hh:ii:ss');
         $this->field->setDatabaseMask('yyyy-mm-dd hh:ii:ss');

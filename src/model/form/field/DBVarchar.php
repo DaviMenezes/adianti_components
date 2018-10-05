@@ -22,7 +22,7 @@ class DBVarchar extends DBFormField
     {
         $this->field = new Varchar($name, $label, $size, false);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
     }
 
     #region [FACADE] Especific methods to this class

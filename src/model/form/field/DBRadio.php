@@ -22,7 +22,7 @@ class DBRadio extends DBFormField
     {
         $this->field = new RadioGroup($name, $label);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
     }
 
     public function setType($type)

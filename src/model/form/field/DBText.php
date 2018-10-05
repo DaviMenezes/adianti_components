@@ -22,7 +22,7 @@ class DBText extends DBFormField
     {
         $this->field = new Text($name, $label, $maxlength, $height);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
     }
 
     /**@return Text*/

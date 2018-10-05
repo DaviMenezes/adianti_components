@@ -23,7 +23,7 @@ class DBSelect extends DBFormField
     {
         $this->field = new Select($name, $label);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->field->setType(new FieldTypeInt());
     }

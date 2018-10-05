@@ -23,7 +23,7 @@ class DBDate extends DBFormField
     {
         $this->field = new Date($name, $label);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->setType(new FieldTypeString());
     }

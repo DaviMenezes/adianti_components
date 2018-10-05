@@ -20,6 +20,6 @@ class DBColor extends DBFormField
     {
         $this->field = new Color($name, $label, $max_length, false);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
     }
 }

@@ -40,10 +40,9 @@ trait CommonActions
     /** * check if form has token and if is valid(session value) */
     protected function validateToken()
     {
-        $called_class = Route::getClassName(get_called_class());
-        $token = $this->request[$called_class . '_form_token'];
+        $token = $this->request['form_token'];
         if (!empty($token) and (
-                $token === TSession::getValue($called_class . '_form_token'))) {
+                $token === TSession::getValue('form_token'))) {
             return true;
         }
         return false;
@@ -57,7 +56,7 @@ trait CommonActions
 
         //get result form data
         $form_data = array_merge($this->request, (array)$this->getFormData());
-        unset($form_data['class'], $form_data['method'], $form_data[Reflection::shortName(get_called_class()) . '_form_token']);
+        unset($form_data['class'], $form_data['method'], $form_data['form_token']);
 
         /**@var DviModel $last_model */
         $last_model = $this->currentObj;

@@ -20,7 +20,7 @@ class DBSlider extends DBFormField
     {
         $this->field = new Slider($name, $min, $max, $step, $label ?? $name);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->field->setType(new FieldTypeInt());
     }

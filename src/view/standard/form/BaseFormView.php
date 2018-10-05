@@ -59,17 +59,17 @@ abstract class BaseFormView extends DviBaseView
 
     public function createFormToken($param)
     {
-        if ($this->panel->getForm()->getField($param['class'] . '_form_token')) {
+        if ($this->panel->getForm()->getField('form_token')) {
             return;
         }
         $field_id = new Hidden(Reflection::shortName($this->model) . '-id');
         $field_id->setValue($this->request['id'] ?? null);
-        $field_token = new Hidden($param['class'] . '_form_token');
+        $field_token = new Hidden('form_token');
 
-        $token = $param[$param['class'] . '_form_token'] ?? null;
-        if (empty($param[$param['class'] . '_form_token'])) {
+        $token = $param['form_token'] ?? null;
+        if (empty($param['form_token'])) {
             $token = GUID::getID();
-            TSession::setValue($param['class'] . '_form_token', $token);
+            TSession::setValue('form_token', $token);
         }
         $field_token->setValue($token);
 

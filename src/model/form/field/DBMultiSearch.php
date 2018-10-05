@@ -23,7 +23,7 @@ class DBMultiSearch extends DBFormField
     {
         $this->field = new MultiSearch($name, $min_length, $max_length, $label);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->field->setType(new FieldTypeInt());
     }

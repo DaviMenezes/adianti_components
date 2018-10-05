@@ -21,7 +21,7 @@ class DBHtml extends DBFormField
     {
         $this->field = new HtmlEditor($name, $height, $label);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
     }
 
     public function getField()

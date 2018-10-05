@@ -22,7 +22,7 @@ class DBInteger extends DBFormField
     {
         $this->field = new Spinner($name, $min, $max, $step);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->setType(new FieldTypeInt());
     }

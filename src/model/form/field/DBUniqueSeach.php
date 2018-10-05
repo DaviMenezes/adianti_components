@@ -23,7 +23,7 @@ class DBUniqueSeach extends DBFormField
     {
         $this->field = new UniqueSearch($name, $min_length, $max_length, $label);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->field->setType(new FieldTypeInt());
     }

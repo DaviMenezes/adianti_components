@@ -22,7 +22,7 @@ class DBCurrency extends DBFormField
     {
         $this->field = new Numeric($name, $decimals, $decimalsSeparator, $thousandSeparator);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->setType(new FieldTypeString());
     }

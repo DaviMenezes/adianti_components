@@ -67,9 +67,10 @@ abstract class DBFormField
         return $this;
     }
 
-    public function unique($model)
+    public function unique($service)
     {
-        $this->validation(new UniqueValidator($model, $this->field->getName()));
+        $array_name = explode('-', $this->field->getName());
+        $this->validation(new UniqueValidator($service, array_pop($array_name)));
         return $this;
     }
 

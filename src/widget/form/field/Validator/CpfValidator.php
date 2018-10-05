@@ -57,7 +57,7 @@ class CpfValidator extends FieldValidator
     private function setInvalidCpfMessage()
     {
         $msg = AdiantiCoreTranslator::translate('The field ^1 has not a valid CPF', $this->label);
-        $this->error_msg .= isset($this->error_msg) ? ('<br>' . $msg) : $msg;
+        $this->error_msg = $msg;
     }
 
     private function validateNonNumericCharacters()

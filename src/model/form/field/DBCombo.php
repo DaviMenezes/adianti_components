@@ -25,7 +25,7 @@ class DBCombo extends DBFormField
     {
         $this->field = new Combo($name, $label);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->setType(new FieldTypeInt());
     }

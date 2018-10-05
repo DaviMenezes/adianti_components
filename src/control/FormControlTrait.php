@@ -3,7 +3,6 @@
 namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
-use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
@@ -45,7 +44,11 @@ trait FormControlTrait
             Transaction::close();
         } catch (\Exception $e) {
             Transaction::rollback();
-            new TMessage('error', $e->getMessage());
+            if ($e->getCode() == '42000' and ENVIRONMENT == 'production') {
+                new TMessage('error', 'Erro ao salvar. Informe ao administrador');
+            } else {
+                new TMessage('error', $e->getMessage(), null, 'Erro ao salvar');
+            }
         }
     }
 
@@ -64,7 +67,7 @@ trait FormControlTrait
             }
 
             if (isset($this->request['id'])) {
-                TTransaction::open($this->database);
+                Transaction::open($this->database);
 
                 $model_alias = Reflection::shortName($this->view->getModel());
 
@@ -87,10 +90,10 @@ trait FormControlTrait
 
                 $this->getViewContent();
 
-                TTransaction::close();
+                Transaction::close();
             }
         } catch (\Exception $e) {
-            TTransaction::rollback();
+            Transaction::rollback();
             throw $e;
         }
     }
@@ -117,7 +120,7 @@ trait FormControlTrait
             $name = $field->getName();
             $field->setValue($this->request[$name]);
 
-            if (!$field->validate()) {
+            if (!$field->validate($this->request)) {
                 $has_error = true;
             }
 

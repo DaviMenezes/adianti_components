@@ -56,10 +56,10 @@ abstract class DviControl extends TPage
             if (!$this->validateMethod()) {
                 throw new \Exception('Segurança: Método '.$this->request['method'].' inválido');
             }
-            parent::show();
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
+        parent::show();
     }
 
     abstract protected function buildView();
