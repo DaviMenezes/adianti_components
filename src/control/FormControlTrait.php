@@ -66,7 +66,7 @@ trait FormControlTrait
                 $this->view->getPanel()->setCurrentNotebookPage($this->request['tab']);
             }
 
-            if (isset($this->request['id'])) {
+            if ($this->isEditing()) {
                 Transaction::open($this->database);
 
                 $model_alias = Reflection::shortName($this->view->getModel());
@@ -229,7 +229,9 @@ trait FormControlTrait
 
         try {
             Transaction::open();
-            $this->currentObj = $this->view->getModel()::find($this->request['id'] ?? null);
+            $model_short_name = Reflection::shortName($this->view->getModel());
+            $id_value = $this->request['id'] ?? $this->request[$model_short_name.'-id'];
+            $this->currentObj = $this->view->getModel()::find($id_value ?? null);
             if (!$this->currentObj) {
                 throw new \Exception('O registro solicitado não foi encontrado.');
             }

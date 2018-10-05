@@ -21,15 +21,23 @@ trait Utils
         return $value;
     }
 
-    protected function isEditing()
+    public function isEditing()
     {
         return self::editing($this->request);
     }
 
     public static function editing($params)
     {
-        if ((!empty($params['id']) and $params['id'] != 0)) {
-            return true;
+        foreach ($params as $item => $value) {
+            if (in_array($item, ['class', 'method', 'form_token'])) {
+                continue;
+            }
+            $array = explode('-', $item);
+            $property = array_pop($array);
+
+            if (in_array($property, ['id', 'key']) and !empty($value) and $value != 0) {
+                return true;
+            }
         }
         return false;
     }

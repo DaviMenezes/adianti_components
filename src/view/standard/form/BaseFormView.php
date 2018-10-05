@@ -62,8 +62,10 @@ abstract class BaseFormView extends DviBaseView
         if ($this->panel->getForm()->getField('form_token')) {
             return;
         }
-        $field_id = new Hidden(Reflection::shortName($this->model) . '-id');
-        $field_id->setValue($this->request['id'] ?? null);
+        $model_short_name = Reflection::shortName($this->model);
+        $field_id = new Hidden($model_short_name . '-id');
+        $id_value =  $this->request['id'] ?? $this->request[$model_short_name.'-id'];
+        $field_id->setValue($id_value ?? null);
         $field_token = new Hidden('form_token');
 
         $token = $param['form_token'] ?? null;
