@@ -2,9 +2,12 @@
 
 namespace Dvi\Adianti\Control;
 
+use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Dialog\TQuestion;
+use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
@@ -156,5 +159,54 @@ trait CommonActions
     protected function hasIsDisabledMethod($formField): bool
     {
         return in_array('isDisabled', (new ReflectionClass(get_class($formField)))->getMethods());
+    }
+
+    public static function gridOnDelete($param)
+    {
+        $class = $param['class'];
+        $action_yes = new TAction([$class, 'delete']);
+        $action_no = new TAction([$class, 'backToList']);
+
+        $param['url_params'] = PaginationHelper::getUrlPaginationParameters($param);
+
+        $action_yes->setParameters($param);
+        $action_no->setParameters($param);
+
+        new TQuestion(_t('Do you really want to delete ?'), $action_yes);
+    }
+
+    public function backToList()
+    {
+        $this->onBack();
+    }
+
+    public function delete()
+    {
+        try {
+            Transaction::open($this->database);
+
+            $this->view = new $this->viewClass(array());
+            $modelShortName = Reflection::shortName($this->view->getModel());
+            $this->view->getModel()::remove($this->request[$modelShortName .'-id']);
+
+            Transaction::close();
+
+            $this->onBack();
+        } catch (\Exception $e) {
+            Transaction::rollback();
+            throw $e;
+        }
+    }
+
+    private function onBack()
+    {
+        unset(
+            $this->request['url_params']['class'],
+            $this->request['url_params']['method'],
+            $this->request['url_params']['id'],
+            $this->request['url_params']['key'],
+            $this->request['url_params']['static']
+        );
+        AdiantiCoreApplication::loadPage(get_called_class(), null, $this->request['url_params'] ?? null);
     }
 }

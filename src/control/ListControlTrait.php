@@ -52,57 +52,6 @@ trait ListControlTrait
         TSession::setValue($called_class . '_filters', $filters);
     }
 
-    #region[DATAGRID ACTIONS] ***********************************************
-    public static function gridOnDelete($param)
-    {
-        $class = $param['class'];
-        $action_yes = new TAction([$class, 'delete']);
-        $action_no = new TAction([$class, 'backToList']);
-
-        $param['url_params'] = PaginationHelper::getUrlPaginationParameters($param);
-
-        $action_yes->setParameters($param);
-        $action_no->setParameters($param);
-
-        new TQuestion(_t('Do you really want to delete ?'), $action_yes);
-    }
-
-    public function backToList()
-    {
-        $this->onBack();
-    }
-
-    public function delete()
-    {
-        try {
-            Transaction::open($this->database);
-
-            $this->view = new $this->viewClass(array());
-            $this->view->getModel()::remove($this->request['id']);
-
-            Transaction::close();
-
-            $this->onBack();
-        } catch (\Exception $e) {
-            Transaction::rollback();
-            throw $e;
-        }
-    }
-
-    private function onBack()
-    {
-        unset(
-            $this->request['url_params']['class'],
-            $this->request['url_params']['method'],
-            $this->request['url_params']['id'],
-            $this->request['url_params']['key'],
-            $this->request['url_params']['static']
-        );
-        AdiantiCoreApplication::loadPage(get_called_class(), null, $this->request['url_params'] ?? null);
-    }
-
-    #endregion
-
     public function loadDatagrid()
     {
         $this->buildView();
