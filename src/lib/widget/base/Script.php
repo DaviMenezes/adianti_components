@@ -6,7 +6,6 @@ use Adianti\Base\Lib\Widget\Base\TScript;
 
 /**
  * Widget DScript
- *
  * @package    Widget
  * @subpackage
  * @author     Davi Menezes
@@ -17,6 +16,7 @@ class Script extends TScript
 {
     protected static $scripts_id = array();
 
+    /**This class will avoid script duplicity*/
     public static function add(string $id, string $code, bool $show = true)
     {
         if (!in_array($id, self::$scripts_id)) {

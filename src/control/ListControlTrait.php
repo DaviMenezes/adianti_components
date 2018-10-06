@@ -84,7 +84,7 @@ trait ListControlTrait
     protected function getDatagridItems()
     {
         try {
-            $this->prepareFieldsToBuildQuery();
+            $this->prepareSqlFieldsToBuildQuery();
 
             $query = new DBFormFieldPrepare($this->view->getModel(), get_called_class());
             $query->mountQueryByFields($this->getFieldsBuiltToQuery());
@@ -146,7 +146,7 @@ trait ListControlTrait
         parent::show($this->request);
     }
 
-    protected function prepareFieldsToBuildQuery()
+    protected function prepareSqlFieldsToBuildQuery()
     {
         $this->fields_to_sql = array();
         $this->fields_to_sql['id'] = 'id';

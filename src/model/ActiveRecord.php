@@ -23,7 +23,7 @@ use ReflectionProperty;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DviTRecord extends TRecord
+class ActiveRecord extends TRecord
 {
     const TABLENAME = '';
     const PRIMARYKEY = 'id';
@@ -147,7 +147,7 @@ class DviTRecord extends TRecord
     {
         $class = get_called_class();
 
-        /**@var DviTRecord $class */
+        /**@var ActiveRecord $class */
         $class::where('id', '=', $id)->delete();
 
         return true;

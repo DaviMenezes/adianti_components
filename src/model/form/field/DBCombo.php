@@ -9,7 +9,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
  *  DBCombo
- *
+ * Link between attribute table and form field Combo
  * @version    Dvi 1.0
  * @package    Model
  * @subpackage Component

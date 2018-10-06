@@ -51,6 +51,7 @@ abstract class BaseFormView extends DviBaseView
             throw new \Exception('Criação do painel.'.$e->getMessage());
         }
     }
+
     public function createPanelForm()
     {
         $this->panel = $this->panel ?? new PanelGroup($this->request['class']);
@@ -64,8 +65,8 @@ abstract class BaseFormView extends DviBaseView
         }
         $model_short_name = Reflection::shortName($this->model);
         $field_id = new Hidden($model_short_name . '-id');
-        $id_value =  $this->request['id'] ?? $this->request[$model_short_name.'-id'];
-        $field_id->setValue($id_value ?? null);
+
+        $field_id->setValue($this->request['id'] ?? ($this->request[$model_short_name.'-id'] ?? null));
         $field_token = new Hidden('form_token');
 
         $token = $param['form_token'] ?? null;

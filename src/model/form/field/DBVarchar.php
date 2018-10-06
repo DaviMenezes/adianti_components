@@ -9,7 +9,7 @@ use Dvi\Adianti\Widget\Form\Field\Varchar;
 
 /**
  * Field DBVarchar
- *
+ * Link between attribute table and form field Varchar
  * @package    Field
  * @subpackage Form
  * @author     Davi Menezes

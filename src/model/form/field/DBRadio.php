@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
  * FieldRadio
- *
+ * Link between attribute table and form field RadioGroup
  * @version    Dvi 1.0
  * @package    Fields
  * @subpackage Form

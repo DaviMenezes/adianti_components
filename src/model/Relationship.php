@@ -15,8 +15,9 @@ use Dvi\Adianti\Helpers\Reflection;
  */
 class Relationship
 {
-    const HASONE = 1;
-    const BELONGSTO = 2;
+    const HASONE = 'hasone';
+    const BELONGSTO = 'belongsto';
+
     protected $relationships = array();
 
     public function hasOne(string $model)
@@ -35,16 +36,16 @@ class Relationship
         return $this;
     }
 
-    public function getJoin($self_model, $associated)
+    public function getStringJoin($self_model, $associated)
     {
         $selfName = Reflection::shortName($self_model);
         $associatedAlias = Reflection::shortName($associated);
 
         if ($this->getRelationship($associated)->type == self::HASONE) {
-            return $this->createJoin($associated, $associatedAlias.'.'.strtolower($selfName).'_id', $selfName.'.id');
+            return $this->createStringJoin($associated, $associatedAlias.'.'.strtolower($selfName).'_id', $selfName.'.id');
         }
 
-        return $this->createJoin($associated, $associatedAlias.'.id', $selfName.'.'.strtolower($associatedAlias).'_id');
+        return $this->createStringJoin($associated, $associatedAlias.'.id', $selfName.'.'.strtolower($associatedAlias).'_id');
     }
 
     public function getRelationship($model): RelationshipModelType
@@ -52,7 +53,7 @@ class Relationship
         return $this->relationships[Reflection::lowerName($model)];
     }
 
-    private function createJoin($associated, $key1, $key2): string
+    private function createStringJoin($associated, $key1, $key2): string
     {
         $associatedAlias = (new \ReflectionClass($associated))->getShortName();
 

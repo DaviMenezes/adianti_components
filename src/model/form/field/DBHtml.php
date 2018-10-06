@@ -7,7 +7,7 @@ use Dvi\Adianti\Widget\Form\Field\HtmlEditor;
 
 /**
  * Fields FieldHtml
- *
+ * Link between attribute table and form field HtmlEditor
  * @version    Dvi 1.0
  * @package    Fields
  * @subpackage Form

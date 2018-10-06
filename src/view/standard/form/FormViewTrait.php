@@ -33,7 +33,7 @@ trait FormViewTrait
 
     public function createActionSave()
     {
-        return $this->panel->addActionSave();
+        $this->panel->addActionSave();
         $this->button_save = $this->panel->getCurrentButton();
         return $this->button_save;
     }

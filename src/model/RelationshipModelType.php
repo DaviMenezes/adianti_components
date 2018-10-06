@@ -20,7 +20,7 @@ class RelationshipModelType
     protected $class_name;
     public $type;
 
-    public function __construct(string $model, int $type)
+    public function __construct(string $model, string $type)
     {
         if (!is_subclass_of($model, DviModel::class)) {
             throw new \Exception('A classe modelo precisa ser do tipo ' . DviModel::class);

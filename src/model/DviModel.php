@@ -17,10 +17,11 @@ use Stringizer\Stringizer;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-abstract class DviModel extends DviTRecord
+abstract class DviModel extends ActiveRecord
 {
     protected $model_fields;
     public $id;
+    /**@var Relationship $relationship*/
     protected $relationship;
 
     public function __construct($id = null, bool $callObjectLoad = true)
@@ -49,7 +50,7 @@ abstract class DviModel extends DviTRecord
 
     public function getJoin($model)
     {
-        return $this->relationship->getJoin(get_called_class(), $model);
+        return $this->relationship->getStringJoin(get_called_class(), $model);
     }
 
     protected function setAttributeValues($properties)
@@ -119,7 +120,7 @@ abstract class DviModel extends DviTRecord
     }
 
     #endregion
-
+    //Todo remove, no more used
     public function setMap($attribute_name, $class)
     {
         $this->foreign_keys[$attribute_name] = ['alias' => $attribute_name, 'class' => $class];

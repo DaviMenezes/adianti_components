@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
  * Fields DBPassword
- *
+ * Link between attribute table and form field Password
  * @package    Fields
  * @subpackage Form
  * @author     Davi Menezes

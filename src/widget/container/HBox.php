@@ -9,7 +9,6 @@ use Dvi\Adianti\Widget\IGroupField;
 /**
  * Extension of the THBox. Adiciona alguns botões com estilo alterado
  *
- * @version    Adianti 4.0
  * @package    grid bootstrap
  * @subpackage base
  * @author     Davi Menezes

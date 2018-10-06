@@ -42,12 +42,14 @@ trait Utils
         return false;
     }
 
+    /**Dump and die*/
     public function dd($var)
     {
         var_dump($var);
         die();
     }
 
+    /**Get url parameters*/
     public static function getNewParams():array
     {
         $new_params = array();

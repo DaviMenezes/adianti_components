@@ -34,7 +34,7 @@ trait Reflection
         return new ReflectionClass($class ?? get_called_class());
     }
 
-    public static function getPublicModelPropertyNames($obj)
+    public static function getPublicPropertyNames($obj)
     {
         $rf_properties = (new \ReflectionObject($obj))->getProperties(\ReflectionProperty::IS_PUBLIC);
 

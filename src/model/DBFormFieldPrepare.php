@@ -8,7 +8,7 @@ use Dvi\Adianti\Helpers\Reflection;
 
 /**
  *  DBFormFieldPrepare
- *
+ * Prepare field data to database query
  * @package    Model
  * @subpackage DviAdianti Components
  * @author     Davi Menezes

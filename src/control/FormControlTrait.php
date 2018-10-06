@@ -221,6 +221,7 @@ trait FormControlTrait
         return $form_field_reference_names;
     }
 
+    /**Create object being edited*/
     protected function createCurrentObject()
     {
         if (!$this->isEditing()) {

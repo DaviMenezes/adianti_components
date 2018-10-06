@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
  * Fields FieldInteger
- *
+ * Link between attribute table and form field Spinner
  * @version    Dvi 1.0
  * @package    Fields
  * @subpackage Form

@@ -21,7 +21,7 @@ abstract class FormControl extends DviControl
     protected $view;
 
     use FormControlTrait;
-    use CommonActions;
+    use CommonControl;
 
     public function __construct($param)
     {

@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\UniqueSearch;
 
 /**
  * Field DBUniqueSeach
- *
+ * Link between attribute table and form field UniqueSearch
  * @package    Field
  * @subpackage Form
  * @author     Davi Menezes

@@ -22,7 +22,7 @@ abstract class FormListControl extends DviControl
     use FormControlTrait;
     use SearchListControlTrait;
     use ListControlTrait;
-    use CommonActions;
+    use CommonControl;
     use PaginationHelper;
 
     public function __construct($param)

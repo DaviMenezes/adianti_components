@@ -140,7 +140,7 @@ trait PageFormView
 
     public function createActionClear()
     {
-        return $this->panel->addActionClear();
+        $this->panel->addActionClear();
         $this->button_clear = $this->panel->getCurrentButton();
         return $this->button_clear;
     }

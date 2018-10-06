@@ -6,7 +6,6 @@ use Adianti\Base\Lib\Widget\Base\TElement;
 /**
  * Row to bootstrap grid
  *
- * @version    Adianti 4.0
  * @package    grid bootstrap
  * @subpackage base
  * @author     Davi Menezes

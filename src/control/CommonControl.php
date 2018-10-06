@@ -11,20 +11,19 @@ use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Model\DviTRecord;
-use Dvi\AdiantiExtension\Route;
+use Dvi\Adianti\Model\ActiveRecord;
 use ReflectionClass;
 
 /**
- * Helpers CommonActions
+ * Control CommonControl
  * @Metodos compartilhados entre views e controllers
- * @package    Helpers
+ * @package    Control
  * @subpackage
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-trait CommonActions
+trait CommonControl
 {
     public static function onClear($param)
     {
@@ -134,7 +133,7 @@ trait CommonActions
         $current_obj->addAttributeValue($attribute_name, $value);
     }
 
-    protected function formFieldModelAttributeIsDisabled(DviTRecord &$current_obj, $attribute_name)
+    protected function formFieldModelAttributeIsDisabled(ActiveRecord &$current_obj, $attribute_name)
     {
         $class_name = Reflection::shortName($current_obj);
         $formField = $this->view->getPanel()->getForm()->getField($class_name . '-' . $attribute_name);
@@ -147,7 +146,7 @@ trait CommonActions
         return false;
     }
 
-    protected function modelSetMethodExists(DviTRecord &$current_obj, $attribute_name)
+    protected function modelSetMethodExists(ActiveRecord &$current_obj, $attribute_name)
     {
         $methods = get_class_methods(get_class($current_obj));
         if (in_array('set_' . $attribute_name, $methods)) {
@@ -161,11 +160,11 @@ trait CommonActions
         return in_array('isDisabled', (new ReflectionClass(get_class($formField)))->getMethods());
     }
 
-    public static function gridOnDelete($param)
+    public static function onDelete($param)
     {
         $class = $param['class'];
         $action_yes = new TAction([$class, 'delete']);
-        $action_no = new TAction([$class, 'backToList']);
+        $action_no = new TAction([$class, 'onBack']);
 
         $param['url_params'] = PaginationHelper::getUrlPaginationParameters($param);
 
@@ -175,9 +174,10 @@ trait CommonActions
         new TQuestion(_t('Do you really want to delete ?'), $action_yes);
     }
 
-    public function backToList()
+    /**Especific to call of datagrid.*/
+    public static function gridOnDelete($param)
     {
-        $this->onBack();
+        self::onDelete($param);
     }
 
     public function delete()
@@ -187,7 +187,7 @@ trait CommonActions
 
             $this->view = new $this->viewClass(array());
             $modelShortName = Reflection::shortName($this->view->getModel());
-            $this->view->getModel()::remove($this->request[$modelShortName .'-id']);
+            $this->view->getModel()::remove($this->request['id'] ?? $this->request[$modelShortName .'-id']);
 
             Transaction::close();
 

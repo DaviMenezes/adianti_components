@@ -9,7 +9,7 @@ use PDOStatement;
 use ReflectionClass;
 
 /**
- *  DviQueryBuilder
+ *  QueryBuilder
  *
  * @version    Dvi 1.0
  * @package    querybuilder
@@ -18,7 +18,7 @@ use ReflectionClass;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-trait DviQueryBuilder
+trait QueryBuilder
 {
     protected $table;
     protected $fields = array();
@@ -91,7 +91,7 @@ trait DviQueryBuilder
 
     public function table(string $model_class, string $alias = null)
     {
-        /**@var DviTRecord $model_class */
+        /**@var ActiveRecord $model_class */
         $alias = $alias ?? (new ReflectionClass($model_class))->getShortName();
         $this->table = ['table' => $model_class::getTableName(), 'alias' => $alias, 'default_obj' => $model_class];
         return $this;

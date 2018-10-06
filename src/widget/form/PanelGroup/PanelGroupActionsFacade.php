@@ -4,12 +4,10 @@ namespace Dvi\Adianti\Widget\Form\PanelGroup;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Dvi\Adianti\Helpers\GUID;
 use Dvi\Adianti\Widget\Bootstrap\Component\ButtonGroup;
 use Dvi\Adianti\Widget\Form\Button;
 use Dvi\Adianti\Widget\Util\Action;
 use Dvi\Adianti\Widget\Util\ActionLink;
-use Dvi\Module\Office\Task\Control\TaskList2;
 
 /**
  * Widget PanelGroupActionsFacade
@@ -51,7 +49,7 @@ trait PanelGroupActionsFacade
 
     public function addActionDelete(array $parameters = null, $tip = null)
     {
-        $this->footerButton([$this->className, 'gridOnDelete'], $parameters, $tip)->icon('fa:trash  red fa-2x')->setLabel(_t('Delete'));
+        $this->footerButton([$this->className, 'onDelete'], $parameters, $tip)->icon('fa:trash  red fa-2x')->setLabel(_t('Delete'));
 
         return $this;
     }

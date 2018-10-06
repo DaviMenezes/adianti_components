@@ -9,7 +9,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
  *  DateTime
- *
+ * Link between attribute table and form field DateTime
  * @version    Dvi 1.0
  * @package    Model
  * @subpackage Adianti

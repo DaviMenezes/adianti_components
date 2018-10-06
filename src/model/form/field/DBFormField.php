@@ -10,7 +10,7 @@ use Dvi\Adianti\Widget\Form\Field\Validator\UniqueValidator;
 
 /**
  *  DBFormField
- *
+ * Link between attribute table and form field
  * @version    Dvi 1.0
  * @package    Model
  * @subpackage Adianti

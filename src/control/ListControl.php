@@ -23,7 +23,7 @@ abstract class ListControl extends DviControl implements StandardSearchListInter
 
     use SearchListControlTrait;
     use ListControlTrait;
-    use CommonActions;
+    use CommonControl;
 
     public function __construct($param)
     {
@@ -61,6 +61,7 @@ abstract class ListControl extends DviControl implements StandardSearchListInter
         $this->view->setFormController($this->formController);
     }
 
+    /**Define query limit default to listing and pagination*/
     protected function setQueryLimit($limit = null)
     {
         $this->view->setQueryLimit($limit ?? 10);

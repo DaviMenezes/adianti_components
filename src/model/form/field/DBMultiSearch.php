@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
  * Field DBMultiSearch
- *
+ * Link between attribute table and form field MultiSearch
  * @package    Field
  * @subpackage Form
  * @author     Davi Menezes

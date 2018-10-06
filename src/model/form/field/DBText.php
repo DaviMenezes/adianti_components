@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
  *  FieldText
- *
+ * Link between attribute table and form field Text
  * @version    Dvi 1.0
  * @package    Model
  * @subpackage Adianti
