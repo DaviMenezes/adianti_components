@@ -28,6 +28,9 @@ trait Utils
 
     public static function editing($params)
     {
+        if (!isset($params['method']) or $params['method'] !== 'onEdit') {
+            return false;
+        }
         foreach ($params as $item => $value) {
             if (in_array($item, ['class', 'method', 'form_token'])) {
                 continue;
