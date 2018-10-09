@@ -11,14 +11,11 @@ use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Util\TImage;
 use Dvi\Adianti\Helpers\GUID;
-use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
  * Form Button
- *
- * @version    Dvi 1.0
  * @package    Form
  * @subpackage Widget
  * @author     Davi Menezes

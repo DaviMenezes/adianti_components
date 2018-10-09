@@ -12,8 +12,7 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * Trait DviControl
- *
- * @version    Dvi 1.0
+
  * @package    control
  * @subpackage trait
  * @author     Davi Menezes

@@ -3,9 +3,7 @@
 namespace Dvi\Adianti\Model;
 
 /**
- *  DBField
- *
- * @version    Dvi 1.0
+ * DBField
  * @package    Model
  * @subpackage Adiant Components
  * @author     Davi Menezes

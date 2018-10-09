@@ -8,8 +8,6 @@ use Dvi\Adianti\Widget\Form\Field\Validator\DateValidator;
 
 /**
  *  Date
- *
- * @version    Dvi 1.0
  * @package    form
  * @subpackage widget
  * @author     Davi Menezes

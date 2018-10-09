@@ -7,8 +7,6 @@ use Dvi\Adianti\Widget\IGroupField;
 
 /**
  * Coluna bootstraps
- *
- * @version    Dvi 1.0
  * @package    grid bootstrap
  * @subpackage base
  * @author     Davi Menezes

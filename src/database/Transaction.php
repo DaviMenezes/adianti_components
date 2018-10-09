@@ -7,8 +7,7 @@ use Closure;
 
 /**
  *  DTransaction
- *
- * @version    Dvi 1.0
+
  * @package    database
  * @subpackage dvi
  * @author     Davi Menezes

@@ -10,8 +10,6 @@ use Dvi\Adianti\Widget\Util\ActionLink;
 
 /**
  * Component InputGroup
- *
- * @version    Dvi 1.0
  * @package    Component
  * @subpackage Bootstrap
  * @author     Davi Menezes

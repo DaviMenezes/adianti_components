@@ -12,12 +12,9 @@ use Dvi\Adianti\View\Standard\Form\BaseFormView;
 use Dvi\Adianti\View\Standard\Form\FormViewTrait;
 use Dvi\Adianti\View\Standard\SearchList\ListViewTrait;
 use Dvi\Adianti\Widget\Base\DataGrid;
-use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * Control DviSearchFormList
- *
- * @version    Dvi 1.0
  * @package    Control
  * @subpackage component
  * @author     Davi Menezes

@@ -4,8 +4,6 @@ namespace Dvi\Adianti\Widget;
 
 /**
  * Widget IGroupField
- *
- * @version    Dvi 1.0
  * @package    Widget
  * @subpackage Component
  * @author     Davi Menezes

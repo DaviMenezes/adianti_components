@@ -10,8 +10,6 @@ use Exception;
 
 /**
  * Control Action
- *
- * @version    Dvi 1.0
  * @package    Control
  * @subpackage Components
  * @author     Davi Menezes

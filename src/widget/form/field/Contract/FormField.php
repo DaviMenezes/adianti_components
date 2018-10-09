@@ -5,8 +5,6 @@ use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 
 /**
  * Interface for all DviFormField
- *
- * @version    Dvi 1.0
  * @package    Field
  * @subpackage form
  * @author     Davi Menezes

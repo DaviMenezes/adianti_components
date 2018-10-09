@@ -3,8 +3,6 @@ namespace Dvi\Adianti\Widget;
 
 /**
  *  IDviWidget
- *
- * @version    Dvi 1.0
  * @package    widget
  * @subpackage dvi
  * @author     Davi Menezes

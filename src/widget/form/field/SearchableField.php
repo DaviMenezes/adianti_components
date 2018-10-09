@@ -3,8 +3,6 @@ namespace Dvi\Adianti\Widget\Form\Field;
 
 /**
  *  SearchableField
- *
- * @version    Dvi 1.0
  * @package    field
  * @subpackage form
  * @author     Davi Menezes

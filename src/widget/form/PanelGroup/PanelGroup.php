@@ -19,8 +19,6 @@ use ReflectionClass;
 
 /**
  *  PanelGroup
- *
- * @version    Dvi 1.0
  * @package    Container
  * @subpackage Widget
  * @author     Davi Menezes

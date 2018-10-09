@@ -7,8 +7,6 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
  * Form Hidden
- *
- * @version    Dvi 1.0
  * @package    Form
  * @subpackage Widget
  * @author     Davi Menezes

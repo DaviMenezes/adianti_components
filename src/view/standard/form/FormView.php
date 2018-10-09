@@ -4,16 +4,12 @@ namespace Dvi\Adianti\View\Standard\Form;
 
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Dvi\Adianti\Database\Transaction;
-use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\View\Standard\DviBaseView;
 use Dvi\Adianti\View\Standard\PageFormView;
 use Dvi\Adianti\Widget\Form\Button;
 
 /**
  * Control DviStandardForm
- *
- * @version    Dvi 1.0
  * @package    Control
  * @subpackage component
  * @author     Davi Menezes
