@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Modules\Admin\Model\SystemUser;
 
 /**
- * Model ObjectDvi
+ *  ObjectDvi
  *
  * @version    Dvi 1.0
  * @package    model
@@ -14,9 +14,9 @@ use Adianti\Base\Modules\Admin\Model\SystemUser;
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class ObjectDvi extends DviTRecord
+class ObjectDvi extends ActiveRecord
 {
-    const TABLENAME = 'obj_object_dvi';
+    const TABLENAME = 'object_dvi';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'serial'; // {max, serial}
     

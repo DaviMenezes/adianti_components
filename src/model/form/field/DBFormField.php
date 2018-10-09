@@ -6,10 +6,11 @@ use Adianti\Base\Lib\Validator\TFieldValidator;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 use Dvi\Adianti\Widget\Form\Field\Validator\RequiredValidator;
+use Dvi\Adianti\Widget\Form\Field\Validator\UniqueValidator;
 
 /**
- * Model DBFormField
- *
+ *  DBFormField
+ * Link between attribute table and form field
  * @version    Dvi 1.0
  * @package    Model
  * @subpackage Adianti
@@ -26,7 +27,7 @@ abstract class DBFormField
 
     public function __construct(string $label = null)
     {
-        $this->label= $label;
+        $this->label = $label;
 
         if (isset($this->field)) {
             $this->field->setType(new FieldTypeString());
@@ -63,6 +64,13 @@ abstract class DBFormField
     public function validation(TFieldValidator $validator)
     {
         $this->field->addValidation($this->getLabel(), $validator);
+        return $this;
+    }
+
+    public function unique($service)
+    {
+        $array_name = explode('-', $this->field->getName());
+        $this->validation(new UniqueValidator($service, array_pop($array_name)));
         return $this;
     }
 

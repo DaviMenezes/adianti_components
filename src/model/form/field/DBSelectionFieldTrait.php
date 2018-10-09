@@ -6,7 +6,7 @@ use Dvi\Adianti\Model\DviModel;
 
 /**
  * Field DBSelectionFieldTrait
- *
+ * Commons method to selection fields
  * @package    Field
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)

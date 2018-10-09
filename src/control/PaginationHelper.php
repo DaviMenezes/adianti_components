@@ -29,20 +29,12 @@ trait PaginationHelper
 
     protected static function callCameFromAnotherClass($param):bool
     {
-        $url_params = self::getUrlParams();
-
+        $url_params = explode('&', $_SERVER['QUERY_STRING']);
         $class = explode('=', $url_params[0]);
 
         if ($class[1] !== $param['class']) {
             return true;
         }
         return false;
-    }
-
-    protected static function getUrlParams(): array
-    {
-        $url_params = explode('&', $_SERVER['QUERY_STRING']);
-
-        return $url_params;
     }
 }

@@ -7,7 +7,7 @@ use Dvi\Adianti\Widget\Form\Field\HtmlEditor;
 
 /**
  * Fields FieldHtml
- *
+ * Link between attribute table and form field HtmlEditor
  * @version    Dvi 1.0
  * @package    Fields
  * @subpackage Form
@@ -21,7 +21,7 @@ class DBHtml extends DBFormField
     {
         $this->field = new HtmlEditor($name, $height, $label);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
     }
 
     public function getField()

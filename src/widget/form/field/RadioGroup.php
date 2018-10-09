@@ -22,7 +22,7 @@ class RadioGroup extends TRadioGroup implements FormField
     use FormFieldValidation;
     use SearchableField;
 
-    private $field_disabled;
+    protected $field_disabled;
 
     public function __construct(string $name, $label, $required = false)
     {

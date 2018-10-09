@@ -1,14 +1,15 @@
 <?php
+
 namespace Dvi\Adianti\Model\Form\Field;
 
 use Dvi\Adianti\Model\Fields\DBFormField;
-use Dvi\Adianti\Widget\Form\Field\Varchar;
 use Dvi\Adianti\Widget\Form\Field\Validator\CpfValidator;
 use Dvi\Adianti\Widget\Form\Field\Validator\EmailValidator;
+use Dvi\Adianti\Widget\Form\Field\Varchar;
 
 /**
  * Field DBVarchar
- *
+ * Link between attribute table and form field Varchar
  * @package    Field
  * @subpackage Form
  * @author     Davi Menezes
@@ -21,7 +22,7 @@ class DBVarchar extends DBFormField
     {
         $this->field = new Varchar($name, $label, $size, false);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
     }
 
     #region [FACADE] Especific methods to this class
@@ -47,7 +48,7 @@ class DBVarchar extends DBFormField
     {
         $this->field->addValidation($this->field->getLabel(), new CPFValidator());
 
-        $this->mask('999-999-999-99');
+        $this->mask('999.999.999-99');
         return $this;
     }
     #endregion

@@ -18,7 +18,7 @@ use Exception;
  */
 trait SelectionFieldTrait
 {
-    private function getObjItems(array $obj_array_value)
+    protected function getObjItems(array $obj_array_value)
     {
         try {
             Transaction::open();

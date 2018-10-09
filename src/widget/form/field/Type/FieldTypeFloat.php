@@ -15,7 +15,6 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
  */
 class FieldTypeFloat implements FieldTypeInterface
 {
-
     public function sanitize($value)
     {
         $value = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);

@@ -7,7 +7,7 @@ use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 use Dvi\Adianti\Widget\Form\Field\Validator\DateValidator;
 
 /**
- * Model Date
+ *  Date
  *
  * @version    Dvi 1.0
  * @package    form
@@ -22,7 +22,7 @@ class Date extends TDate implements FormField
     use FormFieldValidation;
     use SearchableField;
 
-    private $field_disabled;
+    protected $field_disabled;
 
     public function __construct($name, string $label = null, bool $required = false)
     {

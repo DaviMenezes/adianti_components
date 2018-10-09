@@ -8,8 +8,8 @@ use Dvi\Adianti\Widget\Form\Field\DateTime;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
- * Model DateTime
- *
+ *  DateTime
+ * Link between attribute table and form field DateTime
  * @version    Dvi 1.0
  * @package    Model
  * @subpackage Adianti
@@ -23,7 +23,7 @@ class DBDateTime extends DBFormField
     {
         $this->field = new DateTime($name);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->field->setMask('dd/mm/yyyy hh:ii:ss');
         $this->field->setDatabaseMask('yyyy-mm-dd hh:ii:ss');

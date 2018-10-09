@@ -7,8 +7,8 @@ use Dvi\Adianti\Widget\Form\Field\Text;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
- * Model FieldText
- *
+ *  FieldText
+ * Link between attribute table and form field Text
  * @version    Dvi 1.0
  * @package    Model
  * @subpackage Adianti
@@ -22,7 +22,7 @@ class DBText extends DBFormField
     {
         $this->field = new Text($name, $label, $maxlength, $height);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
     }
 
     /**@return Text*/

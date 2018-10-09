@@ -4,8 +4,8 @@ namespace Dvi\Adianti\Widget\Base;
 
 class GridNotebook
 {
-    private $tabs = array();
-    private $rows = array();
+    protected $tabs = array();
+    protected $rows = array();
 
     public function __construct(string $title = null, array $rows = null)
     {

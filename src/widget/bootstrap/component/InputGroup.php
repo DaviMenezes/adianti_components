@@ -20,9 +20,9 @@ use Dvi\Adianti\Widget\Util\ActionLink;
  */
 class InputGroup extends GroupField implements IDviWidget
 {
-    private $inputs = array();
-    private $buttons = array();
-    private $links = array();
+    protected $inputs = array();
+    protected $buttons = array();
+    protected $links = array();
 
     public function addInput($entry)
     {

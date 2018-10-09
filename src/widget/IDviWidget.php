@@ -2,7 +2,7 @@
 namespace Dvi\Adianti\Widget;
 
 /**
- * Model IDviWidget
+ *  IDviWidget
  *
  * @version    Dvi 1.0
  * @package    widget
