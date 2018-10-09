@@ -5,21 +5,17 @@ namespace Dvi\Adianti\Control;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Registry\TSession;
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Dialog\TQuestion;
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
-use Dvi\Adianti\Helpers\Utils;
-use Dvi\Adianti\Model\DB;
 use Dvi\Adianti\Model\DBFormFieldPrepare;
-use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\QueryFilter;
-use Dvi\Adianti\View\Standard\SearchList\StandardSearchListView;
+use Dvi\Adianti\View\Standard\SearchList\ListView;
 use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Datagrid\PageNavigation;
 
 /**
- * Control ListActionsControl
+ * Control ListControlTrait
  *
  * @package    Control
  * @subpackage
@@ -27,27 +23,27 @@ use Dvi\Adianti\Widget\Datagrid\PageNavigation;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-trait ListActionsControl
+trait ListControlTrait
 {
-    /**@var DataGrid $datagrid*/
+    /**@var DataGrid $datagrid */
     protected $datagrid;
-    /**@var PageNavigation $pageNavigation*/
+    /**@var PageNavigation $pageNavigation */
     protected $pageNavigation;
     protected $datagrid_items_criteria;
     protected $datagrid_items_obj_repository;
     protected $page_navigation_count;
     protected $query_limit;
-    /**@var StandardSearchListView $view*/
+    /**@var ListView $view */
     protected $view;
     protected $fields_to_sql = array();
-    protected $grid_loaded =  false;
-    private $reloaded;
+    protected $grid_loaded = false;
+    protected $reloaded;
 
     abstract protected function setQueryLimit();
 
     protected function addDatagridFilter(QueryFilter $filter)
     {
-        $called_class = Reflection::getClassName(get_called_class());
+        $called_class = Reflection::shortName(get_called_class());
 
         $filters = TSession::getValue($called_class . '_filters');
 
@@ -55,56 +51,6 @@ trait ListActionsControl
 
         TSession::setValue($called_class . '_filters', $filters);
     }
-
-    #region[DATAGRID ACTIONS] ***********************************************
-    public static function gridOnDelete($param)
-    {
-        $class = $param['class'];
-        $action_yes = new TAction([$class, 'delete']);
-        $action_no = new TAction([$class, 'backToList']);
-
-        $param['url_params'] = PaginationHelper::getUrlPaginationParameters($param);
-
-        $action_yes->setParameters($param);
-        $action_no->setParameters($param);
-
-        new TQuestion(_t('Do you really want to delete ?'), $action_yes);
-    }
-
-    public function backToList()
-    {
-        $this->onBack();
-    }
-
-    public function delete()
-    {
-        try {
-            Transaction::open($this->database);
-
-            $this->view = new $this->viewClass(array());
-            $this->view->getModel()::remove($this->params['id']);
-
-            Transaction::close();
-
-            $this->onBack();
-        } catch (\Exception $e) {
-            Transaction::rollback();
-            throw $e;
-        }
-    }
-
-    private function onBack()
-    {
-        unset(
-            $this->params['url_params']['class'],
-            $this->params['url_params']['method'],
-            $this->params['url_params']['id'],
-            $this->params['url_params']['key'],
-            $this->params['url_params']['static']
-        );
-        AdiantiCoreApplication::loadPage(get_called_class(), null, $this->params['url_params'] ?? null);
-    }
-    #endregion
 
     public function loadDatagrid()
     {
@@ -131,14 +77,14 @@ trait ListActionsControl
             $this->reloaded = true;
         } catch (\Exception $e) {
             Transaction::rollback();
-            throw new \Exception($e->getMessage());
+            throw new \Exception('Obtendo items para datagrid.' . $e->getMessage());
         }
     }
 
     protected function getDatagridItems()
     {
         try {
-            $this->prepareFieldsToBuildQuery();
+            $this->prepareSqlFieldsToBuildQuery();
 
             $query = new DBFormFieldPrepare($this->view->getModel(), get_called_class());
             $query->mountQueryByFields($this->getFieldsBuiltToQuery());
@@ -148,13 +94,13 @@ trait ListActionsControl
             $query->checkFilters(get_called_class());
 
             $this->setPageNavigationCount($query->count());
-            $query->offset($this->params['offset'] ?? null);
+            $query->offset($this->request['offset'] ?? null);
 
             return $query->get($this->query_limit);
         } catch (\Exception $e) {
-            $session_name = Reflection::getClassName(get_called_class()) . '_listOrder';
+            $session_name = Reflection::shortName(get_called_class()) . '_listOrder';
             TSession::setValue($session_name, null);
-            throw new \Exception('Montando query para popular datagrid '.$e->getMessage());
+            throw new \Exception('Montando query para popular datagrid ' . $e->getMessage());
         }
     }
 
@@ -182,7 +128,7 @@ trait ListActionsControl
         if ($this->page_navigation_count <= $this->query_limit) {
             return;
         }
-        $this->view->createPageNavigation($this->page_navigation_count, $this->params);
+        $this->view->createPageNavigation($this->page_navigation_count, $this->request);
     }
 
     public function show()
@@ -197,10 +143,10 @@ trait ListActionsControl
             }
         }
 
-        parent::show($this->params);
+        parent::show($this->request);
     }
 
-    protected function prepareFieldsToBuildQuery()
+    protected function prepareSqlFieldsToBuildQuery()
     {
         $this->fields_to_sql = array();
         $this->fields_to_sql['id'] = 'id';
@@ -224,11 +170,11 @@ trait ListActionsControl
             $this->fields_to_sql[$field] = $field;
         }
 
-        $filters = TSession::getValue(Reflection::getClassName(get_called_class()) . '_filters');
+        $filters = TSession::getValue(Reflection::shortName(get_called_class()) . '_filters');
         if ($filters) {
             foreach ($filters as $key => $filter) {
                 $pos = strpos($key, '.');
-                if ($pos !== false and substr($key, 0, $pos) == Reflection::getClassName($model)) {
+                if ($pos !== false and substr($key, 0, $pos) == Reflection::shortName($model)) {
                     continue;
                 }
                 $this->fields_to_sql[strtolower($key)] = strtolower($key);
@@ -243,19 +189,19 @@ trait ListActionsControl
 
     protected function checkOrderColumn()
     {
-        $session_name = Reflection::getClassName(get_called_class()) . '_listOrder';
-        if (isset($this->params['order_field']) and $this->params['order_field']) {
+        $session_name = Reflection::shortName(get_called_class()) . '_listOrder';
+        if (isset($this->request['order_field']) and $this->request['order_field']) {
             $direction_array = ['asc' => 'desc', 'desc' => 'asc'];
             $listOrder = TSession::getValue($session_name);
 
             $direction = $direction_array[$listOrder['direction'] ?? 'desc'];
 
-            $order = $this->params['order_field'];
+            $order = $this->request['order_field'];
             TSession::setValue($session_name, ['field' => $order, 'direction' => $direction ?? 'asc']);
             return;
         }
-        $tableAlias = Reflection::getClassName($this->view->getModel());
-        $order = $tableAlias .'.id';
+        $tableAlias = Reflection::shortName($this->view->getModel());
+        $order = $tableAlias . '.id';
         TSession::setValue($session_name, ['field' => $order, 'direction' => $direction ?? 'asc']);
     }
 }

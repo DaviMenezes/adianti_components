@@ -6,7 +6,6 @@ use Adianti\Base\Lib\Widget\Form\TLabel;
 /**
  * representa um elemento a ser manipulado
  *
- * @version    Adianti 4.0
  * @package    grid bootstrap
  * @subpackage base
  * @author     Davi Menezes
@@ -15,7 +14,7 @@ use Adianti\Base\Lib\Widget\Form\TLabel;
  */
 class GridElement
 {
-    private $element;
+    protected $element;
     public $insideForm;
 
     public function __construct($element, $inside_form = 'inside')

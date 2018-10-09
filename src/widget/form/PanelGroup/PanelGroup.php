@@ -4,55 +4,21 @@ namespace Dvi\Adianti\Widget\Form\PanelGroup;
 
 use Adianti\Base\Lib\Widget\Container\THBox;
 use Adianti\Base\Lib\Widget\Container\TPanelGroup;
-use Adianti\Base\Lib\Widget\Form\TButton;
-use Adianti\Base\Lib\Widget\Form\TCheckGroup;
-use Adianti\Base\Lib\Widget\Form\TColor;
-use Adianti\Base\Lib\Widget\Form\TCombo;
-use Adianti\Base\Lib\Widget\Form\TDate;
-use Adianti\Base\Lib\Widget\Form\TDateTime;
-use Adianti\Base\Lib\Widget\Form\TEntry;
-use Adianti\Base\Lib\Widget\Form\TFile;
 use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Lib\Widget\Form\THidden;
-use Adianti\Base\Lib\Widget\Form\THtmlEditor;
 use Adianti\Base\Lib\Widget\Form\TLabel;
-use Adianti\Base\Lib\Widget\Form\TMultiField;
-use Adianti\Base\Lib\Widget\Form\TMultiFile;
-use Adianti\Base\Lib\Widget\Form\TNumeric;
-use Adianti\Base\Lib\Widget\Form\TPassword;
-use Adianti\Base\Lib\Widget\Form\TRadioGroup;
-use Adianti\Base\Lib\Widget\Form\TSeekButton;
-use Adianti\Base\Lib\Widget\Form\TSelect;
-use Adianti\Base\Lib\Widget\Form\TSlider;
-use Adianti\Base\Lib\Widget\Form\TSpinner;
-use Adianti\Base\Lib\Widget\Form\TText;
-use Adianti\Base\Lib\Widget\Wrapper\TDBCombo;
-use Adianti\Base\Lib\Widget\Wrapper\TDBSeekButton;
-use Dvi\Adianti\Componente\Model\Form\Fields\Numeric;
-use Dvi\Adianti\Route;
 use Dvi\Adianti\Widget\Base\GridBootstrap;
 use Dvi\Adianti\Widget\Base\GridColumn as Col;
 use Dvi\Adianti\Widget\Base\GridElement;
 use Dvi\Adianti\Widget\Bootstrap\Component\ButtonGroup;
 use Dvi\Adianti\Widget\Container\HBox;
 use Dvi\Adianti\Widget\Container\VBox;
-use Dvi\Adianti\Widget\Form\Button;
-use Dvi\Adianti\Widget\Form\Field\CKEditor;
-use Dvi\Adianti\Widget\Form\Field\Combo;
-use Dvi\Adianti\Widget\Form\Field\Date;
-use Dvi\Adianti\Widget\Form\Field\DateTime;
-use Dvi\Adianti\Widget\Form\Field\Varchar;
-use Dvi\Adianti\Widget\Form\Field\Hidden;
-use Dvi\Adianti\Widget\Form\Field\HtmlEditor;
-use Dvi\Adianti\Widget\Form\Field\Password;
-use Dvi\Adianti\Widget\Form\Field\RadioGroup;
-use Dvi\Adianti\Widget\Form\Field\Spinner;
-use Dvi\Adianti\Widget\Form\Field\Text;
 use Dvi\Adianti\Widget\IDviWidget;
+use Dvi\AdiantiExtension\Route;
 use ReflectionClass;
 
 /**
- * Model PanelGroup
+ *  PanelGroup
  *
  * @version    Dvi 1.0
  * @package    Container
@@ -67,18 +33,18 @@ class PanelGroup implements IDviWidget
 
     protected $tpanel;
     protected $grid;
-    /**@var TForm $form*/
+    /**@var TForm $form */
     protected $form;
-    /**@var HBox $hboxButtonsFooter*/
+    /**@var HBox $hboxButtonsFooter */
     protected $hboxButtonsFooter;
-    /**@var ButtonGroup $group_actions*/
+    /**@var ButtonGroup $group_actions */
     protected $group_actions;
     protected $form_data;
 
     protected $useLabelFields = false;
     protected $footer_items = array();
     protected $footer_item;
-    private $title;
+    protected $title;
 
     use PanelGroupActionsFacade;
     use PanelGroupFormFacade;
@@ -88,7 +54,7 @@ class PanelGroup implements IDviWidget
     {
         $this->className = Route::getClassName($className);
 
-        $this->form = new TForm($this->className.'_form_'.($formName ?? uniqid()));
+        $this->form = new TForm($this->className . '_form_' . ($formName ?? uniqid()));
         $this->form->class = 'form-horizontal';
         $this->form->add($this->getGrid());
 
@@ -189,8 +155,8 @@ class PanelGroup implements IDviWidget
         }
 
         foreach ($columns as $column) {
-            /**@var Col $element*/
-            $element =$column->getChilds(0);
+            /**@var Col $element */
+            $element = $column->getChilds(0);
             if (!is_a($element, THidden::class)) {
                 return true;
             }
@@ -198,7 +164,7 @@ class PanelGroup implements IDviWidget
         return false;
     }
 
-    private function createColumnElement($field) : GridElement
+    private function createColumnElement($field): GridElement
     {
         if (is_array($field)) {
             $gridElement = new GridElement($field[0]);
@@ -208,7 +174,7 @@ class PanelGroup implements IDviWidget
         return $gridElement;
     }
 
-    public function getGrid() : GridBootstrap
+    public function getGrid(): GridBootstrap
     {
         return $this->grid = $this->grid ?? new GridBootstrap();
     }

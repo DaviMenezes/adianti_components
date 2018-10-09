@@ -8,8 +8,8 @@ use Dvi\Adianti\Widget\Form\Field\DateTime;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
- * Model Date
- *
+ *  Date
+ * Link between attribute table and form field Date
  * @version    Dvi 1.0
  * @package    Model
  * @subpackage Components
@@ -23,7 +23,7 @@ class DBDate extends DBFormField
     {
         $this->field = new Date($name, $label);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->setType(new FieldTypeString());
     }

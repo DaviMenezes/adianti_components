@@ -1,25 +1,24 @@
 <?php
-/**
- * Column to bootstrap grid
- *
- * @version    Adianti 4.0
- * @package    grid bootstrap
- * @subpackage base
- * @author     Davi Menezes
- * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
- * @link https://github.com/DaviMenezes
- */
 
 namespace Dvi\Adianti\Widget\Base;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 
+/**
+ * Column to bootstrap grid
+ *
+ * @package    grid bootstrap
+ * @subpackage base
+ * @author     Davi Menezes
+ * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
+ * @link https://github.com/DaviMenezes
+ */
 class DataGridColumn extends TDataGridColumn
 {
-    private $order_params;
-    private $order;
-    private $datagrid_load_method;
+    protected $order_params;
+    protected $order;
+    protected $datagrid_load_method;
 
     public function __construct($name, $label, $align = 'left', $width = '100%')
     {

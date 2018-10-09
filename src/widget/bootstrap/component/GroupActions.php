@@ -25,7 +25,7 @@ class GroupActions
     protected $buttons = array();
     protected $items = array();
     protected $currentAction;
-    private $icon_size;
+    protected $icon_size;
     /**@var TForm $form_default*/
     protected $form_default;
 

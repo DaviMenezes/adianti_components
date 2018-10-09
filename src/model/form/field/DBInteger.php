@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
  * Fields FieldInteger
- *
+ * Link between attribute table and form field Spinner
  * @version    Dvi 1.0
  * @package    Fields
  * @subpackage Form
@@ -22,7 +22,7 @@ class DBInteger extends DBFormField
     {
         $this->field = new Spinner($name, $min, $max, $step);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->setType(new FieldTypeInt());
     }

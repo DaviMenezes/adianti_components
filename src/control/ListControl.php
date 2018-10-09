@@ -2,11 +2,10 @@
 
 namespace Dvi\Adianti\Control;
 
-use Dvi\Adianti\Helpers\CommonActions;
 use Dvi\Adianti\Widget\Container\VBox;
 
 /**
- * Control StandardSearchListControl
+ * Control ListControl
  *
  * @package    Control
  * @subpackage
@@ -14,17 +13,17 @@ use Dvi\Adianti\Widget\Container\VBox;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-abstract class StandardSearchListControl extends DviControl implements StandardSearchListInterface
+abstract class ListControl extends DviControl implements StandardSearchListInterface
 {
     protected $viewClass;
     protected $formController;
-    /**@var VBox $vbox_container*/
+    /**@var VBox $vbox_container */
     protected $vbox_container;
     protected $already_build_view;
 
-    use SearchActionsControl;
-    use ListActionsControl;
-    use CommonActions;
+    use SearchListControlTrait;
+    use ListControlTrait;
+    use CommonControl;
 
     public function __construct($param)
     {
@@ -42,7 +41,7 @@ abstract class StandardSearchListControl extends DviControl implements StandardS
 
         $this->setQueryLimit();
 
-        $this->view->build($this->params);
+        $this->view->build($this->request);
 
         $this->datagrid = $this->view->getDatagrid();
         $this->pageNavigation = $this->view->getPageNavigation();
@@ -58,10 +57,11 @@ abstract class StandardSearchListControl extends DviControl implements StandardS
 
     protected function createView()
     {
-        $this->view = new $this->viewClass($this->params);
+        $this->view = new $this->viewClass($this->request);
         $this->view->setFormController($this->formController);
     }
 
+    /**Define query limit default to listing and pagination*/
     protected function setQueryLimit($limit = null)
     {
         $this->view->setQueryLimit($limit ?? 10);

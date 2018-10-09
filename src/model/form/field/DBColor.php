@@ -7,7 +7,7 @@ use Dvi\Adianti\Widget\Form\Field\Color;
 
 /**
  * Fields DBColor
- *
+ * Link between attribute table and form field Color
  * @package    Fields
  * @subpackage Form
  * @author     Davi Menezes
@@ -20,6 +20,6 @@ class DBColor extends DBFormField
     {
         $this->field = new Color($name, $label, $max_length, false);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
     }
 }

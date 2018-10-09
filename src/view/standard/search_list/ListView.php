@@ -4,142 +4,103 @@ namespace Dvi\Adianti\View\Standard\SearchList;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
-use Dvi\Adianti\Control\PaginationHelper;
-use Dvi\Adianti\Helpers\Utils;
+use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
+use Dvi\Adianti\Database\Transaction;
+use Dvi\Adianti\View\Standard\Form\BaseFormView;
+use Dvi\Adianti\View\Standard\PageFormView;
 use Dvi\Adianti\Widget\Base\DataGrid;
-use Dvi\Adianti\Widget\Datagrid\PageNavigation;
-use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
- * View ListView
+ * Cria tela com formulário de pesquisa com listagem paginada
  *
  * @version    Dvi 1.0
- * @package    Control
- * @subpackage component
+ * @package    grid bootstrap to Adianti Framework
+ * @subpackage base
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-trait ListView
+abstract class ListView extends BaseFormView
 {
-    /**@var PanelGroup $panel*/
-    protected $panel;
+    protected $formController;
     /**@var DataGrid $datagrid*/
     protected $datagrid;
-    /**@var PageNavigation $pageNavigation*/
+    /**@var TPageNavigation $pageNavigation*/
     protected $pageNavigation;
     /**@var TDataGridColumn $column_id*/
     protected $column_id;
-    /**@var TAction $action_edit*/
-    protected $action_edit;
     /**@var TAction $action_delete*/
     protected $action_delete;
-    protected $useCheckButton;
-    protected $formController;
-    private $query_limit;
+    protected $panel_grid;
 
-    public function buildDatagrid($createModel = true, $showId = false): DataGrid
+    protected $actions_created;
+    protected $view_builded;
+
+    use PageFormView;
+    use ListViewTrait;
+
+    public function __construct($param)
     {
-        $class = $this->params['class'];
-        $this->datagrid = new DataGrid($class, 'grid', $showId);
+        $this->setModel();
+        $this->setStructureFields();
 
-        $this->datagrid->useEditAction($this->formController ?? $class);
-        $this->datagrid->useDeleteAction($class);
-        $this->createDatagridColumns($showId);
-
-        if ($createModel) {
-            $this->createDatagridModel();
-        }
-
-        return $this->datagrid;
+        parent::__construct($param);
     }
 
-    public function getDatagrid()
+    public function createActions()
     {
-        return $this->datagrid;
-    }
-
-    public function getPageNavigation()
-    {
-        return $this->pageNavigation;
-    }
-
-    public function createDatagridColumns($showId = false)
-    {
-        $this->datagrid->col('name', 'Nome', !$showId ? '100%' : '93%');
-    }
-
-    public function createDatagridModel($create_header = true, $show_default_actions = true)
-    {
-        $this->datagrid->createModel($create_header, $show_default_actions);
-    }
-
-    public function createPageNavigation($count, $params)
-    {
-        $this->pageNavigation = new PageNavigation();
-
-        $new_params = PaginationHelper::getUrlPaginationParameters($this->params);
-
-        if (!count($new_params)) {
-            $new_params =  null;
-        }
-
-        $this->pageNavigation->setAction(new TAction([$this->params['class'], 'loadDatagrid'], $new_params));
-        $this->pageNavigation->setWidth($this->datagrid->getWidth());
-        $this->pageNavigation->setCount($count);
-        $this->pageNavigation->setProperties($params);
-        $this->pageNavigation->setLimit($this->query_limit);
-    }
-
-    public function addPageNavigationInBoxContainer()
-    {
-        if ($this->alreadyAddPagenavigation()) {
+        if ($this->actions_created) {
             return;
         }
-        if ($this->pageNavigation) {
+
+        $this->createActionSearch();
+
+        $this->createActionClear();
+
+        $this->createActionNew();
+
+        $this->actions_created = true;
+    }
+
+    public function build($param)
+    {
+        try {
+            if ($this->view_builded) {
+                return;
+            }
+            Transaction::open();
+
+            $this->createPanel($param);
+
+            $this->createActions();
+
+            $this->createContentAfterPanel();
+
+            $this->buildDatagrid();
+
+            Transaction::close();
+
+            $this->view_builded = true;
+        } catch (\Exception $e) {
+            Transaction::rollback();
+            throw new \Exception('Construção da view.'.$e->getMessage());
+        }
+    }
+
+    public function getContent()
+    {
+        $this->vbox->add($this->panel);
+        $this->vbox->add($this->getContentAfterPanel());
+        $this->vbox->add($this->getDatagrid());
+        if ($this->datagrid) {
             $this->vbox->add($this->pageNavigation);
         }
+
+        return $this->vbox;
     }
 
-    protected function alreadyAddPagenavigation()
+    public function setFormController($formController)
     {
-        foreach ($this->vbox->getChilds() as $item) {
-            if (is_a($item, PageNavigation::class)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function useCheckButton()
-    {
-        $this->useCheckButton = true;
-    }
-
-    public function createActionNew()
-    {
-        if (!empty($this->formController)) {
-            return $this->panel
-                ->footerLink([$this->formController], 'fa:plus fa-2x')->label(_t('Add'))
-                ->setParameters(Utils::getNewParams());
-        }
-    }
-
-    public function createActionSearch()
-    {
-        $this->panel->addActionSearch();
-        $this->panel->getCurrentButton()
-            ->getAction()
-            ->setParameters(Utils::getNewParams());
-    }
-
-    public function setQueryLimit($limit)
-    {
-        $this->query_limit = $limit;
-    }
-
-    public function getQueryLimit()
-    {
-        return $this->query_limit;
+        $this->formController = $formController;
     }
 }

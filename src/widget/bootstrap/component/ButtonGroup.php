@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvi\Adianti\Widget\Bootstrap\Component;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
@@ -6,7 +7,7 @@ use Dvi\Adianti\Widget\IDviWidget;
 use Dvi\Adianti\WidgetBootstrap\Component\GroupActions;
 
 /**
- * Model ButtonGroup
+ *  ButtonGroup
  *
  * @version    Dvi 1.0
  * @package    bootstrap
@@ -22,7 +23,7 @@ class ButtonGroup extends GroupActions implements IDviWidget
     public $current_group;
     protected $class;
 
-    private $group;
+    protected $group;
 
     public function __construct($default_form = null)
     {
@@ -33,7 +34,7 @@ class ButtonGroup extends GroupActions implements IDviWidget
 
     public function setClass($class)
     {
-        $this->class .= ';'.$class;
+        $this->class .= ';' . $class;
     }
 
     public function addGroup($action_header = null, $title_group_action = null): ActionGroup
@@ -46,9 +47,9 @@ class ButtonGroup extends GroupActions implements IDviWidget
     public function show()
     {
         $group = new TElement('div');
-        $group->class= $this->class;
-        $group->role ="group";
-        $group->{'aria-label'}="...";
+        $group->class = $this->class;
+        $group->role = "group";
+        $group->{'aria-label'} = "...";
         $group->style = $this->style;
 
         foreach ($this->items as $item) {

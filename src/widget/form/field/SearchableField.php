@@ -2,7 +2,7 @@
 namespace Dvi\Adianti\Widget\Form\Field;
 
 /**
- * Model SearchableField
+ *  SearchableField
  *
  * @version    Dvi 1.0
  * @package    field
@@ -13,7 +13,7 @@ namespace Dvi\Adianti\Widget\Form\Field;
  */
 trait SearchableField
 {
-    private $search_operator;
+    protected $search_operator;
 
     public function operator(string $operator)
     {

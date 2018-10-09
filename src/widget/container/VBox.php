@@ -17,7 +17,7 @@ use Dvi\Adianti\Widget\IGroupField;
  */
 class VBox extends TVBox implements IGroupField
 {
-    private $childs;
+    protected $childs;
 
     public function __construct()
     {

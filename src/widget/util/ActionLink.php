@@ -7,7 +7,7 @@ use Adianti\Base\Lib\Widget\Util\TImage;
 use Adianti\Base\Lib\Widget\Util\TTextDisplay;
 
 /**
- * Model ActionLink
+ *  ActionLink
  *
  * @version    Dvi 1.0
  * @package    util
@@ -18,14 +18,14 @@ use Adianti\Base\Lib\Widget\Util\TTextDisplay;
  */
 class ActionLink extends TTextDisplay
 {
-    private $label;
+    protected $label;
     /**@var TElement $a_content*/
-    private $a_content;
-    private $image_icon;
+    protected $a_content;
+    protected $image_icon;
     protected $image;
     /**@var TAction $action*/
-    private $action;
-    private $icon_size;
+    protected $action;
+    protected $icon_size;
 
     public function __construct(
         Action $action = null,

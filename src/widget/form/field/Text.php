@@ -7,7 +7,7 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 
 /**
- * Model Text
+ *  Text
  *
  * @version    Dvi 1.0
  * @package    form
@@ -22,7 +22,7 @@ class Text extends TText implements FormField
     use FormFieldValidation;
     use SearchableField;
 
-    private $field_disabled;
+    protected $field_disabled;
 
     public function __construct(string $name, string $label = null, int $max_length = null, $height = '50')
     {

@@ -6,8 +6,8 @@ use Closure;
 use Dvi\Adianti\Database\Transaction;
 
 /**
- * Model DviDefaultQuery
- *
+ * DviDefaultQuery
+ * Create easy query
  * @package    Model
  * @subpackage Components
  * @author     Davi Menezes
@@ -16,7 +16,7 @@ use Dvi\Adianti\Database\Transaction;
  */
 class DB
 {
-    use DviQueryBuilder;
+    use QueryBuilder;
 
     public static function transaction(Closure $closure)
     {
@@ -27,7 +27,7 @@ class DB
             return $result;
         } catch (\Exception $e) {
             Transaction::rollback();
-            throw new \Exception($e->getMessage());
+            throw new \Exception('Transação-'.$e->getMessage());
         }
     }
 

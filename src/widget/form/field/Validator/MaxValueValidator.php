@@ -13,8 +13,8 @@ namespace Dvi\Adianti\Widget\Form\Field\Validator;
  */
 class MaxValueValidator extends FieldValidator
 {
-    private $max_value;
-    private $default_msg;
+    protected $max_value;
+    protected $default_msg;
 
     public function __construct($max_value, string $error_msg = null)
     {

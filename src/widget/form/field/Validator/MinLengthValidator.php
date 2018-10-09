@@ -13,8 +13,8 @@ namespace Dvi\Adianti\Widget\Form\Field\Validator;
  */
 class MinLengthValidator extends FieldValidator
 {
-    private $min_length;
-    private $default_error_msg;
+    protected $min_length;
+    protected $default_error_msg;
 
     public function __construct($min_value = 0, string $error_msg = null)
     {

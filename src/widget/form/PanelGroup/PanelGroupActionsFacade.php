@@ -4,12 +4,10 @@ namespace Dvi\Adianti\Widget\Form\PanelGroup;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Dvi\Adianti\Helpers\GUID;
 use Dvi\Adianti\Widget\Bootstrap\Component\ButtonGroup;
 use Dvi\Adianti\Widget\Form\Button;
 use Dvi\Adianti\Widget\Util\Action;
 use Dvi\Adianti\Widget\Util\ActionLink;
-use Dvi\Module\Office\Task\Control\TaskList2;
 
 /**
  * Widget PanelGroupActionsFacade
@@ -23,13 +21,11 @@ use Dvi\Module\Office\Task\Control\TaskList2;
 trait PanelGroupActionsFacade
 {
     protected $currentButton;
-    /**@var ButtonGroup $group_actions*/
+    /**@var ButtonGroup $group_actions */
     protected $group_actions;
 
     public function addActionSave(array $parameters = null, $tip = null)
     {
-        return $this->group_actions->addButton([$this->className, 'onSave'], 'fa:floppy-o fa-2x', _t('Save'), $parameters);
-
         $this->footerButton([$this->className, 'onSave'], $parameters, $tip)
             ->icon('fa:floppy-o fa-2x')
             ->setLabel(_t('Save'));
@@ -39,7 +35,7 @@ trait PanelGroupActionsFacade
 
     public function addActionClear(array $parameters = null, $tip = null)
     {
-        return $this->footerButton([$this->className, 'onClear'], $parameters, $tip)->icon('fa:eraser fa-2x')->setLabel(_t('Clear'));
+        $this->footerButton([$this->className, 'onClear'], $parameters, $tip)->icon('fa:eraser fa-2x')->setLabel(_t('Clear'));
 
         return $this;
     }
@@ -51,16 +47,23 @@ trait PanelGroupActionsFacade
         return $this;
     }
 
-    public function footerButton(array $callback, array $parameters = null, $tip = null)
+    public function addActionDelete(array $parameters = null, $tip = null)
+    {
+        $this->footerButton([$this->className, 'onDelete'], $parameters, $tip)->icon('fa:trash  red fa-2x')->setLabel(_t('Delete'));
+
+        return $this;
+    }
+
+    public function footerButton(array $callback, array $parameters = null, $tip = null): Button
     {
         $action = $this->group_actions->addButton($callback, 'fa:floppy-o fa-2x', null, $parameters);
         $action->setTip($tip);
         return $this->currentButton = $action;
     }
 
-    public function footerLink(array $callback, string $image = null, $btn_style = 'default'):ActionLink
+    public function footerLink(array $callback, string $image = null, $btn_style = 'default'): ActionLink
     {
-        return $this->group_actions->addLink($callback, $image)->styleBtn('btn btn-'.$btn_style.' dvi_panel_group');
+        return $this->group_actions->addLink($callback, $image)->styleBtn('btn btn-' . $btn_style . ' dvi_panel_group');
     }
 
     public function addActionBackLink($action = null)
@@ -73,7 +76,7 @@ trait PanelGroupActionsFacade
         return $this->currentButton;
     }
 
-    private function createButton($params):Button
+    private function createButton($params): Button
     {
         $btn = new Button($params['id']);
         $btn->setAction(new TAction($params['callback'], $params['parameters']));
@@ -92,7 +95,7 @@ trait PanelGroupActionsFacade
         return $btn;
     }
 
-    public function getCurrentButton():Button
+    public function getCurrentButton(): Button
     {
         return $this->currentButton;
     }

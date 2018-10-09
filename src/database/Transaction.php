@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Log\AdiantiLoggerInterface;
 use Closure;
 
 /**
- * Model DTransaction
+ *  DTransaction
  *
  * @version    Dvi 1.0
  * @package    database

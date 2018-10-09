@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 
 /**
  * Fields FieldCurrency
- *
+ * Link between attribute table and form field Numeric
  * @version    Dvi 1.0
  * @package    Fields
  * @subpackage Form
@@ -22,7 +22,7 @@ class DBCurrency extends DBFormField
     {
         $this->field = new Numeric($name, $decimals, $decimalsSeparator, $thousandSeparator);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->setType(new FieldTypeString());
     }

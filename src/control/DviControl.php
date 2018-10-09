@@ -29,11 +29,11 @@ abstract class DviControl extends TPage
     protected $currentObj;
     /**@var DviControl $pageList*/
     protected $pageList;
-    protected $params;
+    protected $request;
     /**@var PanelGroup $panel*/
     protected $panel;
     protected $database = 'default';
-    private $already_get_view_content;
+    protected $already_get_view_content;
 
     use Utils;
     use Reflection;
@@ -41,20 +41,22 @@ abstract class DviControl extends TPage
     public function __construct($param)
     {
         parent::__construct();
-        $this->params = $param;
+        $this->request = $param;
     }
 
+    /**Load page without the need to pass a method*/
     public function load()
     {
         $param = Utils::getNewParams();
         AdiantiCoreApplication::loadPage(get_called_class(), null, $param);
     }
 
+    /**Show the current page*/
     public function show()
     {
         try {
             if (!$this->validateMethod()) {
-                throw new \Exception('Segurança: Método '.$this->params['method'].' inválido');
+                throw new \Exception('Segurança: Método '.$this->request['method'].' inválido');
             }
             parent::show();
         } catch (\Exception $e) {
@@ -64,6 +66,7 @@ abstract class DviControl extends TPage
 
     abstract protected function buildView();
 
+    /**Check if has the 'method' parameter*/
     protected function hasMethod($args)
     {
         if (isset($args['method']) and $args['method']) {
@@ -72,9 +75,10 @@ abstract class DviControl extends TPage
         return false;
     }
 
+    /**Check if the past method is valid*/
     protected function validateMethod(): bool
     {
-        if (!isset($this->params['method'])) {
+        if (!isset($this->request['method'])) {
             return true;
         }
         $rf = new \ReflectionClass(get_called_class());
@@ -85,7 +89,7 @@ abstract class DviControl extends TPage
             $methods[$method->name] = $method->name;
         }
         ksort($methods);
-        if (in_array($this->params['method'], array_keys($methods))) {
+        if (in_array($this->request['method'], array_keys($methods))) {
             return true;
         }
         return false;

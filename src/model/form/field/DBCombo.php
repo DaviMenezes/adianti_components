@@ -8,8 +8,8 @@ use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
- * Model DBCombo
- *
+ *  DBCombo
+ * Link between attribute table and form field Combo
  * @version    Dvi 1.0
  * @package    Model
  * @subpackage Component
@@ -25,7 +25,7 @@ class DBCombo extends DBFormField
     {
         $this->field = new Combo($name, $label);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->setType(new FieldTypeInt());
     }

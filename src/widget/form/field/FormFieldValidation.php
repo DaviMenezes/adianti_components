@@ -50,6 +50,9 @@ trait FormFieldValidation
                 $label = $validation[0];
                 $validator = $validation[1];
                 $parameters = $validation[2];
+                if (func_num_args() > 0) {
+                    $parameters['request'] = func_get_arg(0);
+                }
 
                 /**@var FieldValidator $validator */
                 if (!$validator->validate($label, $this->getValue(), $parameters)) {

@@ -1,10 +1,14 @@
 <?php
+
 namespace Dvi\Adianti\View\Standard;
 
 use Dvi\Adianti\Database\Transaction;
+use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
+use Dvi\Adianti\Model\RelationshipModelType;
+use Dvi\Adianti\View\Standard\Form\FormView;
 use Dvi\Adianti\Widget\Base\GridColumn;
-use Dvi\Adianti\Widget\Form\Field\FormField;
+use Dvi\Adianti\Widget\Form\Button;
 use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
@@ -20,7 +24,7 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 trait PageFormView
 {
     protected $panel_rows_columns = array();
-    /**@var PanelGroup $panel*/
+    /**@var PanelGroup $panel */
     protected $panel;
     protected $content_after_panel;
     protected $build_group_fields = array();
@@ -34,69 +38,15 @@ trait PageFormView
             if (count($this->build_group_fields)) {
                 return $this->build_group_fields;
             }
-            $this->build_group_fields = array();
 
-            /**@var DviModel $dviModel */
-            $dviModel = new $this->model();
+            $this->buildGroupFields();
 
-            $rows_form = $this->groupFields;
-            /**@var GroupFieldView $group*/
-            foreach ($rows_form as $key => $group) {
-                $build_fields = array();
-                $row = 0;
-                $group_fields = $group->getFields();
-                foreach ($group_fields as $fields) {
-                    foreach ($fields as $component_name) {
-                        if (!$component_name) {
-                            throw new \Exception('Campo inválido. Verifique o nome dos campos.');
-                        }
-                        $class = is_array($component_name) ? ($component_name[1] ?? null) : null;
-                        $style = is_array($component_name) ? ($component_name[2] ?? null) : null;
-                        $field = is_array($component_name) ? $component_name[0] : $component_name;
-                        if (is_array($class)) {
-                            $class = implode(' ', array_values($component_name[1]));
-                        }
-
-                        $pos = strpos($field, '.');
-
-                        $model_alias = substr($field, 0, $pos);
-
-                        $pos = $pos ? $pos + 1 : 0;
-                        $field_name = substr($field, $pos);
-
-                        /**@var FormField $dviField*/
-                        if ($model_alias and in_array($model_alias, array_keys($dviModel->getForeignKeys()))) {
-                            $model_class = $dviModel->getForeignKeys()[$model_alias];
-                            $model = new $model_class();
-
-                            $form_field = $this->getFormField($model, $field_name);
-                        } else {
-                            $form_field = $this->getFormField($dviModel, $field_name);
-                        }
-
-                        if ($form_field->getHideInEdit()) {
-                            continue;
-                        }
-
-                        $dviField = $form_field->getField();
-                        $dviField->setReferenceName($field);
-                        $build_fields[$row][] = [
-                            'field' => $dviField,
-                            'class' => $class,
-                            'style' => $style
-                        ];
-                    }
-                    $row++;
-                }
-
-                $this->build_group_fields[$key] = ['tab' => $group->getTab(), 'fields' => $build_fields];
-            }
             Transaction::close();
 
             return $this->build_group_fields;
         } catch (\Exception $e) {
             Transaction::rollback();
-            throw new \Exception($e->getMessage());
+            throw new \Exception('Construção de campos.' . $e->getMessage());
         }
     }
 
@@ -109,7 +59,6 @@ trait PageFormView
             $this->panel->useLabelFields(true);
         }
 
-        $rows = 0;
         $fields = $this->buildFields();
         foreach ($fields as $key => $groups) {
             if ($groups['tab'] and $key == 0) {
@@ -124,7 +73,6 @@ trait PageFormView
                     $columns[] = new GridColumn($field_array['field'], $field_array['class'], $field_array['style']);
                 }
                 $this->panel->addRow($columns);
-                $rows++;
             }
         }
         $this->already_create_panel_rows = true;
@@ -150,7 +98,7 @@ trait PageFormView
 
     protected function getFormField($model, $field_name)
     {
-        /**@var DviModel $model*/
+        /**@var DviModel $model */
 
         $dot_position = strpos($field_name, '.');
         if ($dot_position !== false) {
@@ -160,7 +108,7 @@ trait PageFormView
             $last_associated = null;
             foreach ($associateds as $key => $associated) {
                 $last_associated = $model->getForeignKeys()[$associated];
-                if ($key+1 == count($associateds)) {
+                if ($key + 1 == count($associateds)) {
                     $model = new $last_associated();
                     break;
                 }
@@ -170,10 +118,10 @@ trait PageFormView
         foreach ($array_underline as $key => $item) {
             $array_underline[$key] = ucfirst($item);
         }
-        $method = 'createField'.implode('', $array_underline);
+        $method = 'createField' . implode('', $array_underline);
 
         if (!method_exists($model, $method)) {
-            throw new \Exception('O método '.$method.' precisa ser criado no modelo '. (new \ReflectionObject($model))->getShortName());
+            throw new \Exception('O método ' . $method . ' precisa ser criado no modelo ' . (new \ReflectionObject($model))->getShortName());
         }
         $model->$method();
         $field_data = $model->getDviField($field_name);
@@ -192,9 +140,19 @@ trait PageFormView
 
     public function createActionClear()
     {
-        return $this->panel->addActionClear();
+        $this->panel->addActionClear();
         $this->button_clear = $this->panel->getCurrentButton();
         return $this->button_clear;
+    }
+
+    public function createActionDelete()
+    {
+        if (!Utils::editing($this->request)) {
+            return;
+        }
+        $this->panel->addActionDelete();
+
+        return $this;
     }
 
     public function createContentAfterPanel($obj = null)
@@ -205,5 +163,87 @@ trait PageFormView
     public function getContentAfterPanel()
     {
         return $this->content_after_panel;
+    }
+
+    private function getFieldClass($component_name)
+    {
+        $class = is_array($component_name) ? ($component_name[1] ?? null) : null;
+        if (is_array($class)) {
+            $class = implode(' ', array_values($component_name[1]));
+        }
+        return $class;
+    }
+
+    /**
+     * @param $component_name
+     * @return mixed|null
+     */
+    private function getFieldStyle($component_name)
+    {
+        $style = is_array($component_name) ? ($component_name[2] ?? null) : null;
+        return $style;
+    }
+
+    private function getFormFieldBuilt($field, $dviModel): \Dvi\Adianti\Model\Fields\DBFormField
+    {
+        $pos = strpos($field, '.');
+        $field_name = substr($field, ($pos ? $pos + 1 : 0));
+
+        $model_alias = substr($field, 0, $pos);
+
+        /**@var DviModel $dviModel */
+        $relationships = $dviModel->associateds()->getRelationships();
+        if ($model_alias and in_array($model_alias, array_keys($relationships))) {
+            /**@var RelationshipModelType $model_type */
+            $model_type = $dviModel->getRelationships()[$model_alias];
+
+            $model_class = $model_type->getClassName();
+            $model = new $model_class();
+            $form_field = $this->getFormField($model, $field_name);
+            return $form_field;
+        }
+
+        $form_field = $this->getFormField($dviModel, $field_name);
+
+        return $form_field;
+    }
+
+    private function buildGroupFields()
+    {
+        /**@var DviModel $dviModel */
+        $dviModel = new $this->model();
+
+        /**@var GroupFieldView $group */
+        foreach ($this->groupFields as $key => $group) {
+            $build_fields = array();
+            $row = 0;
+            $group_fields = $group->getFields();
+            foreach ($group_fields as $fields) {
+                foreach ($fields as $component_name) {
+                    if (!$component_name) {
+                        throw new \Exception('Campo inválido. Verifique o nome dos campos.');
+                    }
+                    $field = is_array($component_name) ? $component_name[0] : $component_name;
+                    $class = $this->getFieldClass($component_name);
+
+                    $form_field = $this->getFormFieldBuilt($field, $dviModel);
+
+                    if ($form_field->getHideInEdit()) {
+                        continue;
+                    }
+
+                    $dviField = $form_field->getField()->setReferenceName($field);
+
+                    if (get_parent_class($this) == FormView::class) {
+                        $dviField->class .= ' dvi_field_required';
+                    }
+
+                    $build_fields[$row][] = ['field' => $dviField, 'class' => $class, 'style' => $this->getFieldStyle($component_name)];
+                }
+                $row++;
+            }
+
+            $this->build_group_fields[$key] = ['tab' => $group->getTab(), 'fields' => $build_fields];
+        }
     }
 }

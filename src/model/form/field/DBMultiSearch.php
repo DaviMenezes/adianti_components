@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
  * Field DBMultiSearch
- *
+ * Link between attribute table and form field MultiSearch
  * @package    Field
  * @subpackage Form
  * @author     Davi Menezes
@@ -23,7 +23,7 @@ class DBMultiSearch extends DBFormField
     {
         $this->field = new MultiSearch($name, $min_length, $max_length, $label);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->field->setType(new FieldTypeInt());
     }

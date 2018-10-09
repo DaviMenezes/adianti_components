@@ -22,11 +22,11 @@ use PHPMailer\PHPMailer\Exception;
  */
 class DviMail
 {
-    private $mail ;
-    private $body;
-    private $toEmails = array();
-    private $subject;
-    private $obj_error;
+    protected $mail ;
+    protected $body;
+    protected $toEmails = array();
+    protected $subject;
+    protected $obj_error;
 
     public function __construct($body, $mails = null, $debug = null)
     {

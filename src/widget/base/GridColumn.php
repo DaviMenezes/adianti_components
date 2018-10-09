@@ -2,21 +2,16 @@
 
 namespace Dvi\Adianti\Widget\Base;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TLabel;
-use Adianti\Base\Lib\Widget\Util\TActionLink;
 use Dvi\Adianti\Widget\Container\VBox;
 use Dvi\Adianti\Widget\Form\Button;
-use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 
 /**
  * Column to bootstrap grid
  *
- * @version    Adianti 4.0
  * @package    grid bootstrap
  * @subpackage base
  * @author     Davi Menezes
@@ -76,9 +71,9 @@ class GridColumn extends TElement
     const LG12 = 'col-lg-12';
     #endregion
 
-    private $childs;
-    private $custom_class;
-    private $default_class = 'col-md-12';
+    protected $childs;
+    protected $custom_class;
+    protected $default_class = 'col-md-12';
 
     protected $useLabelField = false;
 

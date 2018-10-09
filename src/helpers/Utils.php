@@ -2,7 +2,7 @@
 namespace Dvi\Adianti\Helpers;
 
 /**
- * Model Utils
+ *  Utils
  *
  * @version    Dvi 1.0
  * @package    control
@@ -21,25 +21,38 @@ trait Utils
         return $value;
     }
 
-    protected function isEditing()
+    public function isEditing()
     {
-        return self::editing($this->params);
+        return self::editing($this->request);
     }
 
     public static function editing($params)
     {
-        if ((!empty($params['id']) and $params['id'] != 0)) {
-            return true;
+        if (!isset($params['method']) or $params['method'] !== 'onEdit') {
+            return false;
+        }
+        foreach ($params as $item => $value) {
+            if (in_array($item, ['class', 'method', 'form_token'])) {
+                continue;
+            }
+            $array = explode('-', $item);
+            $property = array_pop($array);
+
+            if (in_array($property, ['id', 'key']) and !empty($value) and $value != 0) {
+                return true;
+            }
         }
         return false;
     }
 
+    /**Dump and die*/
     public function dd($var)
     {
         var_dump($var);
         die();
     }
 
+    /**Get url parameters*/
     public static function getNewParams():array
     {
         $new_params = array();
@@ -58,11 +71,11 @@ trait Utils
 
     public function loadPage(array $params = null)
     {
-        return Redirect::loadPage($params)->go(get_called_class());
+        Redirect::loadPage($params)->go(get_called_class());
     }
 
     public function goToPage(array $params = null)
     {
-        return Redirect::goToPage($params)->go(get_called_class());
+        Redirect::goToPage($params)->go(get_called_class());
     }
 }

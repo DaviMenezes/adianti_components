@@ -15,9 +15,9 @@ use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
  */
 class CpfValidator extends FieldValidator
 {
-    private $label;
-    private $value;
-    private $cpf;
+    protected $label;
+    protected $value;
+    protected $cpf;
 
     public function validate($label, $value, $parameters = null)
     {
@@ -57,7 +57,7 @@ class CpfValidator extends FieldValidator
     private function setInvalidCpfMessage()
     {
         $msg = AdiantiCoreTranslator::translate('The field ^1 has not a valid CPF', $this->label);
-        $this->error_msg .= isset($this->error_msg) ? ('<br>'.$msg) : $msg;
+        $this->error_msg = $msg;
     }
 
     private function validateNonNumericCharacters()

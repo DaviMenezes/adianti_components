@@ -10,7 +10,7 @@ namespace Dvi\Adianti\Model;
  * @link https://github.com/DaviMenezes
  */
 
-interface IDviRecord
+interface IActiveRecord
 {
     public static function get($id);
 }

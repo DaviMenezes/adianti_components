@@ -8,7 +8,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeInt;
 
 /**
  * Field DBSelect
- *
+ * Link between attribute table and form field Select
  * @package    Field
  * @subpackage
  * @author     Davi Menezes
@@ -23,7 +23,7 @@ class DBSelect extends DBFormField
     {
         $this->field = new Select($name, $label);
 
-        parent::__construct($label);
+        parent::__construct($label ?? $name);
 
         $this->field->setType(new FieldTypeInt());
     }

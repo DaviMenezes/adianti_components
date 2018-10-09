@@ -5,7 +5,6 @@ namespace Dvi\Adianti\Widget\Bootstrap\Component;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Dvi\Adianti\Widget\Util\Action;
 use Dvi\Adianti\Widget\Util\ActionLink;
-use Dvi\Adianti\WidgetBootstrap\Component\GroupActions;
 
 /**
  * Component DActionGroup
@@ -16,12 +15,12 @@ use Dvi\Adianti\WidgetBootstrap\Component\GroupActions;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class ActionGroup //extends GroupActions
+class ActionGroup
 {
-    private $actionHeader;
+    protected $actionHeader;
     protected $items = array();
-    private $title_group_action;
-    private $icon_size;
+    protected $title_group_action;
+    protected $icon_size;
 
     public function __construct($form, $action_header = null, string $title_group_action = null)
     {
