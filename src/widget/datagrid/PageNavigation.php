@@ -9,8 +9,6 @@ use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 
 /**
  * PageNavigation
- *
- * @version    Dvi 1.0
  * @package    pacageTeste
  * @subpackage subPackageTeste
  * @author     Davi Menezes

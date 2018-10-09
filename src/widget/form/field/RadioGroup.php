@@ -8,8 +8,6 @@ use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 
 /**
  * RadioGroup
- *
- * @version    Dvi 1.0
  * @package    Form
  * @subpackage Widget
  * @author     Davi Menezes

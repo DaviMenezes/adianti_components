@@ -3,8 +3,7 @@ namespace Dvi\Adianti\Helpers;
 
 /**
  *  Utils
- *
- * @version    Dvi 1.0
+
  * @package    control
  * @subpackage dvi
  * @author     Davi Menezes

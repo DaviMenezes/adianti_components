@@ -7,8 +7,6 @@ use Adianti\Base\Modules\Admin\Model\SystemUser;
 
 /**
  *  ObjectDvi
- *
- * @version    Dvi 1.0
  * @package    model
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)

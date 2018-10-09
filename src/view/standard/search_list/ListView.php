@@ -12,8 +12,6 @@ use Dvi\Adianti\Widget\Base\DataGrid;
 
 /**
  * Cria tela com formulário de pesquisa com listagem paginada
- *
- * @version    Dvi 1.0
  * @package    grid bootstrap to Adianti Framework
  * @subpackage base
  * @author     Davi Menezes

@@ -8,8 +8,6 @@ use Dvi\Adianti\WidgetBootstrap\Component\GroupActions;
 
 /**
  *  ButtonGroup
- *
- * @version    Dvi 1.0
  * @package    bootstrap
  * @subpackage widget
  * @author     Davi Menezes

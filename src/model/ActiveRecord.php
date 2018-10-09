@@ -16,8 +16,7 @@ use ReflectionProperty;
  * Classe Auxiliadora na criação de querys manuais
  *
  * É possível criar queries complexas e aplicar filtros. A consulta e criada usando PDO.
- *
- * @version    Dvi 1.0
+
  * @package    model
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)

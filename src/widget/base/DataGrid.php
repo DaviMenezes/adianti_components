@@ -8,8 +8,6 @@ use ReflectionClass;
 
 /**
  * Widget Base DataGrid
- *
- * @version    Dvi 1.0
  * @package    Base
  * @subpackage Widget
  * @author     Davi Menezes

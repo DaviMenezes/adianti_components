@@ -12,8 +12,6 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * View ListViewTrait
- *
- * @version    Dvi 1.0
  * @package    Control
  * @subpackage component
  * @author     Davi Menezes

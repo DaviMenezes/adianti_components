@@ -13,8 +13,6 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
  * Control DviTPageForm
- *
- * @version    Dvi 1.0
  * @package    Control
  * @subpackage component
  * @author     Davi Menezes

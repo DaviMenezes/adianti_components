@@ -7,8 +7,6 @@ use Adianti\Base\Lib\Validator\TFieldValidator;
 
 /**
  * Validator UrlValidator
- *
- * @version    Dvi 1.0
  * @package    Validator
  * @subpackage Adianti
  * @author     Davi Menezes

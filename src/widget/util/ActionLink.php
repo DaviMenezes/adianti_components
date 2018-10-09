@@ -8,8 +8,6 @@ use Adianti\Base\Lib\Widget\Util\TTextDisplay;
 
 /**
  *  ActionLink
- *
- * @version    Dvi 1.0
  * @package    util
  * @subpackage widget
  * @author     Davi Menezes

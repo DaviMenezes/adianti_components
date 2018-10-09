@@ -8,8 +8,6 @@ use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
 
 /**
  *  Text
- *
- * @version    Dvi 1.0
  * @package    form
  * @subpackage widget
  * @author     Davi Menezes

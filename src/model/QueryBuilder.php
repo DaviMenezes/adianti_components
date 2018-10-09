@@ -10,8 +10,6 @@ use ReflectionClass;
 
 /**
  *  QueryBuilder
- *
- * @version    Dvi 1.0
  * @package    querybuilder
  * @subpackage model
  * @author     Davi Menezes

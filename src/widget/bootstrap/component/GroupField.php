@@ -6,8 +6,6 @@ use Dvi\Adianti\Widget\IGroupField;
 
 /**
  * Component GroupField
- *
- * @version    Dvi 1.0
  * @package    Component
  * @subpackage Bootstrap
  * @author     Davi Menezes

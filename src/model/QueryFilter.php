@@ -3,12 +3,8 @@
 namespace Dvi\Adianti\Model;
 
 /**
- * Description of QueryFilter
- *
- * Filtro para a queries uso em conjunto da classe ActiveRecord
- *
- * @version    Dvi 1.0
- * @package    model
+ * QueryFilter
+ * Filtro para a queries uso em conjunto da classe ActiveRecord    model
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
