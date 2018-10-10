@@ -38,8 +38,6 @@ trait SearchListControlTrait
 
             $array_models = $this->getModelAndAttributesOfTheForm();
 
-            Transaction::close();
-
             $filters = array();
 
             /**@var DviModel $model */
@@ -60,6 +58,8 @@ trait SearchListControlTrait
             $this->loadDatagrid();
 
             $this->getViewContent();
+
+            Transaction::close();
         } catch (\Exception $e) {
             Transaction::rollback();
             throw $e;

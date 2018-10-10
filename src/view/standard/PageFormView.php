@@ -2,13 +2,11 @@
 
 namespace Dvi\Adianti\View\Standard;
 
-use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\RelationshipModelType;
 use Dvi\Adianti\View\Standard\Form\FormView;
 use Dvi\Adianti\Widget\Base\GridColumn;
-use Dvi\Adianti\Widget\Form\Button;
 use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
@@ -31,19 +29,14 @@ trait PageFormView
     public function buildFields()
     {
         try {
-            Transaction::open();
-
             if (count($this->build_group_fields)) {
                 return $this->build_group_fields;
             }
 
             $this->buildGroupFields();
 
-            Transaction::close();
-
             return $this->build_group_fields;
         } catch (\Exception $e) {
-            Transaction::rollback();
             throw new \Exception('Construção de campos.' . $e->getMessage());
         }
     }
@@ -96,22 +89,6 @@ trait PageFormView
 
     protected function getFormField($model, $field_name)
     {
-        /**@var DviModel $model */
-
-        $dot_position = strpos($field_name, '.');
-        if ($dot_position !== false) {
-            $associateds = explode('.', $field_name);
-            $field_name = array_pop($associateds);
-
-            $last_associated = null;
-            foreach ($associateds as $key => $associated) {
-                $last_associated = $model->getForeignKeys()[$associated];
-                if ($key + 1 == count($associateds)) {
-                    $model = new $last_associated();
-                    break;
-                }
-            }
-        }
         $array_underline = explode('_', $field_name);
         foreach ($array_underline as $key => $item) {
             $array_underline[$key] = ucfirst($item);

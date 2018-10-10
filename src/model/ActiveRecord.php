@@ -16,7 +16,6 @@ use ReflectionProperty;
  * Classe Auxiliadora na criação de querys manuais
  *
  * É possível criar queries complexas e aplicar filtros. A consulta e criada usando PDO.
-
  * @package    model
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
@@ -28,25 +27,9 @@ class ActiveRecord extends TRecord
     const PRIMARYKEY = 'id';
     const IDPOLICY = 'serial';
 
-    protected $foreign_keys = array();
     protected $current_obj;
 
     #region [BUILD MODEL] *******************************************
-    public function __get($property)
-    {
-        $new_property = $property;
-        $pos = strpos($property, '.');
-        if ($pos !== false) {
-            $new_property = substr($property, 0, $pos);
-        }
-        if (array_key_exists($new_property, $this->foreign_keys)) {
-            return $this->getAssociatedObject($property);
-        }
-
-        $result = parent::__get($property);
-        return $result;
-    }
-
     public function __set($property, $value)
     {
         $this->$property = $value;
@@ -75,11 +58,6 @@ class ActiveRecord extends TRecord
         return $tablename;
     }
 
-    public function getForeignKeys()
-    {
-        return $this->foreign_keys;
-    }
-
     public static function getInstance($id)
     {
         $class = get_called_class();
@@ -91,43 +69,21 @@ class ActiveRecord extends TRecord
     {
         $publics = $this->getPublicProperties();
         foreach ($publics as $key => $value) {
-            if (!array_key_exists($key, $this->foreign_keys)) {
-                if ($key != 'id') {
-                    parent::addAttribute($key);
-                }
+            if ($key != 'id') {
+                parent::addAttribute($key);
             }
         }
-    }
-
-    protected function getAssociatedObject($attribute)
-    {
-        if (empty($this->foreign_keys[$attribute])) {
-            $msg_user = 'Ops... um erro ocorreu ao executar esta ação. Informe ao administrador';
-            $msg_dev = 'Para chamar o método getMagicObject é necessário que o ';
-            $msg_dev .= 'Objeto Associado esteja mapeado. Use o método setMap no construtor do Modelo';
-            throw new \Exception($msg_user, $msg_dev);
-        }
-
-        $attribute_class = $this->foreign_keys[$attribute]['class'];
-        $attribute_id = $attribute . '_id';
-
-        $this->current_obj = $this->$attribute ?? $this->current_obj;
-        if (empty($this->current_obj)) {
-            $this->current_obj = new $attribute_class($this->$attribute_id);
-            $this->$attribute = $this->current_obj;
-        }
-        return $this->$attribute ?? $this->current_obj;
     }
 
     public function getPublicProperties()
     {
         $properties = array();
 
-        $vars = (new ReflectionObject($this))->getProperties(ReflectionProperty::IS_PUBLIC);
+        $reflectionProperties = (new ReflectionObject($this))->getProperties(ReflectionProperty::IS_PUBLIC);
 
-        foreach ($vars as $var) {
-            $prop = $var->name;
-            $properties[$var->name] = $this->$prop;
+        foreach ($reflectionProperties as $property) {
+            $prop = $property->name;
+            $properties[$property->name] = $this->$prop;
         }
         return $properties;
     }

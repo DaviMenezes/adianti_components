@@ -5,7 +5,6 @@ namespace Dvi\Adianti\View\Standard\SearchList;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
-use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\View\Standard\Form\BaseFormView;
 use Dvi\Adianti\View\Standard\PageFormView;
 use Dvi\Adianti\Widget\Base\DataGrid;
@@ -21,13 +20,13 @@ use Dvi\Adianti\Widget\Base\DataGrid;
 abstract class ListView extends BaseFormView
 {
     protected $formController;
-    /**@var DataGrid $datagrid*/
+    /**@var DataGrid $datagrid */
     protected $datagrid;
-    /**@var TPageNavigation $pageNavigation*/
+    /**@var TPageNavigation $pageNavigation */
     protected $pageNavigation;
-    /**@var TDataGridColumn $column_id*/
+    /**@var TDataGridColumn $column_id */
     protected $column_id;
-    /**@var TAction $action_delete*/
+    /**@var TAction $action_delete */
     protected $action_delete;
     protected $panel_grid;
 
@@ -66,8 +65,6 @@ abstract class ListView extends BaseFormView
             if ($this->view_builded) {
                 return;
             }
-            Transaction::open();
-
             $this->createPanel($param);
 
             $this->createActions();
@@ -76,12 +73,9 @@ abstract class ListView extends BaseFormView
 
             $this->buildDatagrid();
 
-            Transaction::close();
-
             $this->view_builded = true;
         } catch (\Exception $e) {
-            Transaction::rollback();
-            throw new \Exception('Construção da view.'.$e->getMessage());
+            throw new \Exception('Construção da view.' . $e->getMessage());
         }
     }
 
