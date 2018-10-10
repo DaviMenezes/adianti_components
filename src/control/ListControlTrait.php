@@ -2,11 +2,7 @@
 
 namespace Dvi\Adianti\Control;
 
-use Adianti\Base\Lib\Control\TAction;
-use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Registry\TSession;
-use Adianti\Base\Lib\Widget\Dialog\TQuestion;
-use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Model\DBFormFieldPrepare;
 use Dvi\Adianti\Model\QueryFilter;
@@ -68,15 +64,12 @@ trait ListControlTrait
 
             $items = $this->getDatagridItems();
 
-            Transaction::open($this->database);
             $this->populateGrids($items);
-            Transaction::close();
 
             $this->preparePageNavidation();
 
             $this->reloaded = true;
         } catch (\Exception $e) {
-            Transaction::rollback();
             throw new \Exception('Obtendo items para datagrid.' . $e->getMessage());
         }
     }

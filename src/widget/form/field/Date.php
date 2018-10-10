@@ -32,7 +32,7 @@ class Date extends TDate implements FormField
 
         $this->operator('=');
 
-        $this->addValidation($this->getLabel(), new DateValidator());
+        $this->addValidation($this->getLabel(), new DateValidator(), ['dd/mm/yyyy']);
     }
 
     public function disable($disable = true)

@@ -3,7 +3,6 @@
 namespace Dvi\Adianti\View\Standard\Form;
 
 use Adianti\Base\Lib\Widget\Base\TScript;
-use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\View\Standard\PageFormView;
 use Dvi\Adianti\Widget\Form\Button;
@@ -18,11 +17,11 @@ use Dvi\Adianti\Widget\Form\Button;
  */
 abstract class FormView extends BaseFormView
 {
-    /**@var Button $button_save*/
+    /**@var Button $button_save */
     protected $button_save;
-    /**@var Button $button_clear*/
+    /**@var Button $button_clear */
     protected $button_clear;
-    /**@var DviModel $currentObj*/
+    /**@var DviModel $currentObj */
     protected $currentObj;
     protected $pageList;
 
@@ -40,8 +39,6 @@ abstract class FormView extends BaseFormView
     public function build($param)
     {
         try {
-            Transaction::open();
-
             $this->createPanelForm();
 
             $this->createFormToken($param);
@@ -52,12 +49,9 @@ abstract class FormView extends BaseFormView
 
             $this->cancelEnterSubmit();
 
-            Transaction::close();
-
             return $this;
         } catch (\Exception $e) {
-            Transaction::rollback();
-            throw new \Exception('Erro ao construir a tela. Erro: '. $e->getMessage());
+            throw new \Exception('Erro ao construir a tela. Erro: ' . $e->getMessage());
         }
     }
 

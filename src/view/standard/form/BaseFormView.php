@@ -3,7 +3,6 @@
 namespace Dvi\Adianti\View\Standard\Form;
 
 use Adianti\Base\Lib\Registry\TSession;
-use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\GUID;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\View\Standard\DviBaseView;
@@ -33,8 +32,6 @@ abstract class BaseFormView extends DviBaseView
             if ($this->panel_created) {
                 return;
             }
-            Transaction::open();
-
             $this->createPanelForm();
 
             $this->createFormToken($param);
@@ -44,10 +41,7 @@ abstract class BaseFormView extends DviBaseView
             $this->createPanelFields();
 
             $this->panel_created = true;
-
-            Transaction::close();
         } catch (\Exception $e) {
-            Transaction::rollback();
             throw new \Exception('Criação do painel.'.$e->getMessage());
         }
     }

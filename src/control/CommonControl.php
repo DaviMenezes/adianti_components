@@ -65,10 +65,6 @@ trait CommonControl
         $model_form_attributes[Reflection::shortName($model_default)] = $last_model;
 
         foreach ($form_data as $property => $value) {
-            if (empty($value)) {
-                continue;
-            }
-
             $models = explode('-', $property);
             $property = array_pop($models);//removing property name of array
 
@@ -198,7 +194,7 @@ trait CommonControl
         }
     }
 
-    private function onBack()
+    public function onBack()
     {
         unset(
             $this->request['url_params']['class'],

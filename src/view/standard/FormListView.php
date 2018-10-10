@@ -5,7 +5,6 @@ namespace Dvi\Adianti\View\Standard;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
-use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\View\Standard\Form\BaseFormView;
@@ -57,7 +56,6 @@ abstract class FormListView extends BaseFormView
 
             $this->buildDatagrid();
         } catch (\Exception $e) {
-            Transaction::rollback();
             throw $e;
         }
     }
