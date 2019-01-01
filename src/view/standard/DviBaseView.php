@@ -2,6 +2,8 @@
 
 namespace Dvi\Adianti\View\Standard;
 
+use Adianti\Base\Lib\Registry\TSession;
+use App\Http\Request;
 use Dvi\Adianti\Helpers\GUID;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
@@ -18,21 +20,24 @@ use Dvi\Adianti\Widget\Container\VBox;
  */
 abstract class DviBaseView
 {
-    /**@var VBox $vbox */
+    /**@var VBox */
     protected $vbox;
+    /**@var DviModel*/
     protected $model;
+    /**@var \App\Http\Request*/
     protected $request;
 
     use Utils;
     use GUID;
 
-    public function __construct($param)
+    public function __construct(Request $request)
     {
-        $this->request = $param;
+        $this->request = $request;
+        //Todo dar um jeito de instanciar isto apenas na primeira hora que ele for necessário
         $this->vbox = new VBox();
     }
 
-    abstract public function build($param);
+    abstract public function build(Request $request);
 
     abstract public function getContent();
 
@@ -40,7 +45,7 @@ abstract class DviBaseView
     abstract public function setPageTitle();
 
     /** @example $this->model = MyModel::class; */
-    abstract protected function setModel();
+    abstract public function setModel();
 
     /** @example $this->fields([
      *      ['field1', 'field2'],
@@ -52,6 +57,11 @@ abstract class DviBaseView
     /**@return DviModel */
     public function getModel()
     {
+        if ($this->model) {
+            return $this->model;
+        }
+        $this->setModel();
+
         return $this->model;
     }
 }

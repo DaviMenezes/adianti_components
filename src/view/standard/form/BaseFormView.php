@@ -3,6 +3,7 @@
 namespace Dvi\Adianti\View\Standard\Form;
 
 use Adianti\Base\Lib\Registry\TSession;
+use App\Http\Request;
 use Dvi\Adianti\Helpers\GUID;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\View\Standard\DviBaseView;
@@ -21,12 +22,12 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
  */
 abstract class BaseFormView extends DviBaseView
 {
-    /**@var PanelGroup $panel */
+    /**@var PanelGroup */
     protected $panel;
     protected $panel_created;
     protected $groupFields = array();
 
-    public function createPanel($param)
+    public function createPanel(Request $request)
     {
         try {
             if ($this->panel_created) {
@@ -34,7 +35,7 @@ abstract class BaseFormView extends DviBaseView
             }
             $this->createPanelForm();
 
-            $this->createFormToken($param);
+            $this->createFormToken($request);
 
             $this->buildFields();
 
@@ -48,11 +49,12 @@ abstract class BaseFormView extends DviBaseView
 
     public function createPanelForm()
     {
-        $this->panel = $this->panel ?? new PanelGroup($this->request['class']);
+        $this->panel = $this->panel ?? new PanelGroup($this->request->routeInfo()->fullRoute());
+
         $this->setPageTitle();
     }
 
-    public function createFormToken($param)
+    public function createFormToken(Request $request)
     {
         if ($this->panel->getForm()->getField('form_token')) {
             return;
@@ -60,11 +62,11 @@ abstract class BaseFormView extends DviBaseView
         $model_short_name = Reflection::shortName($this->model);
         $field_id = new Hidden($model_short_name . '-id');
 
-        $field_id->setValue($this->request['id'] ?? ($this->request[$model_short_name.'-id'] ?? null));
+        $field_id->setValue($this->request->get('id') ?? $this->request->get($model_short_name.'-id'));
         $field_token = new Hidden('form_token');
 
-        $token = $param['form_token'] ?? null;
-        if (empty($param['form_token'])) {
+        $token = $request->get('form_token');
+        if (!$request->has('form_token')) {
             $token = GUID::getID();
             TSession::setValue('form_token', $token);
         }
@@ -83,11 +85,17 @@ abstract class BaseFormView extends DviBaseView
         return $this->groupFields;
     }
 
-    protected function fields(array $fields)
+    protected function fields(array $fields): GroupFieldView
     {
         $this->groupFields[] = $group = (new GroupFieldView())->fields($fields);
 
         return $group;
+    }
+
+    protected function modelProperties($class = null)
+    {
+        $model = $class ?? $this->model;
+        return Reflection::getPublicPropertyNames(new $model);
     }
 
     abstract public function createPanelFields();

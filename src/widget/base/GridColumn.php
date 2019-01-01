@@ -5,6 +5,7 @@ namespace Dvi\Adianti\Widget\Base;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TLabel;
+use App\Http\Request;
 use Dvi\Adianti\Widget\Container\VBox;
 use Dvi\Adianti\Widget\Form\Button;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
@@ -154,9 +155,9 @@ class GridColumn extends TElement
             foreach ($param as $class) {
                 $this->custom_class .= count($param) > 1 ? ' ' . $class : $class;
             }
-        } else {
-            $this->custom_class = $param;
+            return;
         }
+        $this->custom_class = $param;
     }
 
     public function getClass()

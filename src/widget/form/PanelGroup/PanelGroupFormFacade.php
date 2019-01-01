@@ -2,14 +2,11 @@
 
 namespace Dvi\Adianti\Widget\Form\PanelGroup;
 
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Dvi\Adianti\Widget\Base\GridColumn;
 use Dvi\Adianti\Widget\Base\GroupField;
-use Dvi\Adianti\Widget\Form\Col;
-use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\IGroupField;
 
 /**
@@ -43,35 +40,27 @@ trait PanelGroupFormFacade
         return $this->form->getData();
     }
 
-    private function addFormFields($columns)
+    private function addFieldsInForm($columns)
     {
-        $fields = $this->getComponentFields($columns);
-
-        foreach ($fields as $field) {
+        $this->getComponentFields($columns)->each(function ($field) {
             if (!$this->validateFormField($field)) {
-                continue;
+                return;
             }
             $this->addFormField($field);
-        }
+        });
     }
 
-    private function getComponentFields($columns): array
+    private function getComponentFields($columns)
     {
         $components = $this->extractColumnsComponents($columns);
 
-        $fields = array();
-        foreach ($components as $element) {
+        $fields = $components->each(function ($element) {
             if ($this->isGroupField($element)) {
-                $fields[] = $element;
-
-                /**@var IGroupField $element */
-                foreach ($element->getChilds() as $child) {
-                    $fields[] = $child;
-                };
+                return collect($element->getChilds())->concat($element)->all();
             } else {
-                $fields[] = $element;
+                return $element;
             }
-        }
+        });
         return $fields;
     }
 
@@ -84,15 +73,11 @@ trait PanelGroupFormFacade
         return false;
     }
 
-    private function extractColumnsComponents($columns): array
+    private function extractColumnsComponents($columns)
     {
-        $columnElements = array();
-
-        /**@var GridColumn $column*/
-        foreach ($columns as $column) {
-            $columnElements[] = $column->getChilds(0);
-        }
-        return $columnElements;
+        return collect($columns)->map(function (GridColumn $column) {
+            return $column->getChilds(0);
+        });
     }
 
     private function isGroupField($element)
@@ -110,7 +95,7 @@ trait PanelGroupFormFacade
             return;
         }
         if (is_a($field, 'THidden')) {
-            $this->form->add($field); //important to get data via $param
+            $this->form->add($field); //important to get data via $request
         }
 
         $this->form->addField($field);
@@ -122,7 +107,7 @@ trait PanelGroupFormFacade
 
         $qtd_labels = 0;
 
-        //GET FIELD OF DGRIDCOLUMN AND ADD FIELD IN FORM
+        //GET FIELD OF GRIDCOLUMN AND ADD FIELD IN FORM
         /**@var GridColumn $column */
         foreach ($columns as $column) {
             /**@var GroupField $child*/
@@ -134,7 +119,7 @@ trait PanelGroupFormFacade
             }
         }
 
-        $this->addFormFields($columns);
+        $this->addFieldsInForm($columns);
 
         $this->prepareColumnClass($qtd_labels, $columns);
 
@@ -149,9 +134,9 @@ trait PanelGroupFormFacade
         return $this;
     }
 
-    private function validateColumnType($param)
+    private function validateColumnType($params)
     {
-        foreach ($param as $item) {
+        foreach ($params as $item) {
             if (!is_a($item, GridColumn::class)) {
                 throw new \Exception('Todas as colunas devem ser do tipo ' . GridColumn::class);
             }
@@ -170,8 +155,7 @@ trait PanelGroupFormFacade
                 $child = $column->getChilds(0);
 
                 if (is_a($child, TLabel::class)) {
-                    $column->setClass(Col::MD12);
-                    //$column->getChilds(0)->class = 'control-label';
+                    $column->setClass(GridColumn::MD12);
                 } else {
                     $tt_cols_to_label = $qtd_labels * $qtd_cols_to_label;
 
@@ -185,7 +169,7 @@ trait PanelGroupFormFacade
     public function addHiddenFields(array $fields)
     {
         foreach ($fields as $field) {
-            $this->form->add($field); //important to get data via $param
+            $this->form->add($field); //important to get data via $request
             $this->form->addField($field);
         }
 

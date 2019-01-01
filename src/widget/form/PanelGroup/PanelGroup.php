@@ -7,6 +7,8 @@ use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Lib\Widget\Form\THidden;
 use Adianti\Base\Lib\Widget\Form\TLabel;
+use App\Http\Router;
+use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Widget\Base\GridBootstrap;
 use Dvi\Adianti\Widget\Base\GridColumn as Col;
 use Dvi\Adianti\Widget\Base\GridElement;
@@ -16,6 +18,8 @@ use Dvi\Adianti\Widget\Container\VBox;
 use Dvi\Adianti\Widget\IDviWidget;
 use Dvi\AdiantiExtension\Route;
 use ReflectionClass;
+use Stringy\StaticStringy;
+use Stringy\Stringy;
 
 /**
  *  PanelGroup
@@ -27,15 +31,15 @@ use ReflectionClass;
  */
 class PanelGroup implements IDviWidget
 {
-    protected $className;
+    protected $route_name;
 
     protected $tpanel;
     protected $grid;
-    /**@var TForm $form */
+    /**@var TForm */
     protected $form;
-    /**@var HBox $hboxButtonsFooter */
+    /**@var HBox */
     protected $hboxButtonsFooter;
-    /**@var ButtonGroup $group_actions */
+    /**@var ButtonGroup */
     protected $group_actions;
     protected $form_data;
 
@@ -48,11 +52,12 @@ class PanelGroup implements IDviWidget
     use PanelGroupFormFacade;
     use PanelGroupNotebookFacade;
 
-    public function __construct(string $className, string $title = null, string $formName = null)
+    public function __construct(string $route, string $title = null, string $formName = null)
     {
-        $this->className = Route::getClassName($className);
+        $this->route_name = $route;
 
-        $this->form = new TForm($this->className . '_form_' . ($formName ?? uniqid()));
+        $form_name =  Router::getShortClassNameByRoute($route). '_'.($formName ?? uniqid());
+        $this->form = new TForm((string)$form_name);
         $this->form->class = 'form-horizontal';
         $this->form->add($this->getGrid());
 
@@ -69,10 +74,14 @@ class PanelGroup implements IDviWidget
         return $this;
     }
 
-    public static function create($class, string $title = null, string $formName = null)
+    public function getTitle()
     {
-        $className = (new ReflectionClass($class))->getShortName();
-        $obj = new PanelGroup($className, $title, $formName);
+        return $this->title;
+    }
+
+    public static function create($route, string $title = null, string $formName = null)
+    {
+        $obj = new PanelGroup($route, $title, $formName);
         return $obj;
     }
 

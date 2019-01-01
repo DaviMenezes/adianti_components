@@ -12,6 +12,7 @@ use Dvi\Adianti\Helpers\Reflection;
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @see https://github.com/DaviMenezes
+ * @see https://t.me/davimenezes
  */
 class RelationshipModelType
 {
@@ -20,12 +21,12 @@ class RelationshipModelType
     protected $class_name;
     public $type;
 
-    public function __construct(string $model, string $type)
+    public function __construct(string $class_name, $type)
     {
-        if (!is_subclass_of($model, DviModel::class)) {
+        if (!is_subclass_of($class_name, DviModel::class)) {
             throw new \Exception('A classe modelo precisa ser do tipo ' . DviModel::class);
         }
-        $this->class_name = $model;
+        $this->class_name = $class_name;
         $this->type = $type;
     }
 

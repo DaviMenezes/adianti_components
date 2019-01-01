@@ -17,6 +17,6 @@ interface FormFieldValidation
     public function sanitize($value);
     public function validate();
     public function noValidate();
-    public function getErrorValidation();
+    public function setErrorValidationSession();
     public function required();
 }

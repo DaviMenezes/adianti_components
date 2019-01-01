@@ -26,6 +26,7 @@ class Button extends TField implements AdiantiWidgetInterface
 {
     protected static $class;
 
+    /**@var Action*/
     protected $action;
     protected $image;
     protected $properties;
@@ -42,13 +43,13 @@ class Button extends TField implements AdiantiWidgetInterface
 
     /**
      * @param string $name
-     * @param array $callback
+     * @param string $route
      * @param string $image
      * @param string|null $label
      * @return Button
      * @throws Exception
      */
-    public static function create(string $name, array $callback, string $image = null, string $label = null)
+    public static function create(string $name, string $route, string $image = null, string $label = null)
     {
         $button = new Button($name);
 
@@ -58,9 +59,9 @@ class Button extends TField implements AdiantiWidgetInterface
             if ($image) {
                 $element_label->class = 'dvi_btn_label';
             }
-            $button->setAction(new Action($callback), $element_label);
+            $button->setAction(new Action($route, 'POST'), $element_label);
         } else {
-            $button->setAction(new Action($callback), $label);
+            $button->setAction(new Action($route, 'POST'), $label);
         }
 
         if ($image) {
@@ -85,13 +86,13 @@ class Button extends TField implements AdiantiWidgetInterface
         $this->{'class'} = 'btn btn-default '. $class;
     }
 
-    public function setAction(TAction $action, $label = null)
+    public function setAction(Action $action, $label = null)
     {
         $this->action = $action;
         $this->label  = $label;
     }
 
-    public function getAction():TAction
+    public function getAction():Action
     {
         return $this->action;
     }
@@ -169,15 +170,16 @@ class Button extends TField implements AdiantiWidgetInterface
             }
 
             // get the action as URL
-            $url = $this->action->serialize(false);
-            if ($this->action->isStatic()) {
-                $url .= '&static=1';
+            $route = $this->action->serialize(false);
+            if ($this->action->isStatic($route)) {
+                $route .= '&static=1';
             }
+            //Todo customizar mensagem de carregamento
             $wait_message = AdiantiCoreTranslator::translate('Loading');
             // define the button's action (ajax post)
             $action = "Adianti.waitMessage = '$wait_message';";
             $action.= "{$this->functions}";
-            $action.= "__adianti_post_data('{$this->formName}', '{$url}');";
+            $action.= "__adianti_post_data('{$this->formName}', '{$route}');";
             $action.= "return false;";
 
             $button = new TElement('button');

@@ -5,6 +5,7 @@ namespace Dvi\Adianti\View\Standard;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
+use App\Http\Request;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\View\Standard\Form\BaseFormView;
@@ -22,13 +23,13 @@ use Dvi\Adianti\Widget\Base\DataGrid;
  */
 abstract class FormListView extends BaseFormView
 {
-    /**@var DataGrid $datagrid */
+    /**@var DataGrid */
     protected $datagrid;
-    /**@var TPageNavigation $pageNavigation */
+    /**@var TPageNavigation */
     protected $pageNavigation;
-    /**@var TDataGridColumn $column_id */
+    /**@var TDataGridColumn */
     protected $column_id;
-    /**@var TAction $action_delete */
+    /**@var TAction */
     protected $action_delete;
     protected $panel_grid;
 
@@ -36,9 +37,9 @@ abstract class FormListView extends BaseFormView
     use FormViewTrait;
     use PageFormView;
 
-    public function __construct($param)
+    public function __construct(Request $request)
     {
-        parent::__construct($param);
+        parent::__construct($request);
 
         try {
             $this->setModel();
@@ -49,10 +50,10 @@ abstract class FormListView extends BaseFormView
         }
     }
 
-    public function build($param)
+    public function build(Request $request)
     {
         try {
-            $this->buildForm($param);
+            $this->buildForm($request);
 
             $this->buildDatagrid();
         } catch (\Exception $e) {
@@ -60,7 +61,7 @@ abstract class FormListView extends BaseFormView
         }
     }
 
-    public function createPanel($param)
+    public function createPanel(Request $request)
     {
         if ($this->panel_created) {
             return;
@@ -68,7 +69,7 @@ abstract class FormListView extends BaseFormView
 
         $this->createPanelForm();
 
-        $this->createFormToken($param);
+        $this->createFormToken($request);
 
         $this->panel_created = true;
     }

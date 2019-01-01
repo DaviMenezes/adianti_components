@@ -7,6 +7,7 @@ use Adianti\Base\Lib\Widget\Container\TNotebook;
 use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Lib\Wrapper\BootstrapNotebookWrapper;
 use Dvi\Adianti\Widget\Base\GridBootstrap;
+use Dvi\Adianti\Widget\Util\Action;
 
 /**
  * Form PanelGroupNotebookFacade
@@ -19,9 +20,9 @@ use Dvi\Adianti\Widget\Base\GridBootstrap;
  */
 trait PanelGroupNotebookFacade
 {
-    /**@var TNotebook $notebook*/
+    /**@var TNotebook*/
     protected $notebook;
-    /**@var TForm $form*/
+    /**@var TForm*/
     protected $form;
 
     public function addNotebook()
@@ -50,9 +51,10 @@ trait PanelGroupNotebookFacade
         return $this->notebook;
     }
 
-    public function setNotebookPageAction(array $callback, array $parameters = null)
+    public function setNotebookPageAction($route, array $parameters = null)
     {
-        $this->notebook->setTabAction(new TAction($callback, $parameters));
+        $action = new Action($route, 'GET', $parameters);
+        $this->notebook->setTabAction($action);
 
         return $this;
     }

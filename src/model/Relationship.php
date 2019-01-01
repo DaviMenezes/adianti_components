@@ -3,6 +3,8 @@
 namespace Dvi\Adianti\Model;
 
 use Dvi\Adianti\Helpers\Reflection;
+use Dvi\Adianti\Model\Relationship\BelongsTo;
+use Dvi\Adianti\Model\Relationship\HasOne;
 
 /**
  *  Relationship
@@ -12,18 +14,16 @@ use Dvi\Adianti\Helpers\Reflection;
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @see https://github.com/DaviMenezes
+ * @see https://t.me/davimenezes
  */
 class Relationship
 {
-    const HASONE = 'hasone';
-    const BELONGSTO = 'belongsto';
-
     protected $relationships = array();
 
     public function hasOne(string $model)
     {
         $strtolower = Reflection::lowerName($model);
-        $this->relationships[$strtolower] = new RelationshipModelType($model, self::HASONE);
+        $this->relationships[$strtolower] = new RelationshipModelType($model, new HasOne());
         return $this;
     }
 
@@ -31,9 +31,11 @@ class Relationship
     {
         $strtolower = Reflection::lowerName($model);
 
-        $this->relationships[$strtolower] = new RelationshipModelType($model, self::BELONGSTO);
+        $belongsTo = new BelongsTo();
+        $modelType = new RelationshipModelType($model, $belongsTo);
+        $this->relationships[$strtolower] = $modelType;
 
-        return $this;
+        return $belongsTo;
     }
 
     public function getStringJoin($self_model, $associated)
@@ -41,11 +43,15 @@ class Relationship
         $selfName = Reflection::shortName($self_model);
         $associatedAlias = Reflection::shortName($associated);
 
-        if ($this->getRelationship($associated)->type == self::HASONE) {
-            return $this->createStringJoin($associated, $associatedAlias.'.'.strtolower($selfName).'_id', $selfName.'.id');
+        if (is_a($this->getRelationship($associated)->type, HasOne::class)) {
+            $key1 = $associatedAlias . '.' . strtolower($selfName) . '_id';
+            $key2 = $selfName . '.id';
+            return $this->createStringJoin($associated, $key1, $key2);
         }
 
-        return $this->createStringJoin($associated, $associatedAlias.'.id', $selfName.'.'.strtolower($associatedAlias).'_id');
+        $key1 = $associatedAlias . '.id';
+        $key2 = $selfName . '.' . strtolower($associatedAlias) . '_id';
+        return $this->createStringJoin($associated, $key1, $key2);
     }
 
     public function getRelationship($model): RelationshipModelType
@@ -60,8 +66,8 @@ class Relationship
         return 'inner join '.$associated::TABLENAME.' '.$associatedAlias.' on ' . $key1.' = '.$key2;
     }
 
-    public function getRelationships()
+    public function relationships()
     {
-        return $this->relationships;
+        return collect($this->relationships);
     }
 }

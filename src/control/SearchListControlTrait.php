@@ -52,6 +52,7 @@ trait SearchListControlTrait
                 foreach ($filters as $key => $filter) {
                     $session_filters[$key] = $filter;
                 }
+
                 TSession::setValue($called_class . '_filters', $session_filters);
             }
 

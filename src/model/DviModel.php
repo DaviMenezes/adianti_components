@@ -4,6 +4,7 @@ namespace Dvi\Adianti\Model;
 
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Model\Fields\DBFormField;
+use Dvi\Adianti\Model\Relationship\BelongsTo;
 use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
 use Stringizer\Stringizer;
 
@@ -19,7 +20,7 @@ abstract class DviModel extends ActiveRecord
 {
     protected $model_fields;
     public $id;
-    /**@var Relationship $relationship*/
+    /**@var Relationship */
     protected $relationship;
 
     public function __construct($id = null, bool $callObjectLoad = true)
@@ -29,6 +30,8 @@ abstract class DviModel extends ActiveRecord
         $this->addPublicAttributes();
         $this->setAttributeValues($this->getPublicProperties());
         $this->setPublicAttributeValues();
+
+        $this->relationship = new Relationship();
     }
 
     public function associateds(): Relationship
@@ -36,14 +39,29 @@ abstract class DviModel extends ActiveRecord
         return $this->relationship ?? $this->relationship = new Relationship();
     }
 
-    public function getRelationships()
+    public function addBelongsTo(string $class, $field = null)
     {
-        return $this->relationship->getRelationships();
+        if (!$field) {
+            $class_short_name = strtolower((new \ReflectionClass($class))->getShortName());
+            $foreing_key = $class_short_name . '_id';
+        }
+        parent::addAttribute($field ?? $foreing_key);
+        return $this->associateds()->belongsTo($class);
+    }
+
+    public function addHasOne(string $class):Relationship
+    {
+        return $this->associateds()->hasOne($class);
+    }
+
+    public function relationships()
+    {
+        return $this->relationship->relationships();
     }
 
     public function getRelationship($model): ?RelationshipModelType
     {
-        return $this->getRelationships()[$model] ?? null;
+        return $this->relationships()->get($model);
     }
 
     public function getJoin($model)
@@ -157,17 +175,55 @@ abstract class DviModel extends ActiveRecord
 
     public function __call($name, $arguments)
     {
-        $str = new Stringizer($name);
+        $str = str($name);
 
         if ($str->startsWith('set')) {
             $props = $this->getPublicProperties();
 
-            $prop_name = $str->chopLeft('set')->lowercase()->getString();
+            $prop_name = $str->removeLeft('set')->toLowerCase()->str();
 
             if (array_key_exists($prop_name, $props)) {
                 $this->$prop_name = $arguments[0];
             }
         }
         return $this;
+    }
+
+    public static function remove($id = null):bool
+    {
+        return parent::remove($id);
+    }
+
+    /**
+     * Deleta dados de associados de acordo com o relacionamento
+     * Critérios: o tipo deve ser BelongsTo e ter a propriedade on_delete == CASCATE
+     * @param null $id
+     * @return bool|false|\PDOStatement
+     * @throws \Exception
+     */
+    public function delete($id = null)
+    {
+        //Todo testar este metodo, verificar documentacao
+        $this->relationships()->each(function (RelationshipModelType $relationship_type, $foreignkey_class_name) use ($id) {
+            if (is_a($relationship_type->type, BelongsTo::class)) {
+                /**@var BelongsTo $type*/
+                $type = $relationship_type->type;
+
+                if ($type->getOnDelete() == Foreignkey::CASCATE) {
+                    if (!$this->id) {
+                        $self = new $this($id);
+                        $fk_id = $self->{$foreignkey_class_name.'_id'};
+                    } else {
+                        $fk_id = $this->{$foreignkey_class_name.'_id'};
+                    }
+
+                    /**@var DviModel $class*/
+                    $class = $relationship_type->getClassName();
+                    $class = new $class();
+                    $class->delete($fk_id);
+                }
+            }
+        });
+        parent::delete($id);
     }
 }

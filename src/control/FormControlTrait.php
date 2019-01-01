@@ -2,14 +2,14 @@
 
 namespace Dvi\Adianti\Control;
 
-use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use App\Http\Request;
 use Dvi\Adianti\Database\Transaction;
+use Dvi\Adianti\Helpers\Redirect;
 use Dvi\Adianti\Helpers\Reflection;
-use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DBFormFieldPrepare;
 use Dvi\Adianti\Model\DviModel;
-use Dvi\Adianti\Model\Relationship;
+use Dvi\Adianti\Model\Relationship\HasOne;
 use Dvi\Adianti\View\Standard\Form\FormView;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField as FormFieldInterface;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField as IFormField;
@@ -27,8 +27,10 @@ use ReflectionClass;
  */
 trait FormControlTrait
 {
-    /**@var FormView $view */
-    protected $view;
+    /**@var \App\Http\Request*/
+    protected $request;
+    /**@var FormView*/
+    public $view;
 
     public function onSave()
     {
@@ -52,18 +54,18 @@ trait FormControlTrait
         }
     }
 
-    public function onEdit()
+    public function onEdit(Request $request)
     {
-        $this->edit();
+        $this->edit($request);
     }
 
-    public function edit()
+    public function edit(Request $request)
     {
         try {
-            $this->buildView();
+            $this->buildView($request);
 
-            if (isset($this->request['tab']) and $this->request['tab']) {
-                $this->view->getPanel()->setCurrentNotebookPage($this->request['tab']);
+            if ($this->request->has('tab')) {
+                $this->view->getPanel()->setCurrentNotebookPage((int)$this->request->get('tab'));
             }
 
             if ($this->isEditing()) {
@@ -104,6 +106,7 @@ trait FormControlTrait
         if (!$this->validateToken()) {
             throw new \Exception('Ação não permitida');
         }
+        $this->buildView();
 
         $this->view->createPanelForm();
         $this->view->createFormToken($this->request);
@@ -118,31 +121,26 @@ trait FormControlTrait
                 continue;
             }
             $name = $field->getName();
-            $field->setValue($this->request[$name]);
+            $field->setValue($this->request->get($name));
 
             if (!$field->validate($this->request)) {
                 $has_error = true;
+                $field->useLabelField(true);
             }
 
-            $value = $field->getValue();
-            $this->request[$name] = $value;
+            $this->request->result()->add([$name => $field->getValue()]);
         }
 
         if ($has_error) {
             $this->view->getPanel()->useLabelFields(true);
         }
 
-        $this->view->createPanelFields();
-
-        //continues bulding the view
-        $this->buildView();
-
-        $traits = (new ReflectionClass(self::class))->getTraitNames();
-        if (in_array(ListControlTrait::class, array_values($traits))) {
-            $this->loadDatagrid();
-        }
         $this->getViewContent();
         if ($has_error) {
+            $traits = (new ReflectionClass(self::class))->getTraitNames();
+            if (in_array(ListControlTrait::class, array_values($traits))) {
+                $this->loadDatagrid();
+            }
             throw new \Exception('Verifique os campos em destaque');
         }
     }
@@ -157,15 +155,16 @@ trait FormControlTrait
 
         //Saving model default
         /**@var DviModel $last_model */
-        $last_model = $models_in_form[Reflection::shortName($this->view->getModel())];
+        $last_model_short_name = Reflection::shortName($this->view->getModel());
+        $last_model = $models_in_form[$last_model_short_name];
         $last_model->save();
 
-        unset($models_in_form[Reflection::shortName($this->view->getModel())]);
+        unset($models_in_form[$last_model_short_name]);
 
         //Saving associateds
         foreach ($models_in_form as $model_name => $model) {
             $associate = $last_model->getRelationship(strtolower($model_name));
-            if ($associate and $associate->type == Relationship::HASONE) {
+            if ($associate and is_a($associate->type, HasOne::class)) {
                 $fk = Reflection::lowerName($last_model) . '_id';
                 $model->$fk = $last_model->id;
             }
@@ -179,17 +178,24 @@ trait FormControlTrait
 
     protected function afterSave()
     {
-        if ($this->isEditing() and method_exists($this, 'loadDatagrid')) {
-            $this->loadDatagrid();
+        if ($this->isEditing()) {
+            if (method_exists(get_called_class(), 'loadDatagrid')) {
+                $this->fillDatagrid();
+            }
             return;
         }
 
-        $new_params = Utils::getNewParams();
-        unset($new_params['method']);
-        $new_params['id'] = $this->currentObj->id;
+        $get_parameters = $this->request->obj()->query->all();
+        $uri = '';
+        collect($get_parameters)->map(function ($value, $key) use (&$uri) {
+            $uri .= '/' . $key . '/' . $value;
+        });
 
-        $class = Reflection::shortName(get_called_class());
-        AdiantiCoreApplication::loadPage($class, 'onEdit', $new_params);
+        $route = str($this->request->attr('route_base'))
+            ->append('/edit/key/' . $this->currentObj->id.'/id/'.$this->currentObj->id)
+            ->append($uri)->str();
+
+        Redirect::ajaxLoadPage(urlRoute($route));
     }
 
     protected function setFormWithParams()
@@ -231,7 +237,8 @@ trait FormControlTrait
         try {
             Transaction::open();
             $model_short_name = Reflection::shortName($this->view->getModel());
-            $id_value = $this->request['id'] ?? $this->request[$model_short_name.'-id'];
+            $id_value = $this->request->get('id') ?? $this->request->get($model_short_name.'-id');
+
             $this->currentObj = $this->view->getModel()::find($id_value ?? null);
             if (!$this->currentObj) {
                 throw new \Exception('O registro solicitado não foi encontrado.');

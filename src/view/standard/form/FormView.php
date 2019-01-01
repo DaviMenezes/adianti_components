@@ -2,7 +2,9 @@
 
 namespace Dvi\Adianti\View\Standard\Form;
 
+use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Base\TScript;
+use App\Http\Request;
 use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\View\Standard\PageFormView;
 use Dvi\Adianti\Widget\Form\Button;
@@ -17,37 +19,35 @@ use Dvi\Adianti\Widget\Form\Button;
  */
 abstract class FormView extends BaseFormView
 {
-    /**@var Button $button_save */
+    /**@var Button */
     protected $button_save;
-    /**@var Button $button_clear */
-    protected $button_clear;
-    /**@var DviModel $currentObj */
+    /**@var DviModel */
     protected $currentObj;
-    protected $pageList;
 
     use PageFormView;
     use FormViewTrait;
 
-    public function __construct($param)
+    public function __construct(Request $request)
     {
-        parent::__construct($param);
-
-        $this->setModel();
-        $this->setStructureFields();
+        parent::__construct($request);
     }
 
-    public function build($param)
+    public function build(Request $request)
     {
         try {
+            $this->setModel();
+
+            $this->setStructureFields();
+
             $this->createPanelForm();
 
-            $this->createFormToken($param);
+            $this->createFormToken($request);
 
             $this->createPanelFields();
 
             $this->createActions();
 
-            $this->cancelEnterSubmit();
+//            $this->cancelEnterSubmit();
 
             return $this;
         } catch (\Exception $e) {
@@ -71,11 +71,6 @@ abstract class FormView extends BaseFormView
         return $this->button_save;
     }
 
-    public function getButtonClear()
-    {
-        return $this->button_clear;
-    }
-
     private function cancelEnterSubmit()
     {
         TScript::create('$("input, select, text").keypress(function (e) {
@@ -93,10 +88,5 @@ abstract class FormView extends BaseFormView
     public function setCurrentObj($obj)
     {
         $this->currentObj = $obj;
-    }
-
-    public function setPageList($pagelist)
-    {
-        $this->pageList = $pagelist;
     }
 }

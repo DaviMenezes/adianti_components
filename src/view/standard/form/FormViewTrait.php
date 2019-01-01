@@ -2,6 +2,7 @@
 
 namespace Dvi\Adianti\View\Standard\Form;
 
+use App\Http\Request;
 use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
 
 /**
@@ -15,14 +16,14 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
  */
 trait FormViewTrait
 {
-    /**@var PanelGroup $this->panel*/
+    /**@var PanelGroup */
     protected $panel;
 
-    public function buildForm($param)
+    public function buildForm(Request $request)
     {
         $this->createPanelForm();
 
-        $this->createFormToken($param);
+        $this->createFormToken($request);
 
         if (!$this->alreadyCreatePanelRows()) {
             $this->buildFields();
@@ -31,10 +32,11 @@ trait FormViewTrait
         $this->createActions();
     }
 
-    public function createActionSave()
+    public function createActionSave($route = null)
     {
-        $this->panel->addActionSave();
-        $this->button_save = $this->panel->getCurrentButton();
+        $route = $route ?? urlRoute($this->request->attr('route_base').'/save');
+        //Todo check need especific button_save, then remove if not used
+        $this->button_save = $this->panel->addActionSave($route);
         return $this->button_save;
     }
 }

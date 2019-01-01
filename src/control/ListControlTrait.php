@@ -3,6 +3,7 @@
 namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Registry\TSession;
+use App\Http\Request;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Model\DBFormFieldPrepare;
 use Dvi\Adianti\Model\QueryFilter;
@@ -21,16 +22,18 @@ use Dvi\Adianti\Widget\Datagrid\PageNavigation;
  */
 trait ListControlTrait
 {
-    /**@var DataGrid $datagrid */
+    /**@var Request */
+    protected $request;
+    /**@var DataGrid */
     protected $datagrid;
-    /**@var PageNavigation $pageNavigation */
+    /**@var PageNavigation */
     protected $pageNavigation;
     protected $datagrid_items_criteria;
     protected $datagrid_items_obj_repository;
     protected $page_navigation_count;
     protected $query_limit;
-    /**@var ListView $view */
-    protected $view;
+    /**@var ListView */
+    public $view;
     protected $fields_to_sql = array();
     protected $grid_loaded = false;
     protected $reloaded;
@@ -61,16 +64,9 @@ trait ListControlTrait
             if ($this->reloaded) {
                 return;
             }
-
-            $items = $this->getDatagridItems();
-
-            $this->populateGrids($items);
-
-            $this->preparePageNavidation();
-
-            $this->reloaded = true;
+            $this->fillDatagrid();
         } catch (\Exception $e) {
-            throw new \Exception('Obtendo items para datagrid.' . $e->getMessage());
+            throw new \Exception('Populando datagrid.' . $e->getMessage());
         }
     }
 
@@ -80,6 +76,7 @@ trait ListControlTrait
             $this->prepareSqlFieldsToBuildQuery();
 
             $query = new DBFormFieldPrepare($this->view->getModel(), get_called_class());
+
             $query->mountQueryByFields($this->getFieldsBuiltToQuery());
 
             $this->checkOrderColumn();
@@ -87,7 +84,8 @@ trait ListControlTrait
             $query->checkFilters(get_called_class());
 
             $this->setPageNavigationCount($query->count());
-            $query->offset($this->request['offset'] ?? null);
+
+            $query->offset($this->request->get('offset'));
 
             return $query->get($this->query_limit);
         } catch (\Exception $e) {
@@ -111,7 +109,7 @@ trait ListControlTrait
     {
         $this->datagrid->clear();
         if ($items) {
-            $this->datagrid->addItems($items);
+            $this->datagrid->addItems($items->all());
         }
         $this->grid_loaded = true;
     }
@@ -126,17 +124,9 @@ trait ListControlTrait
 
     public function show()
     {
-        $method = TSession::getValue('method') ?? $_GET['method'] ?? null;
-        $black_list_methods = ['loadDatagrid', 'onSearch'];
-        TSession::setValue('method', null);
+        $this->loadDatagrid();
 
-        if (!$this->grid_loaded and (!isset($method) or (!in_array($method, $black_list_methods)))) {
-            if ($method !== 'onSave') {
-                $this->loadDatagrid();
-            }
-        }
-
-        parent::show($this->request);
+        return parent::show($this->request);
     }
 
     protected function prepareSqlFieldsToBuildQuery()
@@ -183,18 +173,29 @@ trait ListControlTrait
     protected function checkOrderColumn()
     {
         $session_name = Reflection::shortName(get_called_class()) . '_listOrder';
-        if (isset($this->request['order_field']) and $this->request['order_field']) {
+        if ($this->request->has('order')) {
             $direction_array = ['asc' => 'desc', 'desc' => 'asc'];
             $listOrder = TSession::getValue($session_name);
 
             $direction = $direction_array[$listOrder['direction'] ?? 'desc'];
 
-            $order = $this->request['order_field'];
+            $order = $this->request->get('order');
             TSession::setValue($session_name, ['field' => $order, 'direction' => $direction ?? 'asc']);
             return;
         }
         $tableAlias = Reflection::shortName($this->view->getModel());
         $order = $tableAlias . '.id';
         TSession::setValue($session_name, ['field' => $order, 'direction' => $direction ?? 'asc']);
+    }
+
+    public function fillDatagrid()
+    {
+        $items = $this->getDatagridItems();
+
+        $this->populateGrids($items);
+
+        $this->preparePageNavidation();
+
+        $this->reloaded = true;
     }
 }

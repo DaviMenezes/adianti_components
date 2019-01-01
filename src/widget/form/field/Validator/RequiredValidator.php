@@ -22,7 +22,10 @@ class RequiredValidator extends FieldValidator
 
     public function validate($label, $value, $parameters = null):bool
     {
-        if ((is_null($value)) or (is_scalar($value) and !is_bool($value) and trim($value)=='') or (is_array($value) and count($value)==1 and isset($value[0]) and empty($value[0])) or (is_array($value) and empty($value))) {
+        if ((is_null($value))
+            or (is_scalar($value) and !is_bool($value) and trim($value)=='')
+            or (is_array($value) and count($value)==1 and isset($value[0]) and empty($value[0]))
+            or (is_array($value) and empty($value))) {
             $this->error_msg = $this->error_msg ?? $this->error_msg_default;
             return false;
         }

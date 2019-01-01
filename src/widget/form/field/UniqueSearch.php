@@ -14,6 +14,7 @@ use Dvi\Adianti\Widget\Form\Field\FormField as FormFieldTrait;
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @see https://github.com/DaviMenezes
+ * @see https://t.me/davimenezes
  */
 class UniqueSearch extends TUniqueSearch implements FormField
 {

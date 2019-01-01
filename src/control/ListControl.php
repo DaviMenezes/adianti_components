@@ -2,7 +2,10 @@
 
 namespace Dvi\Adianti\Control;
 
+use Adianti\Base\Lib\Registry\TSession;
+use App\Http\Request;
 use Dvi\Adianti\Widget\Container\VBox;
+use Exception;
 
 /**
  * Control ListControl
@@ -15,9 +18,7 @@ use Dvi\Adianti\Widget\Container\VBox;
  */
 abstract class ListControl extends DviControl implements StandardSearchListInterface
 {
-    protected $viewClass;
-    protected $formController;
-    /**@var VBox $vbox_container */
+    /**@var VBox */
     protected $vbox_container;
     protected $already_build_view;
 
@@ -25,11 +26,11 @@ abstract class ListControl extends DviControl implements StandardSearchListInter
     use ListControlTrait;
     use CommonControl;
 
-    public function __construct($param)
+    public function __construct(Request $request)
     {
-        parent::__construct($param);
+        parent::__construct($request);
 
-        $this->init();
+        $this->initializeParams();
     }
 
     protected function buildView()
@@ -50,15 +51,14 @@ abstract class ListControl extends DviControl implements StandardSearchListInter
     }
 
     /**@example
-     * $this->viewClass = MyFormListView::class;
-     * $this->formController = MyControllerForm::class;
+     * $this->request->add(['view_class' => 'MyFormListView::class']);
      */
     abstract public function init();
 
     protected function createView()
     {
-        $this->view = new $this->viewClass($this->request);
-        $this->view->setFormController($this->formController);
+        $view = $this->request->attr('view_class');
+        $this->view = new $view($this->request);
     }
 
     /**Define query limit default to listing and pagination*/
@@ -68,23 +68,21 @@ abstract class ListControl extends DviControl implements StandardSearchListInter
         $this->query_limit = $limit ?? 10;
     }
 
-    public function loadDatagrid()
+    private function checkParams(Request $request)
     {
-        $this->buildView();
-        $this->getItemsAndFillDatagrid();
-        if (isset($_GET['method'])) {
-            $this->getViewContent();
+        if (!$request->routeInfo()) {
+            throw new Exception('Objeto route info não informado');
+        }
+
+        if (!$this->request->attr('route_base')) {
+            throw new \Exception('Informe o atributo route_base');
         }
     }
 
-    public function show()
+    protected function initializeParams()
     {
-        if (!isset($_GET['method'])) {
-            $this->buildView();
-            $this->loadDatagrid();
-            $this->getViewContent();
-        }
+        $this->init();
 
-        parent::show();
+        $this->checkParams($this->request);
     }
 }

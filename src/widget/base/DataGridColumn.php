@@ -2,8 +2,10 @@
 
 namespace Dvi\Adianti\Widget\Base;
 
-use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
+use App\Http\Request;
+use Dvi\Adianti\Widget\Util\Action;
 
 /**
  * Column to bootstrap grid
@@ -19,6 +21,7 @@ class DataGridColumn extends TDataGridColumn
     protected $order_params;
     protected $order;
     protected $datagrid_load_method;
+    protected $action;
 
     public function __construct($name, $label, $align = 'left', $width = '100%')
     {
@@ -29,9 +32,14 @@ class DataGridColumn extends TDataGridColumn
 
     public function orderParams($params)
     {
+        $request = Request::instance();
         $this->order_params = $params;
-        $this->order_params['order_field'] = $this->getName();
-
+        $this->order_params['order'] = $this->getName();
+        if ($request->get('direction') == 'asc') {
+            $this->order_params['direction'] = 'desc';
+            return $this;
+        }
+        $this->order_params['direction'] = 'asc';
         return $this;
     }
 
@@ -41,10 +49,11 @@ class DataGridColumn extends TDataGridColumn
         return $this;
     }
 
-    public function setOrderAction($called_class)
+    public function setOrderAction()
     {
         if ($this->order) {
-            $this->setAction(new TAction([$called_class, $this->datagrid_load_method], $this->order_params));
+            $route = urlRoute(Request::instance()->attr('route_base'));
+            $this->setAction(new Action($route, 'GET', $this->order_params));
         }
     }
 

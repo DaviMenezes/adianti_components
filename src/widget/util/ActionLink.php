@@ -1,10 +1,10 @@
 <?php
 namespace Dvi\Adianti\Widget\Util;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Util\TImage;
 use Adianti\Base\Lib\Widget\Util\TTextDisplay;
+use Stringy\StaticStringy;
 
 /**
  *  ActionLink
@@ -17,11 +17,11 @@ use Adianti\Base\Lib\Widget\Util\TTextDisplay;
 class ActionLink extends TTextDisplay
 {
     protected $label;
-    /**@var TElement $a_content*/
+    /**@var TElement*/
     protected $a_content;
     protected $image_icon;
     protected $image;
-    /**@var TAction $action*/
+    /**@var Action*/
     protected $action;
     protected $icon_size;
 
@@ -93,19 +93,39 @@ class ActionLink extends TTextDisplay
 
     public function action($action, array $params = null)
     {
-        if (is_array($action) or is_a($action, Action::class)) {
-            if (is_array($action)) {
-                if (count($action)) {
-                    $action = new Action($action, $params);
+        $parameters = '';
+        if ($params) {
+            foreach ($params as $key => $value) {
+                $parameters .= '/'.$key.'/';
+                if (is_int($value)) {
+                    $parameters .= $value;
+                    continue;
                 }
+                $parameters .= urlencode($value);
             }
-
-            $href = $action->serialize();
-            $this->{'href'} = str_replace('index', 'engine', $href);
-            $this->{'generator'} = 'adianti';
         }
 
+        $route = $action->getAction(). $parameters;
+        $params = collect($params);
+        if ($params->has('static') and $params->get('static') == '1') {
+            $route .= '&static=1';
+        }
+
+        $this->{'href'} = $route;
+        $this->{'generator'} = 'adianti';
         return $this;
+        //Todo remove
+//        if (is_array($action) or is_a($action, Action::class)) {
+//            if (is_array($action)) {
+//                if (count($action)) {
+//                    $action = new Action($action, $params);
+//                }
+//            }
+//
+////  Todo remove          $href = $action->serialize();
+//            $this->{'href'} = URLBASE.'/'.implode('/', collect($params)->filter()->all());
+//            $this->{'generator'} = 'adianti';
+//        }
     }
 
     public function styleBtn($bootstrap_class)
@@ -119,7 +139,7 @@ class ActionLink extends TTextDisplay
         if (empty($this->image) and empty($this->label)) {
             throw new \Exception('O botão precisa de um texto ou uma imagem');
         }
-        $this->a_content->class = 'align_action_middle';
+//        $this->a_content->class = 'align_action_middle';
 
         if ($this->image) {
             $rrpos = strrpos($this->image_icon['icon'], 'fa-');
@@ -131,7 +151,7 @@ class ActionLink extends TTextDisplay
                     $class = 'class = "align_action_middle"';
                 }
             } else {
-                $style = 'style = "vertical-align:text-bottom"';
+//                $style = 'style = "vertical-align:text-bottom"';
             }
             $this->a_content->add('<span '.$class.' '.$style.'>'.$this->image.'</span>');
         }
@@ -140,7 +160,7 @@ class ActionLink extends TTextDisplay
             $this->a_content->add('<span class="action_label">'.$this->label.'</span>');
         }
 
-        $this->action($this->action);
+        $this->action($this->action, $this->action->getParameters());
 
         parent::show();
     }

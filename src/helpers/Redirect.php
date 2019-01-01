@@ -2,7 +2,9 @@
 
 namespace Dvi\Adianti\Helpers;
 
-use App\TApplication;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use App\Http\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Helpers Redirect
@@ -15,48 +17,55 @@ use App\TApplication;
  */
 class Redirect
 {
-    protected $action;
-    protected $method;
-    protected $params;
-
-    private function __construct(array $params)
+    /**
+     * Only loads application content
+     * @param string $route
+     * @param array $parameters
+    */
+    public static function ajaxLoadPage(string $route, array $parameters = null)
     {
-        $this->params = $params;
+        $route = route($route, $parameters);
+
+        TScript::create("__adianti_load_page('".$route."');");
     }
 
-    public function method(string $method)
+    /**
+     * Load all application
+     * @param string $route
+     * @param array $parameters
+    */
+    public static function ajaxGoTo(string $route, array $parameters = null)
     {
-        $this->method = $method;
-        return $this;
+        $route = urlRoute($route, $parameters);
+
+        TScript::create("__adianti_goto_page('{$route}');");
     }
 
-    public static function loadPage(array $params = null)
+    /**
+     * Send http redirect response
+     * @param string $url
+     * @param int $status
+     * @param array $headers
+     * @return RedirectResponse
+     */
+    public static function redirect(string $url, int $status = 302, $headers = array()): RedirectResponse
     {
-        $obj = new self($params);
-
-        $obj->setAction(function ($class, $method = null, $params = null) {
-            TApplication::loadPage($class, $method, $params);
-        });
-        return $obj;
+        $response = new RedirectResponse($url, $status, $headers);
+        $response->send();
+        return $response;
     }
 
-    public static function goToPage(string $params = null)
+    /**
+     * Send http redirect response to internal route
+     * @param string $route ex: route('your/route/page/')
+     * @param array $parameters
+     * @param int $status
+     * @return RedirectResponse
+     */
+    public static function redirectToRoute(string $route, array $parameters = array(), int $status = 302): RedirectResponse
     {
-        $obj = new self($params);
-        $obj->setAction(function ($class, $method = null, $params = null) {
-            \TApplication::goToPage($class, $method, $params);
-        });
-        return $obj;
-    }
+        $route = urlRoute($route, $parameters);
 
-    public function go(string $class = null)
-    {
-        $action = $this->action;
-        $action($class ??get_called_class(), $this->method, $this->params);
-    }
-
-    private function setAction(\Closure $param)
-    {
-        $this->action = $param;
+        return self::redirect($route, $status);
     }
 }

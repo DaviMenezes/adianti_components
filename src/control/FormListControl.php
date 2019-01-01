@@ -2,6 +2,7 @@
 
 namespace Dvi\Adianti\Control;
 
+use App\Http\Request;
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\View\Standard\FormListView;
 
@@ -16,24 +17,18 @@ use Dvi\Adianti\View\Standard\FormListView;
  */
 abstract class FormListControl extends DviControl
 {
-    protected $viewClass;
-    protected $formController;
-
     use FormControlTrait;
     use SearchListControlTrait;
     use ListControlTrait;
     use CommonControl;
-    use PaginationHelper;
 
-    public function __construct($param)
+    public function __construct(Request $request)
     {
         try {
-            $this->formController = get_called_class();
-
             if ($this->already_build_view) {
                 return;
             }
-            parent::__construct($param);
+            parent::__construct($request);
 
             Transaction::open();
 
@@ -43,7 +38,7 @@ abstract class FormListControl extends DviControl
 
             $this->setQueryLimit();
 
-            $this->createView($param);
+            $this->createView($request);
 
             $this->createCurrentObject();
 
@@ -54,13 +49,8 @@ abstract class FormListControl extends DviControl
         }
     }
 
-    /** @example $this->viewClass = MyFormListView::class; */
+    /** @example $this->request->add(['view_class' => MyFormListView::class]); */
     abstract public function init();
-
-    protected function setViewClass(FormListView $view_class)
-    {
-        $this->viewClass = $view_class;
-    }
 
     protected function createPanel()
     {
@@ -82,16 +72,17 @@ abstract class FormListControl extends DviControl
 
     public function validateViewClass()
     {
-        if (!is_subclass_of($this->viewClass, FormListView::class)) {
+        if (!is_subclass_of($this->request->attr('view_class'), FormListView::class)) {
             $str = 'Uma classe do tipo ' . (new \ReflectionClass(self::class))->getShortName();
             $str .= ' deve ter uma view do tipo ' . (new \ReflectionClass(FormListView::class))->getShortName();
             throw new \Exception($str);
         }
     }
 
-    protected function createView($param)
+    protected function createView(Request $request)
     {
-        $this->view = new $this->viewClass($param);
+        $view = $this->request->attr('view_class');
+        $this->view = new $view($request);
     }
 
     protected function setQueryLimit()
@@ -99,21 +90,12 @@ abstract class FormListControl extends DviControl
         $this->query_limit = 10;
     }
 
-    public function onEdit()
+    public function onEdit(Request $request)
     {
-        $this->edit();
+        $this->edit($request);
 
         $this->loadDatagrid();
 
         $this->view->addPageNavigationInBoxContainer();
-    }
-
-    public function show()
-    {
-        if (!isset($_GET['method'])) {
-            $this->loadDatagrid();
-        }
-
-        parent::show();
     }
 }

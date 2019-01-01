@@ -64,20 +64,20 @@ class DBFormFieldPrepare extends DB
     {
         $joins = array();
         foreach ($fields as $field_key => $column_name_alias) {
-            $pos = strpos($column_name_alias, '.');
-            if ($pos !== false) {
-                /**@var DviModel $last_association */
-                $last_association = new $this->model();
-                $column_name_array = explode('.', $column_name_alias);
-                foreach ($column_name_array as $key => $item) {
-                    if (array_key_exists($item, $joins) or !array_key_exists($item, $last_association->getRelationships())) {
-                        continue;
-                    }
-                    $relationshipModelType = $last_association->getRelationship($item);
-                    $model_class = $relationshipModelType->getClassName();
-                    $joins[$item] = $last_association->getJoin($model_class);
-                    $last_association = new $model_class();
+            if (strpos($column_name_alias, '.') === false) {
+                continue;
+            }
+            /**@var DviModel $last_association */
+            $last_association = new $this->model();
+            $column_name_array = explode('.', $column_name_alias);
+            foreach ($column_name_array as $key => $item) {
+                if (collect($joins)->has($item) or !$last_association->relationships()->has($item)) {
+                    continue;
                 }
+                $relationshipModelType = $last_association->getRelationship($item);
+                $association_class = $relationshipModelType->getClassName();
+                $joins[$item] = $last_association->getJoin($association_class);
+                $last_association = new $association_class();
             }
         }
         return $joins;

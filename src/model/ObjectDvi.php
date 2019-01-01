@@ -3,7 +3,7 @@
 namespace Dvi\Adianti\Model;
 
 use Adianti\Base\Lib\Registry\TSession;
-use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 
 /**
  *  ObjectDvi
@@ -23,9 +23,6 @@ class ObjectDvi extends ActiveRecord
     private $arquived_by;
     private $trashed_by;
 
-    /**
-     * Constructor method
-     */
     public function __construct($id = null, $callObjectLoad = true)
     {
         parent::__construct($id, $callObjectLoad);
@@ -61,7 +58,7 @@ class ObjectDvi extends ActiveRecord
         return $this->created_by;
     }
     
-    public function set_updated_by(SystemUser $object)
+    public function set_updated_by(\Adianti\Base\Modules\Admin\User\Model\SystemUser $object)
     {
         $this->updated_by = $object;
         $this->updated_by_id = $object->id;
@@ -71,7 +68,7 @@ class ObjectDvi extends ActiveRecord
     {
         // loads the associated object
         if (empty($this->updated_by)) {
-            $this->updated_by = new SystemUser($this->updated_by_id);
+            $this->updated_by = new \Adianti\Base\Modules\Admin\User\Model\SystemUser($this->updated_by_id);
         }
 
         // returns the associated object
@@ -105,7 +102,7 @@ class ObjectDvi extends ActiveRecord
     {
         // loads the associated object
         if (empty($this->trashed_by)) {
-            $this->trashed_by = new SystemUser($this->trashed_by_id);
+            $this->trashed_by = new \Adianti\Base\Modules\Admin\User\Model\SystemUser($this->trashed_by_id);
         }
     
         // returns the associated object

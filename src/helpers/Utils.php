@@ -1,15 +1,17 @@
 <?php
 namespace Dvi\Adianti\Helpers;
 
+use App\Http\Request;
+
 /**
  *  Utils
-
  * @package    control
  * @subpackage dvi
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2017. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
+
 trait Utils
 {
     public function formatCurrency($value, $decimals = 2)
@@ -25,21 +27,11 @@ trait Utils
         return self::editing($this->request);
     }
 
-    public static function editing($params)
+    public static function editing(Request $request)
     {
-        if (!isset($params['method'])) {
-            return false;
-        }
-        foreach ($params as $item => $value) {
-            if (in_array($item, ['class', 'method', 'form_token'])) {
-                continue;
-            }
-            $array = explode('-', $item);
-            $property = array_pop($array);
-
-            if (in_array($property, ['id', 'key']) and !empty($value) and $value != 0) {
-                return true;
-            }
+        $corda_uri = str($request->getRequestUri())->lastStr('xhr-');
+        if ($corda_uri->contains('id')) {
+            return true;
         }
         return false;
     }
@@ -51,30 +43,29 @@ trait Utils
         die();
     }
 
-    /**Get url parameters*/
-    public static function getNewParams():array
-    {
-        $new_params = array();
-
-        $url_params = explode('&', $_SERVER['QUERY_STRING']);
-        unset($url_params[0]);
-        foreach ($url_params as $url_param) {
-            if (!empty($url_param)) {
-                $value = explode('=', $url_param);
-                $new_params[$value[0]] = $value[1];
-            }
-        }
-
-        return $new_params;
-    }
-
+    //Todo remover o redirecionamento esta na classe redirect e que deve passar a um helper
     public function loadPage(array $params = null)
     {
         Redirect::loadPage($params)->go(get_called_class());
     }
-
+    //Todo remover o redirecionamento esta na classe redirect e que deve passar a um helper
     public function goToPage(array $params = null)
     {
         Redirect::goToPage($params)->go(get_called_class());
+    }
+
+    /**Return the last string of the string with separator
+     * @example 'Model-name' return 'name'
+     * @param string $separator
+     * @param string $string
+     * @return string
+     */
+    public static function lastStr(string $separator, string $string):string
+    {
+        $position = strlen($string) - strrpos($string, $separator);
+        if (strpos($string, $separator) !== false) {
+            $position -= 1;
+        }
+        return substr($string, - $position);
     }
 }

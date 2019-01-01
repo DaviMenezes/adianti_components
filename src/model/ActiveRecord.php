@@ -165,4 +165,22 @@ class ActiveRecord extends TRecord
         $model = !empty(get_called_class()::TABLENAME) ? get_called_class()::TABLENAME : strtolower($model);
         return $model;
     }
+
+    public function load($id)
+    {
+        $result = parent::load($id);
+        if (is_array($result)) {
+            return collection($result);
+        }
+        return $result;
+    }
+
+    public static function all()
+    {
+        $result = parent::all();
+        if (is_array($result)) {
+            return collection($result);
+        }
+        return $result;
+    }
 }

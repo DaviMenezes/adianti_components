@@ -2,8 +2,10 @@
 
 namespace Dvi\Adianti\View\Standard;
 
+use App\Http\Request;
 use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Model\DviModel;
+use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\Model\RelationshipModelType;
 use Dvi\Adianti\View\Standard\Form\FormView;
 use Dvi\Adianti\Widget\Base\GridColumn;
@@ -19,8 +21,10 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
  */
 trait PageFormView
 {
+    /**@var Request*/
+    protected $request;
     protected $panel_rows_columns = array();
-    /**@var PanelGroup $panel */
+    /**@var PanelGroup */
     protected $panel;
     protected $content_after_panel;
     protected $build_group_fields = array();
@@ -30,15 +34,18 @@ trait PageFormView
     {
         try {
             if (count($this->build_group_fields)) {
-                return $this->build_group_fields;
+                return;
             }
 
             $this->buildGroupFields();
-
-            return $this->build_group_fields;
         } catch (\Exception $e) {
             throw new \Exception('Construção de campos.' . $e->getMessage());
         }
+    }
+
+    public function groupFields()
+    {
+        return collect($this->build_group_fields);
     }
 
     public function createPanelFields()
@@ -50,22 +57,10 @@ trait PageFormView
             $this->panel->useLabelFields(true);
         }
 
-        $fields = $this->buildFields();
-        foreach ($fields as $key => $groups) {
-            if ($groups['tab'] and $key == 0) {
-                $this->panel->addNotebook();
-            }
-            if ($groups['tab']) {
-                $this->panel->appendPage($groups['tab']);
-            }
-            foreach ($groups['fields'] as $row_fields) {
-                $columns = array();
-                foreach ($row_fields as $field_array) {
-                    $columns[] = new GridColumn($field_array['field'], $field_array['class'], $field_array['style']);
-                }
-                $this->panel->addRow($columns);
-            }
-        }
+        $this->buildFields();
+
+        $this->createPanelContent();
+
         $this->already_create_panel_rows = true;
     }
 
@@ -89,11 +84,10 @@ trait PageFormView
 
     protected function getFormField($model, $field_name)
     {
-        $array_underline = explode('_', $field_name);
-        foreach ($array_underline as $key => $item) {
-            $array_underline[$key] = ucfirst($item);
-        }
-        $method = 'createField' . implode('', $array_underline);
+        $method = 'createField'. collect(explode('_', $field_name))
+            ->map(function ($name) {
+                return ucfirst($name);
+            })->implode('');
 
         if (!method_exists($model, $method)) {
             throw new \Exception('O método ' . $method . ' precisa ser criado no modelo ' . (new \ReflectionObject($model))->getShortName());
@@ -108,24 +102,33 @@ trait PageFormView
         return $this->getFormField($model, $field_name)->getField();
     }
 
-    public function createActionGoBack()
+    public function createActionGoBack($route = null)
     {
-        return $this->panel->footerLink([$this->pageList], 'fa:arrow-left fa-2x')->label('Voltar');
+        $route = $route ?? urlRoute($this->request->attr('route_page_list'));
+        return $this->panel->footerLink($route, 'fa:arrow-left fa-2x')->label('Voltar');
     }
 
-    public function createActionClear()
+    public function createActionClear($route = null)
     {
-        $this->panel->addActionClear();
-        $this->button_clear = $this->panel->getCurrentButton();
-        return $this->button_clear;
+        $route = $route ?? urlRoute($this->request->attr('route_base').'/clear');
+        $this->panel->addActionClear($route);
+
+//Todo check        $this->panel->getActionClear()->getAction()
+//            ->setParameters([
+//                'form_name' => $this->panel->getForm()->getName(),
+//                'form_token' => $this->panel->getForm()->getField('form_token')->getvalue(),
+//                'static' => 1
+//            ]);
     }
 
-    public function createActionDelete()
+    public function createActionDelete($route = null)
     {
         if (!Utils::editing($this->request)) {
-            return;
+            return $this;
         }
-        $this->panel->addActionDelete();
+        $id = $this->request->get('id');
+        $route = $route ?? urlRoute($this->request->attr('route_base').'/delete/key/'. $id.'/id/'.$id.'/&static=1');
+        $this->panel->addActionDelete($route);
 
         return $this;
     }
@@ -159,7 +162,7 @@ trait PageFormView
         return $style;
     }
 
-    private function getFormFieldBuilt($field, $dviModel): \Dvi\Adianti\Model\Fields\DBFormField
+    private function getFormFieldBuilt($field, $dviModel): DBFormField
     {
         $pos = strpos($field, '.');
         $field_name = substr($field, ($pos ? $pos + 1 : 0));
@@ -167,10 +170,10 @@ trait PageFormView
         $model_alias = substr($field, 0, $pos);
 
         /**@var DviModel $dviModel */
-        $relationships = $dviModel->associateds()->getRelationships();
-        if ($model_alias and in_array($model_alias, array_keys($relationships))) {
+        $relationships = $dviModel->relationships();
+        if ($relationships->has($model_alias)) {
             /**@var RelationshipModelType $model_type */
-            $model_type = $dviModel->getRelationships()[$model_alias];
+            $model_type = $relationships->get($model_alias);
 
             $model_class = $model_type->getClassName();
             $model = new $model_class();
@@ -209,16 +212,38 @@ trait PageFormView
 
                     $dviField = $form_field->getField()->setReferenceName($field);
 
-                    if (get_parent_class($this) == FormView::class) {
+                    if (in_array(get_parent_class($this), [FormView::class, FormListView::class])) {
                         $dviField->class .= ' dvi_field_required';
                     }
 
-                    $build_fields[$row][] = ['field' => $dviField, 'class' => $class, 'style' => $this->getFieldStyle($component_name)];
+                    $build_fields[$row][] = [
+                        'field' => $dviField,
+                        'class' => $class,
+                        'style' => $this->getFieldStyle($component_name)
+                    ];
                 }
                 $row++;
             }
 
-            $this->build_group_fields[$key] = ['tab' => $group->getTab(), 'fields' => $build_fields];
+            $this->build_group_fields[$key] = collect(['tab' => $group->getTab(), 'fields' => collect($build_fields)]);
         }
+    }
+
+    protected function createPanelContent()
+    {
+        $this->groupFields()->map(function ($group, $key) {
+            if ($group->get('tab')) {
+                if ($key == 0) {
+                    $this->panel->addNotebook();
+                }
+                $this->panel->appendPage($group->get('tab'));
+            }
+            $group->get('fields')->each(function ($row_fields) {
+                $columns = collect($row_fields)->map(function ($field_array) {
+                    return new GridColumn($field_array['field'], $field_array['class'], $field_array['style']);
+                })->all();
+                $this->panel->addRow($columns);
+            });
+        });
     }
 }

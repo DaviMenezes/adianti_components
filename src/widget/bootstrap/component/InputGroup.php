@@ -47,7 +47,6 @@ class InputGroup extends GroupField implements IDviWidget
         $input_group = new TElement('div');
         $input_group->class= 'input-group';
 
-        $columns = array();
         foreach ($this->inputs as $input) {
             $input_group->add($input);
         }

@@ -29,7 +29,11 @@ class HtmlEditor extends THtmlEditor implements FormField
         $this->setup($label, $required);
 
         $this->setSize('100%', $height);
+    }
 
-        Script::add('remove_note-popover', '$(".note-popover").remove();');
+    public function show()
+    {
+        parent::show();
+        Script::add('remove_note-popover', ' $(".note-popover").remove();');
     }
 }

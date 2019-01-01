@@ -1,9 +1,12 @@
 <?php
 namespace Dvi\Adianti\Widget\Base;
 
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
-use Dvi\AdiantiExtension\Route;
+use App\Http\Request;
+use App\Http\Router;
 use ReflectionClass;
 
 /**
@@ -20,30 +23,20 @@ class DataGrid extends TDataGrid
     protected $grid_action_edit;
 
     protected $custom_actions = array();
-    protected $called_class;
+    protected $route_base;
     protected $my_columns;
     protected $order_default_parameters;
     protected $datagrid_load_method;
 
-    public function __construct($called_class, $function_prefix = 'grid', $use_column_id = true, $use_edit_action = false, $use_delete_action = false, $params_delete = null)
+    public function __construct($show_id = true)
     {
         parent::__construct();
-
-        $this->called_class = $called_class;
 
         $this->style ='width: 100%';
         $this->disableDefaultClick();
 
-        if ($use_column_id) {
+        if ($show_id) {
             $this->addCol('id', 'Id', '7%');
-        }
-
-        if ($use_edit_action) {
-            $this->useEditAction($called_class);
-        }
-
-        if ($use_delete_action) {
-            $this->useDeleteAction($called_class, $function_prefix, $params_delete);
         }
     }
 
@@ -69,7 +62,7 @@ class DataGrid extends TDataGrid
                 /**@var DataGridColumn $column */
                 $column->orderParams($this->order_default_parameters);
                 $column->setDatagridLoadMethod($this->datagrid_load_method);
-                $column->setOrderAction($this->called_class);
+                $column->setOrderAction();
 
                 parent::addColumn($column);
             }
@@ -103,13 +96,6 @@ class DataGrid extends TDataGrid
         $this->custom_actions[] = $actions;
     }
 
-    public function init()
-    {
-        $class = get_called_class();
-        $grid = new DataGrid($class);
-        return $grid;
-    }
-
     public function addCol($name, $label, $width = '100%', $align = 'left', array $order_params = null):DataGridColumn
     {
         $column = new DataGridColumn($name, $label, $align, $width);
@@ -126,9 +112,10 @@ class DataGrid extends TDataGrid
         return $this->addCol($name, $label, $width, $align);
     }
 
-    public function useEditAction($class_name): TDataGridAction
+    public function useEditAction($route = null): TDataGridAction
     {
-        $this->grid_action_edit = new TDataGridAction([$class_name, 'onEdit']);
+        $route = $route ?? urlRoute(Request::instance()->attr('route_base').'/edit');
+        $this->grid_action_edit = new TDataGridAction($route);
         $this->grid_action_edit->setField('id');
         $this->grid_action_edit->setLabel('Editar');
         $this->grid_action_edit->setImage('fa:pencil blue fa-2x');
@@ -136,12 +123,14 @@ class DataGrid extends TDataGrid
         return $this->grid_action_edit;
     }
 
-    public function useDeleteAction($class_name, $function_prefix = 'grid', $params_delete = null): TDataGridAction
+    public function useDeleteAction($route = null, $params_delete = null): TDataGridAction
     {
-        $this->grid_action_delete = new TDataGridAction([$class_name, $function_prefix . 'OnDelete'], $params_delete);
+        $route = $route ?? urlRoute(Request::instance()->attr('route_base').'/delete');
+        $this->grid_action_delete = new TDataGridAction($route, 'GET', $params_delete);
         $this->grid_action_delete->setField('id');
         $this->grid_action_delete->setLabel('Excluir');
         $this->grid_action_delete->setImage('fa:trash red fa-2x');
+        $this->grid_action_delete->setStatic();
 
         return $this->grid_action_delete;
     }
@@ -164,10 +153,34 @@ class DataGrid extends TDataGrid
 
     public function setDatagridLoadMethod(string $method)
     {
-        $has_method = (new ReflectionClass(Route::getPath($this->called_class)))->hasMethod($method);
+        $class = Router::getStaticRouteInfo();
+        $has_method = (new ReflectionClass($class->class()))->hasMethod($method);
         if (!$has_method) {
             throw new \Exception('O método '.$method.' informado em '."<br>".' $datagrid->setDatagridLoadMethod("'.$method.'") não existe.', false);
         }
         $this->datagrid_load_method = $method;
+    }
+
+    public function show()
+    {
+        $this->processTotals();
+
+        if (!$this->hasCustomWidth()) {
+            $this->{'style'} .= ';width:unset';
+        }
+
+        // shows the datagrid
+        parent::show();
+
+        // to keep browsing parameters (order, page, first_page, ...)
+        collect($_REQUEST)->map(function ($value, $key) use (&$urlparams) {
+            $urlparams .= $key.'/'.$value;
+        });
+
+        $route = str(TSession::delValue('route_base').'/'.$urlparams)->ensureLeft('/');
+
+        // inline editing treatment
+        TScript::create(" tdatagrid_inlineedit( '{".$route."}' );");
+        TScript::create(" tdatagrid_enable_groups();");
     }
 }

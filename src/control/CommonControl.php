@@ -2,16 +2,18 @@
 
 namespace Dvi\Adianti\Control;
 
-use Adianti\Base\Lib\Control\TAction;
-use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Dialog\TQuestion;
+use App\Http\Request;
 use Dvi\Adianti\Database\Transaction;
+use Dvi\Adianti\Helpers\Redirect;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\Adianti\Helpers\Utils;
-use Dvi\Adianti\Model\DviModel;
 use Dvi\Adianti\Model\ActiveRecord;
+use Dvi\Adianti\Model\DviModel;
+use Dvi\Adianti\View\Standard\DviBaseView;
+use Dvi\Adianti\Widget\Util\Action;
 use ReflectionClass;
 
 /**
@@ -25,26 +27,37 @@ use ReflectionClass;
  */
 trait CommonControl
 {
-    public static function onClear($param)
+    /**@var \App\Http\Request*/
+    protected $request;
+
+    public static function onClear(Request $request)
     {
-        $className = Reflection::shortName(get_called_class());
+        $className = Reflection::shortName($request->routeInfo()->class());
+
         TSession::setValue($className . '_form_data', null);
         TSession::setValue($className . '_filters', null);
         TSession::setValue($className . '_listOrder', null);
-        TSession::setValue('method', $param['method']);
 
-        $params = Utils::getNewParams();
-        unset($params['id'], $params['key'], $params['method'], $params['static']);
+        //Todo check need params maybe in url pagination...
+        $params = $request->getCollection()->except(['id', 'key', 'static'])->all();
 
-        AdiantiCoreApplication::loadPage($className, null, $params);
+        $route = $request->routeInfo()->fullRoute()->removeRight('clear')->removeRight('/');
+
+        $parent_class = get_parent_class(get_called_class());
+        if ($parent_class == FormControl::class) {
+            $route = $route->removeRight('clear')->ensureRight('create')->str();
+            Redirect::ajaxLoadPage($route);
+            return;
+        }
+
+        Redirect::redirect(urlRoute($route->str()));
     }
 
-    /** * check if form has token and if is valid(session value) */
+    /** check if form has token and if is valid(session value) */
     protected function validateToken()
     {
-        $token = $this->request['form_token'];
-        if (!empty($token) and (
-                $token === TSession::getValue('form_token'))) {
+        $token = $this->request->get('form_token');
+        if (!empty($token) and ($token === TSession::getValue('form_token'))) {
             return true;
         }
         return false;
@@ -54,11 +67,12 @@ trait CommonControl
     {
         $model_default = $this->view->getModel();
 
-        $this->currentObj = new $model_default($this->request[Reflection::shortName($model_default) . '-id'] ?? null);
+        $this->currentObj = new $model_default($this->request->get(Reflection::shortName($model_default) . '-id'));
 
-        //get result form data
-        $form_data = array_merge($this->request, (array)$this->getFormData());
-        unset($form_data['class'], $form_data['method'], $form_data['form_token']);
+        $form_data = $this->request->getCollection()
+            ->except(['form_token'])
+            ->merge((array)$this->getFormData())
+            ->all();
 
         /**@var DviModel $last_model */
         $last_model = $this->currentObj;
@@ -66,7 +80,7 @@ trait CommonControl
 
         foreach ($form_data as $property => $value) {
             $models = explode('-', $property);
-            $property = array_pop($models);//removing property name of array
+            $property = Utils::lastStr('-', $property);
 
             foreach ($models as $model_name) {
                 if ($model_name == Reflection::shortName($model_default)) {
@@ -87,9 +101,10 @@ trait CommonControl
         return $model_form_attributes;
     }
 
-    public function showErrorMsg($param)
+    public static function showErrorMsg(Request $request)
     {
-        new TMessage('error', $param['msg']);
+        $msg = TSession::getValue($request->get('form') . $request->get('field'));
+        new TMessage('error', urldecode($msg ?? 'Mensagem não encontrada'));
     }
 
     public function getFormData()
@@ -156,53 +171,58 @@ trait CommonControl
         return in_array('isDisabled', (new ReflectionClass(get_class($formField)))->getMethods());
     }
 
-    public static function onDelete($param)
+    public static function onDelete(Request $request)
     {
-        $class = $param['class'];
-        $action_yes = new TAction([$class, 'delete']);
-        $action_no = new TAction([$class, 'onBack']);
+        $route_base = $request->attr('route_base');
 
-        $param['url_params'] = PaginationHelper::getUrlPaginationParameters($param);
+        $id = $request->get('id');
+        $route_base = $route_base . '/delete/confirm';
+        $action_yes = new Action($route_base);
 
-        $action_yes->setParameters($param);
-        $action_no->setParameters($param);
+        $url_params = $request->obj()->query->all();
+//Todo check        $url_params['static'] = 1;
+        $url_params['key'] = $id;
+        $url_params['id'] = $id;
+
+        $action_yes->setRouteParams(collection($url_params)->route());
+
+        $request->add(['url_params' => $url_params]);
+
+        $action_yes->setParameters($url_params);
+        $action_yes->setStatic();
 
         new TQuestion(_t('Do you really want to delete ?'), $action_yes);
     }
 
-    /**Especific to call of datagrid.*/
-    public static function gridOnDelete($param)
-    {
-        self::onDelete($param);
-    }
-
-    public function delete()
+    public static function delete(Request $request)
     {
         try {
-            Transaction::open($this->database);
+            Transaction::open();
 
-            $this->view = new $this->viewClass(array());
-            $modelShortName = Reflection::shortName($this->view->getModel());
-            $this->view->getModel()::remove($this->request['id'] ?? $this->request[$modelShortName .'-id']);
+            $view = $request->attr('view_class');
+            /**@var DviBaseView $view*/
+            $view = new $view($request);
+
+            /**@var DviModel $model*/
+            $model = $view->getModel();
+            $model = new $model();
+            $modelShortName = Reflection::shortName($model);
+            $model->delete($request->get('id') ?? $request->get($modelShortName .'-id'));
 
             Transaction::close();
 
-            $this->onBack();
+            self::onBack($request);
         } catch (\Exception $e) {
             Transaction::rollback();
             throw $e;
         }
     }
 
-    public function onBack()
+    public static function onBack(Request $request)
     {
-        unset(
-            $this->request['url_params']['class'],
-            $this->request['url_params']['method'],
-            $this->request['url_params']['id'],
-            $this->request['url_params']['key'],
-            $this->request['url_params']['static']
-        );
-        AdiantiCoreApplication::loadPage(get_called_class(), null, $this->request['url_params'] ?? null);
+        $url_params = collect($request->attr('url_params'))->except(['id', 'key', 'static'])->all();
+
+        $route = urlRoute($request->attr('route_base'));
+        Redirect::ajaxLoadPage($route, $url_params);
     }
 }

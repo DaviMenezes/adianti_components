@@ -2,11 +2,11 @@
 
 namespace Dvi\Adianti\Widget\Dialog;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Dvi\Adianti\Control\DviControl;
+use Dvi\Adianti\Helpers\Utils;
+use Dvi\Adianti\Widget\Util\Action;
 
 /**
  * Dialog Message
@@ -23,7 +23,7 @@ class Message
     {
     }
 
-    public static function create(string $type, string $user_message = null, string $dev_message = null, $scpape_str = true, TAction $action = null, string $title_msg = '')
+    public static function create(string $type, string $user_message = null, string $dev_message = null, $scpape_str = true, Action $action = null, string $title_msg = '')
     {
         $config = parse_ini_file("app/config/application.ini");
         $environment =  $config['environment'];
@@ -58,8 +58,7 @@ class Message
 
     private static function getFileInfo($file)
     {
-        $file_path_array = explode('/', $file);
-        $file_name = array_pop($file_path_array);
+        $file_name = Utils::lastStr('/', $file);
         $class_name = substr($file_name, 0, strpos($file_name, '.'));
         return $class_name;
     }

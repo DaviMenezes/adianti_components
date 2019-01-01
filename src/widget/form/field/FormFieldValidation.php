@@ -2,6 +2,7 @@
 
 namespace Dvi\Adianti\Widget\Form\Field;
 
+use Adianti\Base\Lib\Registry\TSession;
 use Dvi\Adianti\Widget\Form\Field\Validator\FieldValidator;
 
 /**
@@ -30,7 +31,7 @@ trait FormFieldValidation
         if (empty($this->type)) {
             return $value;
         }
-        return htmlspecialchars_decode($this->type->sanitize($value));
+        return $this->type->sanitize($value);
     }
 
     public function validating()
@@ -67,7 +68,7 @@ trait FormFieldValidation
         return true;
     }
 
-    public function getErrorValidation()
+    public function setErrorValidationSession()
     {
         $msg_errors = false;
         foreach ($this->error_msg as $key => $item) {
@@ -79,6 +80,7 @@ trait FormFieldValidation
                 $msg_errors .= '<br>';
             }
         }
+        TSession::setValue($this->getFormName() . $this->getName(), $msg_errors);
 
         return $msg_errors;
     }

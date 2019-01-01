@@ -49,6 +49,11 @@ class GridBootstrap
         return $row;
     }
 
+    public function getRows()
+    {
+        return $this->rows;
+    }
+
     public function setStyle($style)
     {
         $this->grid->style = $style;

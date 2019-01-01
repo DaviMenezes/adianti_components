@@ -4,6 +4,7 @@ namespace Dvi\Adianti\Model\Form\Field;
 
 use Dvi\Adianti\Model\Fields\DBFormField;
 use Dvi\Adianti\Widget\Form\Field\HtmlEditor;
+use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeHtml;
 
 /**
  * Fields FieldHtml
@@ -22,6 +23,8 @@ class DBHtml extends DBFormField
         $this->field = new HtmlEditor($name, $height, $label);
 
         parent::__construct($label ?? $name);
+
+        $this->setType(new FieldTypeHtml());
     }
 
     public function getField()

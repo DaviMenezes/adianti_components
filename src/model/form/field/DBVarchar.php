@@ -15,6 +15,7 @@ use Dvi\Adianti\Widget\Form\Field\Varchar;
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @see https://github.com/DaviMenezes
+ * @see https://t.me/davimenezes
  */
 class DBVarchar extends DBFormField
 {
@@ -44,9 +45,9 @@ class DBVarchar extends DBFormField
         return $this;
     }
 
-    public function validateCpf()
+    public function validateCpf($debug = true)
     {
-        $this->field->addValidation($this->field->getLabel(), new CPFValidator());
+        $this->field->addValidation($this->field->getLabel(), new CPFValidator($debug));
 
         $this->mask('999.999.999-99');
         return $this;

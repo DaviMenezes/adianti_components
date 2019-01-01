@@ -3,6 +3,7 @@
 namespace Dvi\Adianti\Model\Fields;
 
 use Adianti\Base\Lib\Validator\TFieldValidator;
+use Dvi\Adianti\Helpers\Utils;
 use Dvi\Adianti\Widget\Form\Field\Contract\FormField;
 use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
 use Dvi\Adianti\Widget\Form\Field\Validator\RequiredValidator;
@@ -20,7 +21,7 @@ use Dvi\Adianti\Widget\Form\Field\Validator\UniqueValidator;
  */
 abstract class DBFormField
 {
-    /**@var FormField $field */
+    /**@var FormField*/
     protected $field;
     protected $label;
     protected $hide_in_edit;
@@ -69,8 +70,7 @@ abstract class DBFormField
 
     public function unique($service)
     {
-        $array_name = explode('-', $this->field->getName());
-        $this->validation(new UniqueValidator($service, array_pop($array_name)));
+        $this->validation(new UniqueValidator($service, Utils::lastStr('-', $this->field->getName())));
         return $this;
     }
 

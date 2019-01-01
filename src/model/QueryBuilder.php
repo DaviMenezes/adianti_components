@@ -26,7 +26,7 @@ trait QueryBuilder
     protected $filters = array();
     protected $params;
 
-    /**@var PDOStatement $pdo */
+    /**@var PDOStatement */
     protected $pdo;
     protected $preparedFilters;
     protected $sql;
@@ -184,6 +184,9 @@ trait QueryBuilder
 
     private function getResult()
     {
+        if (is_array($this->result)) {
+            return collect($this->result);
+        }
         return $this->result;
     }
 

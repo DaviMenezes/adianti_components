@@ -19,6 +19,7 @@ class GroupFieldView
     public function tab($name)
     {
         $this->tab = $name;
+        return $this;
     }
 
     public function fields($fields)

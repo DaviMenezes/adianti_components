@@ -4,8 +4,7 @@ namespace Dvi\Adianti\View\Standard\SearchList;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
-use Dvi\Adianti\Control\PaginationHelper;
-use Dvi\Adianti\Helpers\Utils;
+use App\Http\Request;
 use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Datagrid\PageNavigation;
 use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
@@ -20,29 +19,28 @@ use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
  */
 trait ListViewTrait
 {
-    /**@var PanelGroup $panel*/
+    /**@var Request*/
+    protected $request;
+    /**@var PanelGroup*/
     protected $panel;
-    /**@var DataGrid $datagrid*/
+    /**@var DataGrid*/
     protected $datagrid;
-    /**@var PageNavigation $pageNavigation*/
+    /**@var PageNavigation*/
     protected $pageNavigation;
-    /**@var TDataGridColumn $column_id*/
+    /**@var TDataGridColumn*/
     protected $column_id;
-    /**@var TAction $action_edit*/
+    /**@var TAction*/
     protected $action_edit;
-    /**@var TAction $action_delete*/
+    /**@var TAction*/
     protected $action_delete;
     protected $useCheckButton;
-    protected $formController;
     protected $query_limit;
 
     public function buildDatagrid($createModel = true, $showId = false): DataGrid
     {
-        $class = $this->request['class'];
-        $this->datagrid = new DataGrid($class, 'grid', $showId);
-
-        $this->datagrid->useEditAction($this->formController ?? $class);
-        $this->datagrid->useDeleteAction($class);
+        $this->datagrid = new DataGrid($showId);
+        $this->datagrid->useEditAction();
+        $this->datagrid->useDeleteAction();
         $this->createDatagridColumns($showId);
 
         if ($createModel) {
@@ -76,13 +74,13 @@ trait ListViewTrait
     {
         $this->pageNavigation = new PageNavigation();
 
-        $new_params = PaginationHelper::getUrlPaginationParameters($this->request);
+        $new_params = $this->request->obj()->query->all();
 
         if (!count($new_params)) {
             $new_params =  null;
         }
 
-        $this->pageNavigation->setAction(new TAction([$this->request['class'], 'loadDatagrid'], $new_params));
+        $this->pageNavigation->setAction(new Action(urlRoute($this->request->attr('route_base').'/load'), 'GET', $new_params));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         $this->pageNavigation->setCount($count);
         $this->pageNavigation->setProperties($params);
@@ -114,21 +112,19 @@ trait ListViewTrait
         $this->useCheckButton = true;
     }
 
-    public function createActionNew()
+    public function createActionNew($route = null)
     {
-        if (!empty($this->formController)) {
+        $route = $route ?? urlRoute($this->request->attr('route_base').'/create');
+        if ($route) {
             return $this->panel
-                ->footerLink([$this->formController], 'fa:plus fa-2x')->label(_t('Add'))
-                ->setParameters(Utils::getNewParams());
+                ->footerLink($route, 'fa:plus fa-2x')->label(_t('Add'));
+//Todo check                ->setParameters(Utils::getNewParams($this->request));
         }
     }
 
-    public function createActionSearch()
+    public function createActionSearch($route = null)
     {
-        $this->panel->addActionSearch();
-        $this->panel->getCurrentButton()
-            ->getAction()
-            ->setParameters(Utils::getNewParams());
+        $this->panel->addActionSearch($route);
     }
 
     public function setQueryLimit($limit)

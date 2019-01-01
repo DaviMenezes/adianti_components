@@ -2,12 +2,13 @@
 
 namespace Dvi\Adianti\Widget\Form\Field;
 
-use Adianti\Base\Lib\Control\TAction;
-use Adianti\Base\Lib\Widget\Util\TActionLink;
+use App\Http\Request;
 use Dvi\Adianti\Widget\Container\VBox;
 use Dvi\Adianti\Widget\Form\Field\Contract\FieldTypeInterface;
 use Dvi\Adianti\Widget\Form\Field\Validator\MaxLengthValidator;
 use Dvi\Adianti\Widget\Form\Field\Validator\RequiredValidator;
+use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Adianti\Widget\Util\ActionLink;
 
 /**
  * Field DField
@@ -20,8 +21,10 @@ use Dvi\Adianti\Widget\Form\Field\Validator\RequiredValidator;
  */
 trait FormField
 {
+    /**@var \App\Http\Request*/
+    protected $request;
     protected $field_disabled;
-    /**@var FieldTypeInterface $type*/
+    /**@var FieldTypeInterface */
     protected $type;
     protected $error_msg = array();
     protected $required;
@@ -56,7 +59,9 @@ trait FormField
     {
         $this->label($this->field_label);
 
-        $this->{'placeholder'} = strtolower($this->field_label);
+        if (!empty($this->field_label)) {
+            $this->{'placeholder'} = strtolower($this->field_label);
+        }
 
         if ($this->max_length and method_exists($this, 'setMaxLength')) {
             $this->setMaxLength($this->max_length);
@@ -115,15 +120,7 @@ trait FormField
 
     public function getLabel()
     {
-        $label = parent::getLabel();
-        $fc = mb_strtoupper(mb_substr($label, 0, 1));
-        $label = $fc.mb_substr($label, 1);
-
-        if (!empty($this->label_class)) {
-            $class = ' class="dvi_str_' . $this->label_class.'"';
-            $label = '<b>'.$label.'</b>';
-            $label = '<span'.$class.'>'.$label.'</span>';
-        }
+        $label = $this->wrapperStringClass(parent::getLabel());
 
         return  $label;
     }
@@ -157,27 +154,73 @@ trait FormField
 
     public function show()
     {
-        $this->prepare();
+        try {
+            $this->prepare();
 
-        $vbox = new VBox();
-        if ($this->use_label_field) {
-            $vbox->add($this->getLabel().$this->getValidationErrorLink());
+            if (!$this->use_label_field) {
+                $this->showField();
+                return;
+            }
+
+            $vbox = new VBox();
+
+            if ($this->error_msg) {
+                $this->showField();
+
+                $label =  $this->wrapperStringClass('verifique');
+                $vbox->add($this->getValidationErrorLink($label));
+                $vbox->show();
+                return;
+            }
+            $vbox->add($this->getLabel());
+            $vbox->show();
+            $this->showField();
+        } catch (\Exception $e) {
+            throw new \Exception('Houve um problema na construção do campo '. $this->getName());
         }
-        $vbox->show();
-        parent::show();
     }
 
-    protected function getValidationErrorLink()
+    protected function getValidationErrorLink(string $label = null)
     {
         $link_error = null;
         if (in_array(FormFieldValidation::class, array_keys((new \ReflectionClass(self::class))->getTraits()))) {
             if ($this->error_msg) {
-                $icon_error = ' <i class="fa fa-exclamation-triangle red" aria-hidden="true"></i>';
-                $parameters = ['msg' => $this->getErrorValidation(), 'static' => 1];
-                $link_error = new TActionLink($icon_error, new TAction([$_REQUEST['class'], 'showErrorMsg'], $parameters));
+                $this->setErrorValidationSession();
+                $parameters = ['field' => $this->getName(), 'form' => $this->getFormName(), 'static' => 1];
+
+                $route_base = Request::instance()->attr('route_base');
+                $link_error = new ActionLink(new Action(urlRoute($route_base.'/show_error'), 'GET', $parameters));
+                $link_error->label($label);
                 $link_error->{'title'} = 'Clique para ver a mensagem';
+                $link_error->icon('fa:exclamation-triangle red', 'padding-left: 2px;');
             }
         }
         return $link_error;
+    }
+
+    /**
+     * @param $label
+     * @return string
+     */
+    protected function wrapperStringClass($label): string
+    {
+        $fc = mb_strtoupper(mb_substr($label, 0, 1));
+        $label = $fc . mb_substr($label, 1);
+
+        if (!empty($this->label_class)) {
+            $class = ' class="dvi_str_' . $this->label_class . '"';
+            $label = '<b>' . $label . '</b>';
+            $label = '<span' . $class . '>' . $label . '</span>';
+        }
+        return $label;
+    }
+
+    protected function showField()
+    {
+        if (method_exists($this, 'showView')) {
+            $this->showView();
+            return;
+        }
+        parent::show();
     }
 }

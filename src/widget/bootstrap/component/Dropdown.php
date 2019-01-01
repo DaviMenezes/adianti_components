@@ -5,9 +5,12 @@ namespace Dvi\Adianti\Widget\Bootstrap\Component;
 use Adianti\Base\Lib\Widget\Base\TElement;
 
 /**
- * Description of Dropdown
+ * Component DviDropdown
  *
- * @author DAVIO
+ * @package    App
+ * @author     Davi Menezes
+ * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
+ * @link https://github.com/DaviMenezes
  */
 class DviDropdown
 {
@@ -23,28 +26,23 @@ class DviDropdown
         $this->setAlignLeft();
     }
 
-    public function addAction($programName, $method, $label, $faIcon, array $arrayParams = null)
+    public function addAction($route, $label, $faIcon, array $arrayParams = null)
     {
-        $params = '';
-        if ($arrayParams) {
-            foreach ($arrayParams as $key => $parameter) {
-                $params .= '&' . $key . '=' . $parameter;
-            }
-        }
-
-        $link = ['href' => 'class=' . $programName . '&method=' . $method . $params, 'label' => $label, 'icon' => $faIcon];
+        $link = ['href' => urlRoute($route, $arrayParams), 'label' => $label, 'icon' => $faIcon];
         $this->addItems($link, 'link');
     }
 
-    public function addEditAction($id, $programName)
+    public function addEditAction($route, $id)
     {
-        $link = ['href' => 'class=' . $programName . '&method=' . 'onEdit&id=' . $id, 'label' => _t('Edit'), 'icon' => 'fa-pencil-square-o blue fa-2x'];
+        $route = urlRoute($route . '/id/' . $id);
+        $link = ['href' => $route, 'label' => _t('Edit'), 'icon' => 'fa-pencil-square-o blue fa-2x'];
         $this->addItems($link, 'link');
     }
 
-    public function addDeleteAction($id, $programName)
+    public function addDeleteAction($route, $id)
     {
-        $link = ['href' => 'class=' . $programName . '&method=' . 'onDelete&id=' . $id, 'label' => _t('Delete'), 'icon' => 'fa-trash-o red fa-2x'];
+        $route = urlRoute($route . '/id/' . $id);
+        $link = ['href' => $route, 'label' => _t('Delete'), 'icon' => 'fa-trash-o red fa-2x'];
         $this->addItems($link, 'link');
     }
 
@@ -127,11 +125,12 @@ class DviDropdown
         foreach ($this->items as $item) {
             if (isset($item['link'])) {
                 $link = $item['link'];
+
                 $li = '<li>'
-                    . '<a href = index.php?' . $link['href'] . ' generator="adianti" style = "height: 30px; style="cursor: pointer"">'
-                    . '<i class="fa ' . $link['icon'] . '" aria-hidden="true" style="float:left; width:25px"></i>'
-                    . '<div style="font-size: 14px">' . $link['label'] . '</div>'
-                    . '</a>'
+                        . '<a href = ' . $link['href'] . ' generator="adianti" style = "height:30px; cursor:pointer">'
+                            . '<i class="fa ' . $link['icon'] . '" aria-hidden="true" style="float:left; width:25px"></i>'
+                            . '<div style="font-size:14px">' . $link['label'] . '</div>'
+                        . '</a>'
                     . '</li>';
 
                 $ul->add($li);

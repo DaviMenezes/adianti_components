@@ -15,6 +15,7 @@ use Exception;
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @see https://github.com/DaviMenezes
+ * @see https://t.me/davimenezes
  */
 trait SelectionFieldTrait
 {
@@ -22,7 +23,6 @@ trait SelectionFieldTrait
     {
         try {
             Transaction::open();
-
             $result = $obj_array_value[0]::all();
             $items = array();
             if ($result) {

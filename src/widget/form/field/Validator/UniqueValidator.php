@@ -15,6 +15,7 @@ use Dvi\Adianti\Model\DviModel;
  * @author     Davi Menezes
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @see https://github.com/DaviMenezes
+  * @see https://t.me/davimenezes
  */
 class UniqueValidator extends FieldValidator
 {
@@ -46,24 +47,21 @@ class UniqueValidator extends FieldValidator
         $request = $parameters['request'] ?? array();
         $diferent_form_property_name = Reflection::lowerName($this->model).'_id';
 
-        $diferent_form_property_value = null;
+        $different_form_property_value = null;
         foreach ($request as $item => $value) {
-            if (in_array($item, ['class', 'method'])) {
-                continue;
-            }
             $property = str_replace('-', '_', $item);
 
             if ($property == $diferent_form_property_name) {
-                $diferent_form_property_value = $value;
+                $different_form_property_value = $value;
             }
         }
 
-        if (!$diferent_form_property_value) {
+        if (!$different_form_property_value) {
             return true;
         }
 
         Transaction::open();
-        $count = $this->model::where('id', '<>', $diferent_form_property_value)->where($this->property, '=', $value)->count();
+        $count = $this->model::where('id', '<>', $different_form_property_value)->where($this->property, '=', $value)->count();
         Transaction::close();
 
         if ($count > 0) {

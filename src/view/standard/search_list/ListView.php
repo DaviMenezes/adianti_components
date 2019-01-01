@@ -3,8 +3,10 @@
 namespace Dvi\Adianti\View\Standard\SearchList;
 
 use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
+use App\Http\Request;
 use Dvi\Adianti\View\Standard\Form\BaseFormView;
 use Dvi\Adianti\View\Standard\PageFormView;
 use Dvi\Adianti\Widget\Base\DataGrid;
@@ -19,14 +21,13 @@ use Dvi\Adianti\Widget\Base\DataGrid;
  */
 abstract class ListView extends BaseFormView
 {
-    protected $formController;
-    /**@var DataGrid $datagrid */
+    /**@var DataGrid */
     protected $datagrid;
-    /**@var TPageNavigation $pageNavigation */
+    /**@var TPageNavigation */
     protected $pageNavigation;
-    /**@var TDataGridColumn $column_id */
+    /**@var TDataGridColumn */
     protected $column_id;
-    /**@var TAction $action_delete */
+    /**@var TAction */
     protected $action_delete;
     protected $panel_grid;
 
@@ -36,12 +37,12 @@ abstract class ListView extends BaseFormView
     use PageFormView;
     use ListViewTrait;
 
-    public function __construct($param)
+    public function __construct(Request $request)
     {
         $this->setModel();
         $this->setStructureFields();
 
-        parent::__construct($param);
+        parent::__construct($request);
     }
 
     public function createActions()
@@ -50,22 +51,22 @@ abstract class ListView extends BaseFormView
             return;
         }
 
+        $this->createActionNew();
+
         $this->createActionSearch();
 
         $this->createActionClear();
 
-        $this->createActionNew();
-
         $this->actions_created = true;
     }
 
-    public function build($param)
+    public function build(Request $request)
     {
         try {
             if ($this->view_builded) {
                 return;
             }
-            $this->createPanel($param);
+            $this->createPanel($request);
 
             $this->createActions();
 
@@ -89,10 +90,5 @@ abstract class ListView extends BaseFormView
         }
 
         return $this->vbox;
-    }
-
-    public function setFormController($formController)
-    {
-        $this->formController = $formController;
     }
 }

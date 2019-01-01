@@ -18,6 +18,17 @@ class CpfValidator extends FieldValidator
     protected $label;
     protected $value;
     protected $cpf;
+    protected $errors= array();
+    /**
+     * @var bool
+     */
+    private $debug;
+
+    public function __construct($debug = false, string $error_msg = null)
+    {
+        parent::__construct($error_msg);
+        $this->debug = $debug;
+    }
 
     public function validate($label, $value, $parameters = null)
     {
@@ -38,6 +49,14 @@ class CpfValidator extends FieldValidator
 
         $this->validateLastDigitVerifier();
 
+        if (count($this->errors)) {
+            foreach ($this->errors as $key => $error) {
+                $this->error_msg .= $error;
+                if ($key + 1 < count($this->errors)) {
+                    $this->error_msg .= "<br>";
+                }
+            }
+        }
         if (isset($this->error_msg)) {
             return false;
         }
@@ -50,21 +69,26 @@ class CpfValidator extends FieldValidator
         $this->cpf = preg_replace("/[^0-9]/", "", $value);
 
         if (strlen($this->cpf) <> 11) {
-            $this->setInvalidCpfMessage();
+            $this->addInvalidCpfMessage('Comprimento inválido');
         }
     }
 
-    private function setInvalidCpfMessage()
+    private function addInvalidCpfMessage($msg = null)
     {
-        $msg = AdiantiCoreTranslator::translate('The field ^1 has not a valid CPF', $this->label);
-        $this->error_msg = $msg;
+        $msg = $msg;
+        if ($this->debug or !$msg) {
+            $msg = AdiantiCoreTranslator::translate('The field ^1 has not a valid CPF', $this->label);
+        }
+        if (!in_array($msg, $this->errors)) {
+            $this->errors[] = $msg;
+        }
     }
 
     private function validateNonNumericCharacters()
     {
         // Retorna falso se houver letras no cpf
         if (!(preg_match("/[0-9]/", $this->cpf))) {
-            $this->setInvalidCpfMessage();
+            $this->addInvalidCpfMessage('Apenas números são permitidos');
         }
     }
 
@@ -76,7 +100,7 @@ class CpfValidator extends FieldValidator
             "44444444444", "55555555555", "66666666666", "77777777777",
             "88888888888", "99999999999", "00000000000");
         if (in_array($this->cpf, $nulos)) {
-            $this->setInvalidCpfMessage();
+            $this->addInvalidCpfMessage();
         }
     }
 
@@ -92,7 +116,7 @@ class CpfValidator extends FieldValidator
         $acum = ($x > 1) ? (11 - $x) : 0;
         // Retorna falso se o digito calculado eh diferente do passado na string
         if ($acum != $this->cpf[9]) {
-            $this->setInvalidCpfMessage();
+            $this->addInvalidCpfMessage('Penúltimo dígito inválido');
         }
     }
 
@@ -107,8 +131,10 @@ class CpfValidator extends FieldValidator
         $x = $acum % 11;
         $acum = ($x > 1) ? (11 - $x) : 0;
         // Retorna falso se o digito calculado eh diferente do passado na string
-        if ($acum != $this->cpf[10]) {
-            $this->setInvalidCpfMessage();
+        if (strlen($this->cpf) == 11) {
+            if ($acum != $this->cpf[10]) {
+                $this->addInvalidCpfMessage('Último dígito inválido');
+            }
         }
     }
 }

@@ -2,8 +2,9 @@
 
 namespace Dvi\Adianti\Widget\Form\PanelGroup;
 
-use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Base\TElement;
+use App\Http\Request;
 use Dvi\Adianti\Widget\Bootstrap\Component\ButtonGroup;
 use Dvi\Adianti\Widget\Form\Button;
 use Dvi\Adianti\Widget\Util\Action;
@@ -20,66 +21,77 @@ use Dvi\Adianti\Widget\Util\ActionLink;
  */
 trait PanelGroupActionsFacade
 {
-    protected $currentButton;
-    /**@var ButtonGroup $group_actions */
+    /**@var Button*/
+    protected $action_save;
+    /**@var ActionLink*/
+    protected $action_clear;
+    /**@var Button*/
+    protected $action_search;
+    /**@var Button*/
+    protected $action_delete;
+
+    /**@var ButtonGroup */
     protected $group_actions;
 
-    public function addActionSave(array $parameters = null, $tip = null)
+    public function addActionSave($route, array $parameters = null, $tip = null)
     {
-        $this->footerButton([$this->className, 'onSave'], $parameters, $tip)
-            ->icon('fa:floppy-o fa-2x')
-            ->setLabel(_t('Save'));
+        $this->action_save = $this->footerButton($route, $parameters, $tip)->icon('fa:floppy-o fa-2x')->setLabel(_t('Save'));
 
         return $this;
     }
 
-    public function addActionClear(array $parameters = null, $tip = null)
+    public function addActionClear($route, array $parameters = null, $tip = null)
     {
-        $this->footerButton([$this->className, 'onClear'], $parameters, $tip)->icon('fa:eraser fa-2x')->setLabel(_t('Clear'));
+        $this->action_clear = $this->footerLink($route)
+            ->icon('fa:eraser fa-2x')
+            ->label(_t('Clear'))
+            ->params($parameters);
+
+        $this->action_clear->{'title'} = $tip;
+        return $this;
+    }
+
+    public function addActionSearch($route = null, array $parameters = null, $tip = null)
+    {
+        $route = $route ?? urlRoute(Request::instance()->attr('route_base').'/search');
+        $this->action_search = $this->footerButton($route, $parameters, $tip)->icon('fa:search fa-2x')->setLabel(_t('Search'));
 
         return $this;
     }
 
-    public function addActionSearch(array $parameters = null, $tip = null)
+    public function addActionDelete($route, array $parameters = null, $tip = null)
     {
-        $this->footerButton([$this->className, 'onSearch'], $parameters, $tip)->icon('fa:search fa-2x')->setLabel(_t('Search'));
+        $this->action_delete = $this->footerLink($route)->params($parameters)->icon('fa:trash  red fa-2x')->label(_t('Delete'));
 
         return $this;
     }
 
-    public function addActionDelete(array $parameters = null, $tip = null)
+    public function footerButton(string $route, array $parameters = null, $tip = null): Button
     {
-        $this->footerButton([$this->className, 'onDelete'], $parameters, $tip)->icon('fa:trash  red fa-2x')->setLabel(_t('Delete'));
-
-        return $this;
-    }
-
-    public function footerButton(array $callback, array $parameters = null, $tip = null): Button
-    {
-        $action = $this->group_actions->addButton($callback, 'fa:floppy-o fa-2x', null, $parameters);
+        $action = $this->group_actions->addButton($route, 'fa:floppy-o fa-2x', null, $parameters);
         $action->setTip($tip);
-        return $this->currentButton = $action;
+        return $action;
     }
 
-    public function footerLink(array $callback, string $image = null, $btn_style = 'default'): ActionLink
+    public function footerLink(string $route, string $image = null, $btn_style = 'default'): ActionLink
     {
-        return $this->group_actions->addLink($callback, $image)->styleBtn('btn btn-' . $btn_style . ' dvi_panel_group');
+        return $this->group_actions->addLink($route, $image)->styleBtn('btn btn-' . $btn_style . ' dvi_panel_action');
     }
 
     public function addActionBackLink($action = null)
     {
-        $this->currentButton = new ActionLink($action, _t('Back'), 'fa:arrow-left fa-2x');
-        $this->currentButton->class = 'btn btn-default';
+        $link = new ActionLink($action, _t('Back'), 'fa:arrow-left fa-2x');
+        $link->class = 'btn btn-default';
 
-        $this->hboxButtonsFooter->addButton($this->currentButton);
+        $this->hboxButtonsFooter->addButton($link);
 
-        return $this->currentButton;
+        return $link;
     }
-
+    //Todo verificar, se nao for usado, remover
     private function createButton($params): Button
     {
         $btn = new Button($params['id']);
-        $btn->setAction(new TAction($params['callback'], $params['parameters']));
+        $btn->setAction(new Action($params['route'], 'GET', $params['parameters']));
 
         if (isset($params['label']) and $params['label']) {
             $element_label = new TElement('span');
@@ -95,18 +107,35 @@ trait PanelGroupActionsFacade
         return $btn;
     }
 
-    public function getCurrentButton(): Button
+//Todo remove    public function getCurrentButton(): Button
+//    {
+//        return $this->currentButton;
+//    }
+    //Todo check if unnused, then remove
+    private function createButtonLink($route, $label, $image, $class = null, $parameters = null): ActionLink
     {
-        return $this->currentButton;
+        $btn = new ActionLink(new Action($route, 'GET', $parameters), $label, $image);
+        $btn->class = 'dvi_panel_action ' . $class;
+        return $btn;
     }
 
-    private function createButtonLink($value): ActionLink
+    public function getActionSave()
     {
-        $action = new Action($value['callback'], $value['parameters']);
-        $label = $value['label'];
-        $icon = $value['image'];
-        $btn = new ActionLink($action, $label, $icon);
-        $btn->class = 'dvi_panel_action ' . $value['class'];
-        return $btn;
+        return $this->action_save;
+    }
+
+    public function getActionSearch()
+    {
+        return $this->action_search;
+    }
+
+    public function getActionClear()
+    {
+        return $this->action_clear;
+    }
+
+    public function getActionDelete()
+    {
+        return $this->action_delete;
     }
 }

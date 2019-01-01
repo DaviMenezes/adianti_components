@@ -2,13 +2,10 @@
 
 namespace Dvi\Adianti\WidgetBootstrap\Component;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Adianti\Base\Lib\Widget\Form\TField;
 use Adianti\Base\Lib\Widget\Form\TForm;
-use Dvi\Adianti\Widget\Util\Action;
 use Dvi\Adianti\Widget\Form\Button;
+use Dvi\Adianti\Widget\Util\Action;
 use Dvi\Adianti\Widget\Util\ActionLink;
 
 /**
@@ -22,11 +19,11 @@ use Dvi\Adianti\Widget\Util\ActionLink;
  */
 class GroupActions
 {
-    protected $buttons = array();
+    //Todo remove if unused protected $buttons = array();
     protected $items = array();
     protected $currentAction;
     protected $icon_size;
-    /**@var TForm $form_default*/
+    /**@var TForm*/
     protected $form_default;
 
     public function __construct()
@@ -57,11 +54,11 @@ class GroupActions
         $this->icon_size = $size;
     }
 
-    public function addButton(array $action, $icon = null, $label = null, array $parameters = null):Button
+    public function addButton(string $route, $icon = null, $label = null, array $parameters = null):Button
     {
         try {
             $btn = new Button();
-            $btn->setAction(new TAction($action, $parameters));
+            $btn->setAction(new Action($route, 'POST', $parameters));
 
             if ($label) {
                 $element_label = new TElement('span');
@@ -81,7 +78,6 @@ class GroupActions
             }
 
             $btn->class = 'btn btn-default dvi_panel_action';
-            $btn->style = 'font-size: 14px;';
 
             $this->buttons[] = $btn;
             $this->currentAction = $btn;
@@ -102,9 +98,9 @@ class GroupActions
         return $this->buttons;
     }
 
-    public function addLink(array $callback, $icon = null, $label = null, array $parameters = null):ActionLink
+    public function addLink(string $route, $icon = null, $label = null, array $parameters = null):ActionLink
     {
-        $link = new ActionLink(new Action($callback, $parameters), $label, $icon);
+        $link = new ActionLink(new Action($route, 'GET', $parameters), $label, $icon);
         $link->class = 'btn btn-default dvi_panel_action';
 
         $this->currentAction = $link;

@@ -2,8 +2,11 @@
 
 namespace Dvi\Adianti\Control;
 
+use Adianti\Base\Lib\Registry\TSession;
+use App\Http\Request;
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\View\Standard\Form\FormView;
+use mysql_xdevapi\Exception;
 
 /**
  * Control FormControl
@@ -16,67 +19,48 @@ use Dvi\Adianti\View\Standard\Form\FormView;
  */
 abstract class FormControl extends DviControl
 {
-    protected $viewClass;
-    /**@var FormView $view */
-    protected $view;
+    /**@var FormView */
+    public $view;
 
     use FormControlTrait;
     use CommonControl;
 
-    public function __construct($param)
+    public function __construct(Request $request)
     {
-        try {
-            Transaction::open();
+        parent::__construct($request);
 
-            parent::__construct($param);
-
-            $this->init();
-
-            $this->validateRequiredParams();
-
-            $this->createView($param);
-
-            $this->createCurrentObject();
-
-            $this->view->setCurrentObj($this->currentObj);
-
-            $this->view->setPageList($this->pageList);
-
-            Transaction::close();
-        } catch (\Exception $e) {
-            Transaction::rollback();
-            throw $e;
-        }
+        $this->init();
     }
 
     /**@example
-     * $this->viewClass = MyFormListView::class; (Representante da view)
-     * $this->pageList = MyListControl::class (Controlador representante da listagem);
+     * $this->request->add(['view_class' => MyFormListView::class]);
+     * $this->request->add(['route_page_list' => urlRoute('/route')]);
      */
     abstract public function init();
 
-    protected function createView($param)
+    protected function createView()
     {
-        $this->view = new $this->viewClass($param);
+        $view = $this->request->attr('view_class');
+        $this->view = new $view($this->request);
     }
 
     protected function validateRequiredParams()
     {
         $msg_error = null;
-        if (empty($this->viewClass)) {
-            $msg_error .= 'Defina a propriedade viewClass no método init() do seu controlador (' . self::shortName(get_called_class()) . ')' . "<br>";
+        if (!$this->request->attr('route_base')) {
+            throw new \Exception('Informe o atributo route_base');
         }
-        if (!is_subclass_of($this->viewClass, FormView::class)) {
+
+        if (!$this->request->attr('view_class')) {
+            $msg_error .= 'Defina o parâmetro viewClass no método init() do seu controlador (' . self::shortName(get_called_class()) . ')' . "<br>";
+        }
+        if (!is_subclass_of($this->request->attr('view_class'), FormView::class)) {
             $msg_error .= 'A view deve ser filha de ' . (new \ReflectionClass(FormView::class))->getShortName();
         }
 
-        if (empty($this->pageList)) {
-            $msg_error .= 'Defina a propriedade pageList.';
+        if (!$this->request->attr('route_page_list')) {
+            $msg_error .= 'Defina o parâmetro route_page_list.';
             $msg_error .= 'Ela representa o controlador de listagem e será usada por alguns componentes.';
-        } else {
-            if (!is_subclass_of($this->pageList, ListControl::class)) {
-                $msg_error = 'A sua listagem deve ser do tipo ' . (new \ReflectionClass(ListControl::class))->getShortName();
-            }
         }
 
         if ($msg_error) {
@@ -93,15 +77,30 @@ abstract class FormControl extends DviControl
 
     protected function buildView()
     {
-        $this->view->build($this->request);
+        try {
+            Transaction::open();
+
+            $this->init();
+
+            $this->validateRequiredParams();
+
+            $this->createView();
+
+            $this->createCurrentObject();
+
+            $this->view->setCurrentObj($this->currentObj);
+
+            $this->view->build($this->request);
+            Transaction::close();
+        } catch (\Exception $e) {
+            Transaction::rollback();
+            throw $e;
+        }
     }
 
-    public function show()
+    public function create()
     {
-        if (!$this->hasMethod($this->request)) {
-            $this->buildView();
-            $this->getViewContent();
-        }
-        parent::show();
+        $this->buildView($this->request);
+        $this->getViewContent();
     }
 }

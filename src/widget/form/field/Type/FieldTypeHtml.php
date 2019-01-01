@@ -17,7 +17,7 @@ class FieldTypeHtml implements FieldTypeInterface
 {
     public function sanitize($value)
     {
-        $value = filter_var($value, FILTER_SANITIZE_STRING);
+        $value = filter_var($value);
         return $value;
     }
 }

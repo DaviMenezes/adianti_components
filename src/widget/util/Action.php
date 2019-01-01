@@ -3,9 +3,9 @@
 namespace Dvi\Adianti\Widget\Util;
 
 use Adianti\Base\Lib\Control\TAction;
-use Adianti\Base\Lib\Core\AdiantiCoreApplication;
-use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use Dvi\AdiantiExtension\Route;
+use App\Http\Request;
+use App\Http\RouteInfo;
+use App\Http\Router;
 use Exception;
 
 /**
@@ -18,27 +18,21 @@ use Exception;
  */
 class Action extends TAction
 {
+    protected $is_static;
+    private $route;
+    protected $http_method;
+
     /**
      * Action constructor.
-     * @param array $action
+     * @noinspection PhpMissingParentConstructorInspection
+     * @param string $route
+     * @param string $http_method
      * @param array|null $parameters
-     * @throws Exception
      */
-    public function __construct(array $action, array $parameters = null)
+    public function __construct(string $route, string $http_method = 'GET', array $parameters = null)
     {
-        if (!is_object($action[0])) {
-            $action[0] = Route::getPath($action[0]);
-        }
-
-        $this->action = $action;
-        if (is_array($action) and isset($action[1])) {
-            if (!is_callable($this->action)) {
-                $action_string = $this->toString();
-                $str = 'Method ^1 must receive a parameter of type ^2';
-                throw new Exception(AdiantiCoreTranslator::translate($str, __METHOD__, 'Callback'). ' <br> '.
-                    AdiantiCoreTranslator::translate('Check if the action (^1) exists', $action_string));
-            }
-        }
+        $this->action = $route;
+        $this->http_method = $http_method;
 
         if (!empty($parameters)) {
             $this->setParameters($parameters);
@@ -47,33 +41,73 @@ class Action extends TAction
 
     public function serialize($format_action = true)
     {
-        // check if the callback is a method of an object
-        if (is_array($this->action)) {
-            $class = $this->action[0];
-            // get the class name
-            $url['class'] = is_object($class) ? Route::getClassName(get_class($class)) : Route::getClassName($this->action[0]);
-            // get the method name
-            $url['method'] = $this->action[1] ?? null;
-        } elseif (is_string($this->action)) {
-            // otherwise the callback is a function
-
-            // get the function name
-            $url['method'] = $this->action;
-        }
-
-        // check if there are parameters
-        if ($this->param) {
-            $url = array_merge($url, $this->param);
-        }
-
-        if ($format_action) {
-            if ($router = AdiantiCoreApplication::getRouter()) {
-                return $router(http_build_query($url));
-            } else {
-                return 'index.php?'.http_build_query($url);
+        $collection = collect($this->param);
+        $parameters = '';
+        $collection->except(['offset', 'static'])->map(function ($value, $key) use (&$parameters) {
+            if ($key == 'order' and empty($value)) {
+                $value = 'id';
             }
-        } else {
-            return http_build_query($url);
+            if ($key == 'direction' and empty($value)) {
+                $value = 'asc';
+            }
+            $parameters .= '/'.$key.'/'.$value;
+        });
+        if (!empty($this->param['offset'])) {
+            $parameters .= '/offset/'.$this->param['offset'];
         }
+        if (!empty($this->param['static']) or $this->is_static) {
+            $parameters .= '/&static=1';
+        }
+        $url = str($this->action)->ensureLeft('/')->append($parameters)->str();
+
+        return $url;
+    }
+
+    public function isStatic($route = null)
+    {
+        try {
+            $action = $this->prepareActionString($route);
+
+            $dispatcher = Router::getDispatcher();
+            $uri = Router::getPreparedRoute(str($action));
+            $dispatch = $dispatcher->dispatch($this->http_method, $uri->str());
+            Router::setRouteInfo($dispatch);
+            $routeInfo = Router::getRouteInfo();
+
+            $static = (new \ReflectionClass($routeInfo->class()))->getMethod($routeInfo->method())->isStatic();
+
+            return $static;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function setStatic()
+    {
+        $this->is_static = true;
+    }
+
+    public function setRouteParams(string $route)
+    {
+        $this->route = $route;
+    }
+
+    /**
+     * @param $route
+     * @return string
+     */
+    protected function prepareActionString($route): string
+    {
+        $action = $route ?? $this->action;
+
+        str($this->route)->split('/')->filter(function ($value, $key) {
+            return !empty($value->str());
+        })->map(function ($key, $value) use (&$action) {
+            if ($value % 2 == 0) {
+                return;
+            }
+            $action .= '/' . $key->str() . '/' . $value;
+        });
+        return $action;
     }
 }

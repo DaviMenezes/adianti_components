@@ -42,7 +42,7 @@ class ActionGroup
         $this->items[] = '<li role="separator" class="divider"></li>';
     }
 
-    public function addLink(array $callback, $icon = null, $label = null, array $parameters = null, $style = null):ActionLink
+    public function addLink(string $route, $icon = null, $label = null, array $parameters = null, $style = null):ActionLink
     {
         if ($icon) {
             $class_icon = explode(' ', $icon);
@@ -53,8 +53,8 @@ class ActionGroup
                 $icon .= ' '.$this->icon_size;
             }
         }
-        $link = new ActionLink(new Action($callback, $parameters), $label, $icon);
-//        $link->class = 'btn btn-default dvi_panel_action';
+        $link = new ActionLink(new Action($route, 'GET', $parameters), $label, $icon);
+//Todo check ->        $link->class = 'btn btn-default dvi_panel_action';
 
         $this->items[] = $link;
 

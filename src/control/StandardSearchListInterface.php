@@ -8,9 +8,11 @@
 
 namespace Dvi\Adianti\Control;
 
+use App\Http\Request;
+
 interface StandardSearchListInterface
 {
     public function onSearch();
 
-    public static function onClear($param);
+    public static function onClear(Request $request);
 }
