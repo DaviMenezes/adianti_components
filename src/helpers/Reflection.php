@@ -24,6 +24,11 @@ trait Reflection
         return self::obj($class ?? get_called_class())->getShortName();
     }
 
+    public static function objClassName($obj)
+    {
+        return (new \ReflectionObject($obj))->getName();
+    }
+
     public static function lowerName($class = null)
     {
         return strtolower(self::shortName($class));
