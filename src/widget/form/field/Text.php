@@ -101,6 +101,10 @@ class Text extends TText implements FormField
                 $properties .= $property.'='. $value.' ';
             });
 
-        view('form/fields/text', ['properties' => $properties]);
+        $data['properties'] = $properties;
+        if ($this->value) {
+            $data['value'] = $this->value;
+        }
+        view('form/fields/text', $data);
     }
 }
