@@ -29,6 +29,7 @@ trait CommonControl
 {
     /**@var \App\Http\Request*/
     protected $request;
+    protected $form_attribute_values;
 
     public static function onClear(Request $request)
     {
@@ -74,17 +75,34 @@ trait CommonControl
             ->merge((array)$this->getFormData())
             ->all();
 
+        $default_model_short_name = Reflection::shortName($model_default);
         /**@var DviModel $last_model */
         $last_model = $this->currentObj;
-        $model_form_attributes[Reflection::shortName($model_default)] = $last_model;
+        $last_model_short_name = $default_model_short_name;
+        $last_model_full_name = Reflection::objClassName($this->currentObj);
+        $model_form_attributes[$last_model_short_name] = $last_model;
 
+        $this->form_attribute_values = [];
         foreach ($form_data as $property => $value) {
             $models = explode('-', $property);
             $property = Utils::lastStr('-', $property);
 
             foreach ($models as $model_name) {
-                if ($model_name == Reflection::shortName($model_default)) {
+                if ($this->alreadySetModelProperty($last_model_full_name, $property)) {
+                    continue;
+                }
+
+                if ($model_name == $default_model_short_name) {
                     $last_model = $this->currentObj;
+
+                    if (!in_array($property, array_keys($last_model->getPublicProperties()))) {
+                        continue;
+                    }
+
+                    $last_model_full_name = Reflection::objClassName($this->currentObj);
+
+                    $this->form_attribute_values[$last_model_full_name][$property] = $value;
+
                     $this->setModelAttributeValue($last_model, $property, $value);
                     continue;
                 }
@@ -92,12 +110,22 @@ trait CommonControl
                 $model_name_lower = strtolower($model_name);
                 if ($last_model->getRelationship($model_name_lower)) {
                     $last_model = $last_model->$model_name_lower();
+
+                    if (!in_array($property, $last_model->getAttributes())) {
+                        continue;
+                    }
+
+                    $last_model_short_name = $model_name;
+                    $last_model_full_name = Reflection::objClassName($last_model);
                 }
+                $this->form_attribute_values[$last_model_full_name][$property] = $value;
+
                 $this->setModelAttributeValue($last_model, $property, $value);
 
-                $model_form_attributes[$model_name] = $last_model;
+                $model_form_attributes[$last_model_short_name] = $last_model;
             }
         }
+
         return $model_form_attributes;
     }
 
@@ -126,22 +154,18 @@ trait CommonControl
         return htmlspecialchars($value);
     }
 
-    protected function setModelAttributeValue(DviModel &$current_obj, $attribute_name, $value)
+    protected function setModelAttributeValue(DviModel &$model, $attribute_name, $value)
     {
-        if (!in_array($attribute_name, $current_obj->getAttributes())) {
+        if ($this->formFieldModelAttributeIsDisabled($model, $attribute_name)) {
             return;
         }
 
-        if ($this->formFieldModelAttributeIsDisabled($current_obj, $attribute_name)) {
-            return;
-        }
-
-        if ($this->modelSetMethodExists($current_obj, $attribute_name)) {
+        if ($this->modelSetMethodExists($model, $attribute_name)) {
             $set_attibute_method = 'set_' . $attribute_name;
-            $current_obj->$set_attibute_method($value);
+            $model->$set_attibute_method($value);
             return;
         }
-        $current_obj->addAttributeValue($attribute_name, $value);
+        $model->addAttributeValue($attribute_name, $value);
     }
 
     protected function formFieldModelAttributeIsDisabled(ActiveRecord &$current_obj, $attribute_name)
@@ -224,5 +248,13 @@ trait CommonControl
 
         $route = urlRoute($request->attr('route_base'));
         Redirect::ajaxLoadPage($route, $url_params);
+    }
+
+    private function alreadySetModelProperty($last_model_short_name, $property)
+    {
+        if (!empty($this->form_attribute_values[$last_model_short_name][$property])) {
+            return true;
+        }
+        return false;
     }
 }
