@@ -45,6 +45,7 @@ abstract class ListControl extends DviControl implements StandardSearchListInter
         $this->view->build($this->request);
 
         $this->datagrid = $this->view->getDatagrid();
+
         $this->pageNavigation = $this->view->getPageNavigation();
 
         $this->already_build_view = true;
@@ -52,6 +53,8 @@ abstract class ListControl extends DviControl implements StandardSearchListInter
 
     /**@example
      * $this->request->add(['view_class' => 'MyFormListView::class']);
+     * $this->request->add(['route_base' => route('/your/route/base')]);
+     * $this->request->add(['route_form_base' => route('/your/route/form/base')]);
      */
     abstract public function init();
 
