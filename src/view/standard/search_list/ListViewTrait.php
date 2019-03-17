@@ -8,6 +8,7 @@ use App\Http\Request;
 use Dvi\Adianti\Widget\Base\DataGrid;
 use Dvi\Adianti\Widget\Datagrid\PageNavigation;
 use Dvi\Adianti\Widget\Form\PanelGroup\PanelGroup;
+use Dvi\Adianti\Widget\Util\Action;
 
 /**
  * View ListViewTrait
@@ -70,7 +71,7 @@ trait ListViewTrait
         $this->datagrid->createModel($create_header, $show_default_actions);
     }
 
-    public function createPageNavigation($count, $params)
+    public function createPageNavigation($count, Request $request)
     {
         $this->pageNavigation = new PageNavigation();
 
@@ -83,7 +84,7 @@ trait ListViewTrait
         $this->pageNavigation->setAction(new Action(urlRoute($this->request->attr('route_base').'/load'), 'GET', $new_params));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         $this->pageNavigation->setCount($count);
-        $this->pageNavigation->setProperties($params);
+        $this->pageNavigation->setProperties($request->getParameters());
         $this->pageNavigation->setLimit($this->query_limit);
     }
 
@@ -114,7 +115,7 @@ trait ListViewTrait
 
     public function createActionNew($route = null)
     {
-        $route = $route ?? urlRoute($this->request->attr('route_base').'/create');
+        $route = $route ?? urlRoute($this->request->attr('route_form_base').'/create');
         if ($route) {
             return $this->panel
                 ->footerLink($route, 'fa:plus fa-2x')->label(_t('Add'));
