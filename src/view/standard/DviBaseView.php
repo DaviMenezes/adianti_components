@@ -33,8 +33,8 @@ abstract class DviBaseView
     public function __construct(Request $request)
     {
         $this->request = $request;
-        //Todo dar um jeito de instanciar isto apenas na primeira hora que ele for necessário
-        $this->vbox = new VBox();
+
+        $this->setVBox();
     }
 
     abstract public function build(Request $request);
@@ -63,5 +63,13 @@ abstract class DviBaseView
         $this->setModel();
 
         return $this->model;
+    }
+
+    protected function setVBox(): void
+    {
+        if ($this->vbox) {
+            return;
+        }
+        $this->vbox = new VBox();
     }
 }
