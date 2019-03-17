@@ -158,6 +158,7 @@ trait FormField
             $this->prepare();
 
             if (!$this->use_label_field) {
+
                 $this->showField();
                 return;
             }
@@ -165,37 +166,41 @@ trait FormField
             $vbox = new VBox();
 
             if ($this->error_msg) {
-                $this->showField();
 
-                $label =  $this->wrapperStringClass('verifique');
-                $vbox->add($this->getValidationErrorLink($label));
-                $vbox->show();
+                $this->showField();
+//Todo analisar e remover qdo terminar processo de troca de componentes
+                //                $label =  $this->wrapperStringClass('verifique');
+//                $vbox->add($this->getValidationErrorLink($label));
+//                $vbox->show();
                 return;
             }
-            $vbox->add($this->getLabel());
+//            $vbox->add($this->getLabel());
             $vbox->show();
-            $this->showField();
+//            $this->showField();
+            parent::show();
         } catch (\Exception $e) {
             throw new \Exception('Houve um problema na construção do campo '. $this->getName());
         }
     }
 
-    protected function getValidationErrorLink(string $label = null)
+    protected function getFieldInfoValidationErrorData(string $label = null)
     {
-        $link_error = null;
+        $field_info = null;
         if (in_array(FormFieldValidation::class, array_keys((new \ReflectionClass(self::class))->getTraits()))) {
             if ($this->error_msg) {
                 $this->setErrorValidationSession();
-                $parameters = ['field' => $this->getName(), 'form' => $this->getFormName(), 'static' => 1];
+                $parameters = ['field' => $this->getName(), 'form' => $this->getFormName()];
 
                 $route_base = Request::instance()->attr('route_base');
-                $link_error = new ActionLink(new Action(urlRoute($route_base.'/show_error'), 'GET', $parameters));
-                $link_error->label($label);
-                $link_error->{'title'} = 'Clique para ver a mensagem';
-                $link_error->icon('fa:exclamation-triangle red', 'padding-left: 2px;');
+                $route = urlRoute($route_base.'/show_error', $parameters);
+                $route .= '&static=1';
+
+                $field_info['route'] = $route;
+                $field_info['label'] = $label;
+                $field_info['title'] = 'Clique para ver a mensagem';
             }
         }
-        return $link_error;
+        return $field_info;
     }
 
     /**
@@ -217,10 +222,16 @@ trait FormField
 
     protected function showField()
     {
-        if (method_exists($this, 'showView')) {
+        $method = (new \ReflectionClass(self::class))->getMethod('showView');
+        $called_class = get_called_class();
+        if ($method and $method->class == $called_class) {
             $this->showView();
             return;
         }
+//        if (method_exists(self::class, 'showView')) {
+//            $this->showView();
+//            return;
+//        }
         parent::show();
     }
 }
