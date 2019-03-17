@@ -96,6 +96,9 @@ class ActionLink extends TTextDisplay
         $parameters = '';
         if ($params) {
             foreach ($params as $key => $value) {
+                if ($key == 'static') {
+                    continue;
+                }
                 $parameters .= '/'.$key.'/';
                 if (is_int($value)) {
                     $parameters .= $value;
@@ -108,7 +111,7 @@ class ActionLink extends TTextDisplay
         $route = $action->getAction(). $parameters;
         $params = collect($params);
         if ($params->has('static') and $params->get('static') == '1') {
-            $route .= '&static=1';
+            $route .= '/&static=1';
         }
 
         $this->{'href'} = $route;
