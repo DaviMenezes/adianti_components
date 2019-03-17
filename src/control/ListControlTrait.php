@@ -174,18 +174,15 @@ trait ListControlTrait
     {
         $session_name = Reflection::shortName(get_called_class()) . '_listOrder';
         if ($this->request->has('order')) {
-            $direction_array = ['asc' => 'desc', 'desc' => 'asc'];
-            $listOrder = TSession::getValue($session_name);
-
-            $direction = $direction_array[$listOrder['direction'] ?? 'desc'];
+            $direction = $this->request->get('direction') ?? 'desc';
 
             $order = $this->request->get('order');
-            TSession::setValue($session_name, ['field' => $order, 'direction' => $direction ?? 'asc']);
+            TSession::setValue($session_name, ['field' => $order, 'direction' => $direction]);
             return;
         }
         $tableAlias = Reflection::shortName($this->view->getModel());
         $order = $tableAlias . '.id';
-        TSession::setValue($session_name, ['field' => $order, 'direction' => $direction ?? 'asc']);
+        TSession::setValue($session_name, ['field' => $order, 'direction' => $direction ?? 'desc']);
     }
 
     public function fillDatagrid()
