@@ -35,6 +35,16 @@ class Varchar extends TEntry implements FormField
     //Habilitar este campo este metodo esta removendo as mascaras dos campos, analisar !!!
     public function showView()
     {
+        $data = $this->getViewData();
+
+        $data['label'] = $this->error_msg ? 'verifique' : $this->getLabel();
+        $data['field_info'] = $this->getFieldInfoValidationErrorData($this->getLabel());
+
+        view("form/fields/varchar", $data);
+    }
+
+    protected function prepareViewData()
+    {
         $data['id'] = $this->id;
         $data['name'] = $this->name;
         if ($this->value) {
@@ -42,12 +52,11 @@ class Varchar extends TEntry implements FormField
         }
 
         if (!empty($this->size)) {
-            if (strstr($this->size, '%') !== false) {
-                $data['style'] = "width:{$this->size};";
-            } else {
-                $data['style'] = "width:{$this->size}px;";
-            }
+            $width = strstr($this->size, '%') === false ? 'px' : '';
+            $data['style'] = "width:{$this->size}$width;";
         }
+
+        //Todo Revolver estes ifs todos com serviços
 
         // verify if the widget is non-editable
         if (parent::getEditable()) {
@@ -74,10 +83,6 @@ class Varchar extends TEntry implements FormField
                     $this->setProperty('onBlur', $this->exitFunction, true);
                 }
             }
-
-            if ($this->getMask()) {
-                $this->tag->{'onKeyPress'} = "return tentry_mask(this,event,'{$this->getMask()}')";
-            }
         } else {
             $data['readonly'] = 1;
             $data['onmouseover'] = "style.cursor='default'";
@@ -90,18 +95,21 @@ class Varchar extends TEntry implements FormField
         if ($this->numericMask) {
             TScript::create("tentry_numeric_mask( '{$this->id}', {$this->decimals}, '{$this->decimalsSeparator}', '{$this->thousandSeparator}'); ");
         }
+        return $data;
+    }
+
+    protected function getViewData()
+    {
+        $data = $this->prepareViewData();
 
         $properties = $this->tag->getProperties();
-        collect($properties)
-            ->filter()
-            ->map(function ($value, $property) use (&$data) {
-                if ($property == 'class' and isset($data[$property])) {
-                    $data[$property] .= ' tfield_disabled';
-                } else {
-                    $data[$property] = $value;
-                }
-            });
 
-        view("form/fields/varchar", ['properties' => $data]);
+        $data = array_merge($properties, $data);
+        $data['properties'] = '';
+
+        collect($data)->filter()->map(function ($value, $property) use (&$data) {
+            $data['properties'] .= $property . '="' . $value . '" ';
+        });
+        return $data;
     }
 }
