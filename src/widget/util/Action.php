@@ -48,7 +48,7 @@ class Action extends TAction
                 $value = 'id';
             }
             if ($key == 'direction' and empty($value)) {
-                $value = 'asc';
+                $value = 'desc';
             }
             $parameters .= '/'.$key.'/'.$value;
         });
