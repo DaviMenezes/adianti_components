@@ -101,10 +101,13 @@ class Text extends TText implements FormField
                 $properties .= $property.'='. $value.' ';
             });
 
-        $data['properties'] = $properties;
-        if ($this->value) {
-            $data['value'] = $this->value;
-        }
-        view('form/fields/text', $data);
+        $params = [
+            'properties' => $properties,
+            'value' => $this->value ?? null,
+            'label' => $this->error_msg ? $this->wrapperStringClass('verifique') : $this->getLabel(),
+            'field_info' => $this->getFieldInfoValidationErrorData($this->getLabel())
+        ];
+
+        view('form/fields/text', $params);
     }
 }
