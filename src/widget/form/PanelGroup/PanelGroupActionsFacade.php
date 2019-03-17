@@ -42,6 +42,9 @@ trait PanelGroupActionsFacade
 
     public function addActionClear($route, array $parameters = null, $tip = null)
     {
+        if (empty($parameters['static'])) {
+            $parameters['static'] = 1;
+        }
         $this->action_clear = $this->footerLink($route)
             ->icon('fa:eraser fa-2x')
             ->label(_t('Clear'))
