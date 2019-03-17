@@ -39,7 +39,7 @@ class DataGridColumn extends TDataGridColumn
             $this->order_params['direction'] = 'desc';
             return $this;
         }
-        $this->order_params['direction'] = 'asc';
+        $this->order_params['direction'] = 'desc';
         return $this;
     }
 
