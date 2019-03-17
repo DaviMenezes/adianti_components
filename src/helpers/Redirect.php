@@ -24,7 +24,7 @@ class Redirect
     */
     public static function ajaxLoadPage(string $route, array $parameters = null)
     {
-        $route = route($route, $parameters);
+        $route = urlRoute($route, $parameters);
 
         TScript::create("__adianti_load_page('".$route."');");
     }
