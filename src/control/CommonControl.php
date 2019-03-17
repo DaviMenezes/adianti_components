@@ -3,8 +3,10 @@
 namespace Dvi\Adianti\Control;
 
 use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Dialog\TQuestion;
+use Adianti\Base\Lib\Widget\Form\TForm;
 use App\Http\Request;
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Redirect;
@@ -39,19 +41,16 @@ trait CommonControl
         TSession::setValue($className . '_filters', null);
         TSession::setValue($className . '_listOrder', null);
 
-        //Todo check need params maybe in url pagination...
-        $params = $request->getCollection()->except(['id', 'key', 'static'])->all();
-
         $route = $request->routeInfo()->fullRoute()->removeRight('clear')->removeRight('/');
 
         $parent_class = get_parent_class(get_called_class());
         if ($parent_class == FormControl::class) {
-            $route = $route->removeRight('clear')->ensureRight('create')->str();
+            $route = $route->removeRight('clear')->ensureRight('/')->ensureRight('create')->str();
             Redirect::ajaxLoadPage($route);
             return;
         }
 
-        Redirect::redirect(urlRoute($route->str()));
+        Redirect::ajaxLoadPage($route->str());
     }
 
     /** check if form has token and if is valid(session value) */
@@ -204,7 +203,7 @@ trait CommonControl
         $action_yes = new Action($route_base);
 
         $url_params = $request->obj()->query->all();
-//Todo check        $url_params['static'] = 1;
+        //Todo check        $url_params['static'] = 1;
         $url_params['key'] = $id;
         $url_params['id'] = $id;
 
@@ -246,7 +245,7 @@ trait CommonControl
     {
         $url_params = collect($request->attr('url_params'))->except(['id', 'key', 'static'])->all();
 
-        $route = urlRoute($request->attr('route_base'));
+        $route = $request->attr('route_base');
         Redirect::ajaxLoadPage($route, $url_params);
     }
 
