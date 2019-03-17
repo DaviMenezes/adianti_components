@@ -97,5 +97,7 @@ abstract class FormListControl extends DviControl
         $this->loadDatagrid();
 
         $this->view->addPageNavigationInBoxContainer();
+
+        $request->add(['editing' => true]);
     }
 }
