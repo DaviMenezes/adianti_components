@@ -114,25 +114,12 @@ class DataGrid extends TDataGrid
 
     public function useEditAction($route = null): TDataGridAction
     {
-        $route = $route ?? urlRoute(Request::instance()->attr('route_base').'/edit');
-        $this->grid_action_edit = new TDataGridAction($route);
-        $this->grid_action_edit->setField('id');
-        $this->grid_action_edit->setLabel('Editar');
-        $this->grid_action_edit->setImage('fa:pencil blue fa-2x');
-
-        return $this->grid_action_edit;
+        return $this->createActionEdit($route);
     }
 
     public function useDeleteAction($route = null, $params_delete = null): TDataGridAction
     {
-        $route = $route ?? urlRoute(Request::instance()->attr('route_base').'/delete');
-        $this->grid_action_delete = new TDataGridAction($route, 'GET', $params_delete);
-        $this->grid_action_delete->setField('id');
-        $this->grid_action_delete->setLabel('Excluir');
-        $this->grid_action_delete->setImage('fa:trash red fa-2x');
-        $this->grid_action_delete->setStatic();
-
-        return $this->grid_action_delete;
+        return $this->createActionDelete($route, $params_delete);
     }
 
     public function items(array $items, bool $clear = true)
@@ -182,5 +169,34 @@ class DataGrid extends TDataGrid
         // inline editing treatment
         TScript::create(" tdatagrid_inlineedit( '{".$route."}' );");
         TScript::create(" tdatagrid_enable_groups();");
+    }
+
+    protected function createActionEdit($route): TDataGridAction
+    {
+        $request = Request::instance();
+        if ($request->attr('route_form_base')) {
+            $route = $request->attr('route_form_base');
+        } else {
+            $route = $route ?? $request->attr('route_base');
+        }
+        $route = urlRoute($route . '/edit');
+        $this->grid_action_edit = new TDataGridAction($route);
+        $this->grid_action_edit->setField('id');
+        $this->grid_action_edit->setLabel('Editar');
+        $this->grid_action_edit->setImage('fa:pencil blue fa-2x');
+
+        return $this->grid_action_edit;
+    }
+
+    protected function createActionDelete($route, $params_delete): TDataGridAction
+    {
+        $route = $route ?? urlRoute(Request::instance()->attr('route_base') . '/delete');
+        $this->grid_action_delete = new TDataGridAction($route, 'GET', $params_delete);
+        $this->grid_action_delete->setField('id');
+        $this->grid_action_delete->setLabel('Excluir');
+        $this->grid_action_delete->setImage('fa:trash red fa-2x');
+        $this->grid_action_delete->setStatic();
+
+        return $this->grid_action_delete;
     }
 }
