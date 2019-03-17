@@ -52,6 +52,14 @@ abstract class BaseFormView extends DviBaseView
         $this->panel = $this->panel ?? new PanelGroup($this->request->routeInfo()->fullRoute());
 
         $this->setPageTitle();
+
+        $this->setFormNameInSession();
+    }
+
+    public function setFormNameInSession()
+    {
+        $class_name = Reflection::shortName(Request::instance()->routeInfo()->class());
+        TSession::setValue($class_name . '_form_name', $this->panel->getForm()->getName());
     }
 
     public function createFormToken(Request $request)
