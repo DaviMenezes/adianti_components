@@ -62,13 +62,15 @@ trait FormControlTrait
     public function edit(Request $request)
     {
         try {
+            $request->add(['editing' => true]);
+
             $this->buildView($request);
 
             if ($this->request->has('tab')) {
                 $this->view->getPanel()->setCurrentNotebookPage((int)$this->request->get('tab'));
             }
 
-            if ($this->isEditing()) {
+            if (editing()) {
                 Transaction::open($this->database);
 
                 $model_alias = Reflection::shortName($this->view->getModel());
@@ -195,7 +197,7 @@ trait FormControlTrait
             ->append('/edit/key/' . $this->currentObj->id.'/id/'.$this->currentObj->id)
             ->append($uri)->str();
 
-        Redirect::ajaxLoadPage(urlRoute($route));
+        Redirect::ajaxLoadPage($route);
     }
 
     protected function setFormWithParams()
@@ -230,7 +232,7 @@ trait FormControlTrait
     /**Create object being edited*/
     protected function createCurrentObject()
     {
-        if (!$this->isEditing()) {
+        if (!editing()) {
             return;
         }
 
