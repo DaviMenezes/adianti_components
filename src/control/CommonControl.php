@@ -65,67 +65,71 @@ trait CommonControl
 
     protected function getModelAndAttributesOfTheForm(): array
     {
-        $model_default = $this->view->getModel();
+        try {
+            $model_default = $this->view->getModel();
 
-        $this->currentObj = new $model_default($this->request->get(Reflection::shortName($model_default) . '-id'));
+            $this->currentObj = new $model_default($this->request->get(Reflection::shortName($model_default) . '-id'));
 
-        $form_data = $this->request->getCollection()
-            ->except(['form_token'])
-            ->merge((array)$this->getFormData())
-            ->all();
+            $form_data = $this->request->getCollection();
+            $form_data = $form_data->merge((array)$this->getFormData())
+                ->except('form_token')
+                ->all();
 
-        $default_model_short_name = Reflection::shortName($model_default);
-        /**@var DviModel $last_model */
-        $last_model = $this->currentObj;
-        $last_model_short_name = $default_model_short_name;
-        $last_model_full_name = Reflection::objClassName($this->currentObj);
-        $model_form_attributes[$last_model_short_name] = $last_model;
+            $default_model_short_name = Reflection::shortName($model_default);
+            /**@var DviModel $last_model */
+            $last_model = $this->currentObj;
+            $last_model_short_name = $default_model_short_name;
+            $last_model_full_name = Reflection::objClassName($this->currentObj);
+            $model_form_attributes[$last_model_short_name] = $last_model;
 
-        $this->form_attribute_values = [];
-        foreach ($form_data as $property => $value) {
-            $models = explode('-', $property);
-            $property = Utils::lastStr('-', $property);
+            $this->form_attribute_values = [];
+            foreach ($form_data as $property => $value) {
+                $models = explode('-', $property);
+                $property = Utils::lastStr('-', $property);
 
-            foreach ($models as $model_name) {
-                if ($this->alreadySetModelProperty($last_model_full_name, $property)) {
-                    continue;
-                }
-
-                if ($model_name == $default_model_short_name) {
-                    $last_model = $this->currentObj;
-
-                    if (!in_array($property, array_keys($last_model->getPublicProperties()))) {
+                foreach ($models as $model_name) {
+                    if ($this->alreadySetModelProperty($last_model_full_name, $property)) {
                         continue;
                     }
 
-                    $last_model_full_name = Reflection::objClassName($this->currentObj);
+                    if ($model_name == $default_model_short_name) {
+                        $last_model = $this->currentObj;
 
+                        if (!in_array($property, array_keys($last_model->getPublicProperties()))) {
+                            continue;
+                        }
+
+                        $last_model_full_name = Reflection::objClassName($this->currentObj);
+
+                        $this->form_attribute_values[$last_model_full_name][$property] = $value;
+
+                        $this->setModelAttributeValue($last_model, $property, $value);
+                        continue;
+                    }
+
+                    $model_name_lower = strtolower($model_name);
+                    if ($last_model->getRelationship($model_name_lower)) {
+                        $last_model = $last_model->$model_name_lower();
+
+                        if (!in_array($property, $last_model->getAttributes())) {
+                            continue;
+                        }
+
+                        $last_model_short_name = $model_name;
+                        $last_model_full_name = Reflection::objClassName($last_model);
+                    }
                     $this->form_attribute_values[$last_model_full_name][$property] = $value;
 
                     $this->setModelAttributeValue($last_model, $property, $value);
-                    continue;
+
+                    $model_form_attributes[$last_model_short_name] = $last_model;
                 }
-
-                $model_name_lower = strtolower($model_name);
-                if ($last_model->getRelationship($model_name_lower)) {
-                    $last_model = $last_model->$model_name_lower();
-
-                    if (!in_array($property, $last_model->getAttributes())) {
-                        continue;
-                    }
-
-                    $last_model_short_name = $model_name;
-                    $last_model_full_name = Reflection::objClassName($last_model);
-                }
-                $this->form_attribute_values[$last_model_full_name][$property] = $value;
-
-                $this->setModelAttributeValue($last_model, $property, $value);
-
-                $model_form_attributes[$last_model_short_name] = $last_model;
             }
-        }
 
-        return $model_form_attributes;
+            return $model_form_attributes;
+        } catch (\Exception $e) {
+            new TMessage('error', $e->getMessage());
+        }
     }
 
     public static function showErrorMsg(Request $request)
