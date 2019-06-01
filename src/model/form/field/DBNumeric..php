@@ -16,7 +16,7 @@ use Dvi\Adianti\Widget\Form\Field\Type\FieldTypeString;
  * @copyright  Copyright (c) 2018. (davimenezes.dev@gmail.com)
  * @link https://github.com/DaviMenezes
  */
-class DBCurrency extends DBFormField
+class DBNumeric extends DBFormField
 {
     public function __construct(string $name, int $decimals, string $decimalsSeparator, string $thousandSeparator, string $label = null)
     {
