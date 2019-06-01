@@ -32,7 +32,6 @@ class Varchar extends TEntry implements FormField
         $this->operator('like');
     }
 
-    //Habilitar este campo este metodo esta removendo as mascaras dos campos, analisar !!!
     public function showView()
     {
         $data = $this->getViewData();
@@ -41,6 +40,21 @@ class Varchar extends TEntry implements FormField
         $data['field_info'] = $this->getFieldInfoValidationErrorData($this->getLabel());
 
         view("form/fields/varchar", $data);
+    }
+
+    protected function getViewData()
+    {
+        $data = $this->prepareViewData();
+
+        $properties = $this->tag->getProperties();
+
+        $data = array_merge($properties, $data);
+        $data['properties'] = '';
+
+        collect($data)->filter()->map(function ($value, $property) use (&$data) {
+            $data['properties'] .= $property . '="' . $value . '" ';
+        });
+        return $data;
     }
 
     protected function prepareViewData()
@@ -95,21 +109,6 @@ class Varchar extends TEntry implements FormField
         if ($this->numericMask) {
             TScript::create("tentry_numeric_mask( '{$this->id}', {$this->decimals}, '{$this->decimalsSeparator}', '{$this->thousandSeparator}'); ");
         }
-        return $data;
-    }
-
-    protected function getViewData()
-    {
-        $data = $this->prepareViewData();
-
-        $properties = $this->tag->getProperties();
-
-        $data = array_merge($properties, $data);
-        $data['properties'] = '';
-
-        collect($data)->filter()->map(function ($value, $property) use (&$data) {
-            $data['properties'] .= $property . '="' . $value . '" ';
-        });
         return $data;
     }
 }
