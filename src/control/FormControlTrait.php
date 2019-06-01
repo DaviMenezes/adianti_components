@@ -49,7 +49,7 @@ trait FormControlTrait
             if ($e->getCode() == '42000' and ENVIRONMENT == 'production') {
                 new TMessage('error', 'Erro ao salvar. Informe ao administrador');
             } else {
-                new TMessage('error', $e->getMessage(), null, 'Erro ao salvar');
+                new TMessage('error', 'Erro ao salvar'. $e->getMessage());
             }
         }
     }
