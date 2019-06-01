@@ -81,7 +81,7 @@ abstract class DviModel extends ActiveRecord
 
     protected function setPublicAttributeValues()
     {
-        if (!count($this->data)) {
+        if (!isset($this->data)) {
             return;
         }
         foreach ($this->data as $property => $value) {
