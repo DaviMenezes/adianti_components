@@ -1,6 +1,6 @@
 {
-	"name": "dvi/adianti_components",
-	"description": "Components for Adianti Framework",
+	"name": "dvi/page_builder",
+	"description": "Page builders",
 	"type":"library",
 	"authors": [ {
 		"name": "Davi Menezes",
